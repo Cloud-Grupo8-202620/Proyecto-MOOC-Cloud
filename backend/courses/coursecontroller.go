@@ -124,13 +124,19 @@ func (h *Handler) ListCatalog(c *gin.Context) {
 	}
 	sort := "created_at desc"
 	if s := c.Query("sort"); s != "" {
-		allowed := map[string]bool{"created_at": true, "title": true}
-		if parts := strings.Fields(s); len(parts) > 0 && allowed[parts[0]] {
+		// La cláusula sale de la whitelist, nunca del texto del cliente.
+		allowed := map[string]string{
+			"created_at asc": "created_at asc", "created_at desc": "created_at desc",
+			"title asc": "title asc", "title desc": "title desc",
+		}
+		if parts := strings.Fields(s); len(parts) > 0 {
 			order := "asc"
 			if len(parts) > 1 && strings.ToLower(parts[1]) == "desc" {
 				order = "desc"
 			}
-			sort = parts[0] + " " + order
+			if clause, ok := allowed[parts[0]+" "+order]; ok {
+				sort = clause
+			}
 		}
 	}
 	var total int64

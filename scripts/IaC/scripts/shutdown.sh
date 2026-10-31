@@ -26,7 +26,7 @@ case "${ROLE}" in
   *) contenedores="" ;;
 esac
 
-if [ "${ROLE}" = "queue" ]; then
+if [[ "${ROLE}" = "queue" ]]; then
   systemctl stop mooc-queue-metrics 2>/dev/null || true
 fi
 

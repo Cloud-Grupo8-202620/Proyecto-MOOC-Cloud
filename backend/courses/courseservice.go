@@ -112,7 +112,7 @@ func unitChain(db *gorm.DB, unitID uint) (*Unit, *Module, *CourseVersion, *Cours
 // encadenar una búsqueda por id en cada salto.
 func LocateResource(db *gorm.DB, resourceID uint) (*Resource, *Course, *CourseVersion, error) {
 	var r Resource
-	if err := db.First(&r, resourceID).Error; err != nil {
+	if err := db.Where("id = ?", resourceID).First(&r).Error; err != nil {
 		return nil, nil, nil, ErrNotFound
 	}
 	var v CourseVersion

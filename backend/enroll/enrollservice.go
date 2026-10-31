@@ -15,7 +15,7 @@ var ErrNotPublished = errors.New("curso no publicado")
 // El progreso y las notas viven en tablas separadas y se conservan siempre.
 func Enroll(db *gorm.DB, studentID, courseID uint) (*courses.Matricula, bool, error) {
 	var c courses.Course
-	if err := db.First(&c, courseID).Error; err != nil {
+	if err := db.Where("id = ?", courseID).First(&c).Error; err != nil {
 		return nil, false, courses.ErrNotFound
 	}
 	if c.Status != courses.CourseStatusPublished {

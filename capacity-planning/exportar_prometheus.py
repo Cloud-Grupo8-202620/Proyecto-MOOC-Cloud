@@ -20,7 +20,6 @@ import argparse
 import json
 import os
 import subprocess
-import sys
 import time
 from urllib.parse import urlencode
 
@@ -285,7 +284,7 @@ def main():
             print(f"{prefijo}  ->  {len(tipos)} tipos")
             for t in tipos:
                 print("   ", t)
-        return 0
+        return
 
     manifest = []
     ventanas = [(args.nombre, (args.inicio, args.fin))] if args.inicio else WINDOWS.items()
@@ -340,8 +339,7 @@ def main():
         json.dump(manifest, f, indent=1)
     print(f"\nmanifest -> {ruta_man} ({len(manifest)} entradas, "
           f"{len(manifest) - len(previas)} nuevas)")
-    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

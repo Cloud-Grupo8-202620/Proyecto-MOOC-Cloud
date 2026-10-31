@@ -33,7 +33,7 @@ func stableCourse(db *gorm.DB, studentID uint, stableID string) (*courses.Resour
 // Heartbeat registra reproducción/apertura. Completed es monótono (nunca retrocede).
 func Heartbeat(db *gorm.DB, studentID uint, in HeartbeatInput) (*Progress, error) {
 	if in.Percent != nil || in.Completed != nil {
-		log.Printf("AUDIT progreso manipulado student=%d stable=%s", studentID, in.StableID)
+		log.Printf("AUDIT progreso manipulado student=%d stable=%q", studentID, in.StableID)
 		return nil, ErrClientProgress
 	}
 	if in.StableID == "" || in.PositionSec < 0 || in.DurationSec < 0 || in.Page < 0 || in.TotalPages < 0 {

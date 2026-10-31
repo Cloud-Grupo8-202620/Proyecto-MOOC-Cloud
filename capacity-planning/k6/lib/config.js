@@ -20,7 +20,12 @@ export const ENTORNO = env.ENV || 'local';
 
 // BASE_URL apunta al proxy inverso, no al contenedor: es lo que ve el exterior.
 // Con ENV=gcp el Taskfile lo resuelve desde `terraform output app_url`.
-export const BASE_URL = (env.BASE_URL || 'https://localhost:8080').replace(/\/+$/, '');
+function sinBarraFinal(url) {
+  let fin = url.length;
+  while (fin > 0 && url[fin - 1] === '/') fin--;
+  return url.slice(0, fin);
+}
+export const BASE_URL = sinBarraFinal(env.BASE_URL || 'https://localhost:8080');
 
 // Última red de seguridad contra medir el entorno equivocado. Si se pidió GCP y
 // la URL acabó siendo local, casi siempre es que una variable se evaluó antes de
@@ -53,7 +58,7 @@ export const ADMIN_EMAIL = env.ADMIN_EMAIL || 'admin1@carga.test';
 // Contraseña única para toda la carga sintética. bcrypt corre en el request path
 // del login, así que sembrar 500 estudiantes cuesta CPU real: por eso el seed
 // es una tarea aparte y no forma parte de las mediciones.
-export const SEED_PASSWORD = env.SEED_PASSWORD || env.ADMIN_PASS || 'ClaveSegura123';
+export const SEED_PASSWORD = env.SEED_PASSWORD || env.ADMIN_PASS || '';
 
 // Matrículas por lote en la prematricular del escenario 1. En una WAN, lanzar
 // las 2500 de una sola vez hace que el setup pueda agotar su tiempo y aborte la

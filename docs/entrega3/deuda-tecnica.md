@@ -90,8 +90,8 @@ La matriz no es un análisis de seguridad exhaustivo. Antes de cerrar, contrasta
 | Major / Critical / Blocker abiertos, responsables y plazos | 0 / 0 / 0; no hay hallazgos que aplazar |
 | Revisión de hotspots | 0 hotspots en el commit evaluado |
 
-Nota de trazabilidad: los commits posteriores a `b4d5568` solo modifican documentación, por lo que el
-código evaluado coincide con el commit de entrega. Si se modifica código antes de cerrar, repetir el job
-`quality` sobre el nuevo SHA y actualizar esta acta.
+Nota de trazabilidad: después de `b4d5568` solo cambió `frontend/Dockerfile` (commit `99d66a8`), que el
+análisis cuenta como líneas Docker. Antes de cerrar hay que repetir el job `quality` sobre el commit de
+entrega y actualizar esta acta con su artefacto; el resto de las métricas no cambia por esa corrección.
 
 Procedimiento reproducible: [calidad.md](calidad.md).

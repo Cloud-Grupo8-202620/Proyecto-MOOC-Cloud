@@ -26,9 +26,9 @@ No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuraci
 
 `dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. La
 copia local previa en `evidencia/local/sonar/` (`pipeline: local`, `dirty=true`) queda como diagnóstico
-intermedio: no se usa como evidencia final. Los commits posteriores a `b4d5568` solo modifican
-documentación; si se cambia código, este reporte deja de representar al commit final y el análisis debe
-repetirse. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
+intermedio: no se usa como evidencia final. Después de `b4d5568` solo cambió `frontend/Dockerfile`
+(commit `99d66a8`, corrección del build de la imagen), que la herramienta analiza como 34 líneas Docker;
+repetir el job `quality` sobre el commit final antes de cerrar la entrega y actualizar el acta. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
 entrega lo verifica `scripts/quality/sonar.py` sobre las métricas totales, no el gate estándar.
 
 ## Ejecutar y conservar

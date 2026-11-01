@@ -68,7 +68,7 @@
             ]
         },
         "Metadata": {
-            "LastTagTime": "2026-11-01T16:13:35.747619098Z"
+            "LastTagTime": "2026-11-01T19:00:39.153683376Z"
         },
         "Descriptor": {
             "mediaType": "application/vnd.oci.image.index.v1+json",
@@ -135,7 +135,7 @@
             ]
         },
         "Metadata": {
-            "LastTagTime": "2026-11-01T16:14:28.181149198Z"
+            "LastTagTime": "2026-11-01T19:01:32.008844813Z"
         },
         "Descriptor": {
             "mediaType": "application/vnd.docker.distribution.manifest.v2+json",

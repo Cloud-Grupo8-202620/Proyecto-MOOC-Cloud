@@ -2,5 +2,5 @@ Duplicación: 0.5%
 Mantenibilidad: A
 Deuda estimada: 0.0 minutos
 Umbrales entrega 3: cumple
-Commit: b4d556815b37aadc6480aa00f97c0b7e96f893a3
+Commit: c01365c687ceadd0f9a4abf91f1f75e913745d3e
 Cambios sin commit: False

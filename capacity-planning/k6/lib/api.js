@@ -21,6 +21,7 @@ export const OPS = {
   inscripcion: 'inscripcion',
   heartbeat: 'heartbeat',
   quiz: 'quiz',
+  sesion: 'sesion_actual',
   manifiesto: 'manifiesto_hls',
   segmento: 'segmento_hls',
   // Escenario 2

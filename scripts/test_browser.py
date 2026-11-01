@@ -15,8 +15,11 @@ p.add_argument("--container", default="mooc-local-backend-1")
 p.add_argument("--playwright", help="Ruta al ejecutable Playwright, alternativa a pnpm exec")
 args = p.parse_args()
 video = Path(os.environ.get("E2E_VIDEO_PATH", str(Path(__file__).resolve().parents[1] / "capacity-planning/media/p1-small.mp4")))
+audio = Path(os.environ.get("E2E_AUDIO_PATH", str(Path(__file__).resolve().parents[1] / "capacity-planning/media/a1-audio.m4a")))
 if os.environ.get("E2E_MEDIA") != "false" and (not video.exists() or video.stat().st_size < 1024):
     raise SystemExit("Falta el MP4 real: descarga Git LFS o configura E2E_VIDEO_PATH con un video sintético. Un puntero LFS no es contenido multimedia.")
+if os.environ.get("E2E_MEDIA") != "false" and (not audio.exists() or audio.stat().st_size < 1024):
+    raise SystemExit("Falta el audio real: descarga Git LFS o configura E2E_AUDIO_PATH con un audio sintético. Un puntero LFS no es contenido multimedia.")
 username = "e2e-admin-" + uuid.uuid4().hex[:10]
 password = secrets.token_urlsafe(24)
 subprocess.run(["docker", "exec", "-i", args.container, "./main", "provision-admin"], input=json.dumps({"username": username, "email": username + "@test.invalid", "password": password}), text=True, check=True, stdout=subprocess.DEVNULL)

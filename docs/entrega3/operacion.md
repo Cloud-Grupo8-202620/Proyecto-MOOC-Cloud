@@ -47,6 +47,39 @@ Registrar en `despliegue.json`: commit, image_tag, app_url, lb_ip, proyecto, zon
 - Con permiso para retiro, identificar un worker con tarea activa y ejecutar la acción acordada. Guardar logs antes/después por ID, destino de recuperación y objetos finales. **Esta prueba controlada no reemplaza la reducción automática del escenario 3B.**
 - Conciliar todos los trabajos aceptados; fallos requieren causa diagnosticada, no descartar filas.
 
+## Verificaciones de integridad y operación
+
+Las seis comprobaciones del enunciado, con el comando que las produce y el archivo que se guarda en
+`docs/entrega3/evidencia/<corrida>/integridad/`. Sin estas seis evidencias el componente no se acredita.
+
+| # | Verificación | Cómo se ejecuta | Resultado esperado | Evidencia |
+|---|---|---|---|---|
+| 1 | Sesión continua entre réplicas | `task gcp:reparto PETICIONES=40` y el bloque de réplicas de `task integridad` | al menos 2 `X-Served-By` distintos y las 20 lecturas autentican | `reparto.txt`, `integridad-summary.json` |
+| 2 | Lecturas y escrituras consistentes | crear inscripción, intento y progreso; releerlos repartidos por el LB | mismos datos en todas las réplicas | `consistencia.json` |
+| 3 | Intento duplicado sin doble calificación | `task integridad` | `double_grade_total=0` y `duplicated_attempt_total=0` | `integridad-summary.json` |
+| 4 | Archivos accesibles desde cualquier instancia | `download-url` y GET del objeto repetidos por el LB y directo a GCS | 200 y mismo tamaño en todas | `archivos.txt` |
+| 5 | Datos conservados al retirar una API | detener el contenedor API de una VM y consultar después | datos intactos y servicio continuo por otra réplica | `retiro-api/` |
+| 6 | Worker retirado con un trabajo activo | subir un video, ver `active` en la cola, detener el worker | el trabajo se reencola y termina una sola vez | `retiro-worker/` |
+
+Comandos de apoyo:
+
+```bash
+# 1 y 4: reparto y archivos
+task gcp:reparto PETICIONES=40 | tee ../docs/entrega3/evidencia/<corrida>/integridad/reparto.txt
+
+# 2 y 3: invariantes (incluye el envío duplicado y las réplicas)
+task integridad
+
+# 5: exclusión del balanceador antes de la reparación del grupo
+gcloud compute backend-services get-health mooc-api-backend --global
+gcloud compute ssh <vm-api> --zone us-central1-a --tunnel-through-iap \
+  --command 'docker stop $(docker ps -q --filter ancestor=us-central1-docker.pkg.dev/<proyecto>/mooc-images/api:<tag>)'
+```
+
+Registrar en `retiro-api/` y `retiro-worker/` el estado del backend (`HEALTHY`/`UNHEALTHY`), la hora de
+exclusión, la de reemplazo por el MIG y los logs por ID de trabajo. El retiro de un worker durante el
+procesamiento es la única prueba que no se puede sustituir por la reducción automática del grupo.
+
 ## Corridas y conservación
 
 1. Ejecutar el recorrido de [frontend](frontend.md).

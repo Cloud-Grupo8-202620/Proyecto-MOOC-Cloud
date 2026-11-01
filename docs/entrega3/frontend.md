@@ -19,15 +19,22 @@ Implementación React integrada con la API, sin datos simulados. La verificació
 | Estudiante: quiz y nota | Ruta del recurso quiz | Guardar, retomar, enviar y consultar resultado persistido |
 | Autorización | API y rutas protegidas | Estudiante no crea cursos; profesor no modifica cursos ajenos |
 
-## Resultado local del 2026-10-29
+## Resultado local del 2026-11-01
 
-Playwright Chromium: **1 recorrido completo aprobado (13,8 s)**, con escaneo ClamAV y conversión ffmpeg reales, video sintético MP4 de 30 s, reproducción HLS, heartbeat y nota persistente. Incluye rechazos de creación de admin anónima, escalamiento de rol por estudiante y edición ajena por profesor. Capturas locales: [publicación](evidencia/local/profesor-publicacion.png), [resultado](evidencia/local/estudiante-resultado.png), [móvil 390 px](evidencia/local/estudiante-movil.png). No hay desbordamiento horizontal en la vista móvil comprobada.
+Playwright Chromium: **1 recorrido completo aprobado (30,4 s)**, con escaneo ClamAV y conversión ffmpeg reales, video sintético MP4 de 30 s, reproducción HLS, heartbeat y nota persistente. El recorrido cubre ahora los cinco estados de interfaz y los tres tipos de archivo:
 
-El recorrido automatizado cubre lectura, video y quiz. PDF/imagen/audio, edición de preguntas existentes, expiración de intentos y recuperación de fallos requieren verificaciones adicionales; la tabla no implica cobertura automática de todas las variantes. Las cargas de reemplazo quedan fuera del flujo soportado: agregar un recurso nuevo para otro archivo, según [deuda técnica](deuda-tecnica.md).
+- estados: vacío en `/ensenar` de un profesor nuevo, error de credenciales con el mensaje del servidor, y disponibilidad tras el procesamiento;
+- archivos: video, PDF, imagen y audio, cargados desde la interfaz y consumidos por el estudiante;
+- evaluación: quiz con un solo intento, edición de una pregunta existente que persiste tras recargar, y botón «Intentos agotados» al gastarlo;
+- autorización: creación de admin anónima rechazada, escalamiento de rol por estudiante rechazado y edición de un curso ajeno por otro profesor rechazada.
+
+Capturas locales: [publicación](evidencia/local/profesor-publicacion.png), [resultado](evidencia/local/estudiante-resultado.png), [móvil 390 px](evidencia/local/estudiante-movil.png). No hay desbordamiento horizontal en la vista móvil comprobada.
+
+Siguen sin cobertura automática la expiración temporal de un intento —el quiz no expone límite de tiempo en la interfaz— y la recuperación ante fallos del worker; la tabla no implica cobertura de todas las variantes. Las cargas de reemplazo quedan fuera del flujo soportado: se agrega un recurso nuevo para otro archivo, según [deuda técnica](deuda-tecnica.md). El recorrido sobre el despliegue cloud es independiente de este resultado local.
 
 ## Prueba automatizada de navegador
 
-[connected-flow.spec.ts](../../frontend/e2e/connected-flow.spec.ts) prepara únicamente las cuentas mediante API; crea curso, módulo, unidad, lectura, video y quiz desde la interfaz. Publica como profesor, cierra sesión, se inscribe como estudiante, consume y envía el quiz; recarga para comprobar la nota persistida. También realiza peticiones negativas para permisos. No usar capturas como sustituto de los resultados de esta prueba.
+[connected-flow.spec.ts](../../frontend/e2e/connected-flow.spec.ts) prepara únicamente las cuentas mediante API; crea curso, módulo, unidad, lectura, video, PDF, imagen, audio y quiz desde la interfaz. Publica como profesor, cierra sesión, se inscribe como estudiante, consume los cuatro tipos de contenido, registra progreso y envía el quiz; recarga para comprobar la nota persistida. Las imágenes y el PDF son fixtures pequeños en `frontend/e2e/fixtures/`; el audio y el video se generan con ffmpeg en CI y en local deben venir de Git LFS. No usar capturas como sustituto de los resultados de esta prueba.
 
 ```bash
 # Desarrollo (preserva volúmenes existentes; .env local según .env.example)
@@ -35,8 +42,8 @@ docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml up -d --bu
 cd frontend
 pnpm install --frozen-lockfile
 pnpm exec playwright install chromium
-# Los MP4 de Git LFS deben estar descargados (git lfs pull).
-# Alternativa: E2E_VIDEO_PATH con un MP4 sintético real de 30 s.
+# Video y audio de Git LFS deben estar descargados (git lfs pull).
+# Alternativa: E2E_VIDEO_PATH y E2E_AUDIO_PATH con medios sintéticos reales.
 cd ..
 python3 scripts/test_browser.py
 ```

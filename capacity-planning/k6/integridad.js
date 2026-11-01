@@ -14,7 +14,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import { Counter } from 'k6/metrics';
-import { RUN_ID, SEED_PASSWORD } from './lib/config.js';
+import { ENTORNO, RUN_ID, SEED_PASSWORD } from './lib/config.js';
 import { OPS, body, get, json, params, url } from './lib/api.js';
 import { abrirDataset } from './lib/corpus.js';
 
@@ -39,6 +39,7 @@ export const options = {
     duplicated_attempt_total: ['count==0'],
     duplicate_enrollment_total: ['count==0'],
     progress_regression_total: ['count==0'],
+    replicas_insuficientes_total: ['count==0'],
     'functional_error_rate': ['rate<0.01'],
   },
   summaryTrendStats: ['p(50)', 'p(95)', 'p(99)'],
@@ -48,6 +49,7 @@ const dobleCalificacion = new Counter('double_grade_total');
 const intentoDuplicado = new Counter('duplicated_attempt_total');
 const matriculaDuplicada = new Counter('duplicate_enrollment_total');
 const progresoRetrocede = new Counter('progress_regression_total');
+const replicasInsuficientes = new Counter('replicas_insuficientes_total');
 const comprobacionesOk = new Counter('integrity_checks_passed_total');
 
 // Estudiante dedicado a la corrida.
@@ -244,12 +246,43 @@ export function comprobaciones(data) {
     }
   }
 
+  // 6. Sesión entre réplicas: el mismo token debe ser aceptado por instancias
+  //    distintas. En local solo hay una API, así que el mínimo es 1; en GCP el
+  //    balanceador debe repartir y el mínimo es 2. Si no se reparte, es un
+  //    hallazgo de arquitectura, no ruido.
+  {
+    const vistas = {};
+    let aceptadas = 0;
+    for (let i = 0; i < 20; i++) {
+      const res = get('/api/v1/me', token, OPS.sesion);
+      if (res.status === 200) {
+        aceptadas++;
+        const quien =
+          res.headers['X-Served-By'] ||
+          res.headers['x-served-by'] ||
+          'sin-cabecera';
+        vistas[quien] = true;
+      }
+    }
+    const distintas = Object.keys(vistas).length;
+    const minimo = ENTORNO === 'gcp' ? 2 : 1;
+    const ok = check(true, {
+      'sesion entre replicas: las 20 lecturas autentican': () =>
+        aceptadas === 20,
+      [`sesion entre replicas: al menos ${minimo} instancia(s)`]: () =>
+        distintas >= minimo,
+    });
+    if (ok) comprobacionesOk.add(1);
+    else replicasInsuficientes.add(1);
+  }
+
 }
 
 export function handleSummary(data) {
   const m = (n) => (data.metrics[n] && data.metrics[n].values) || {};
   const fallos = ['double_grade_total', 'duplicated_attempt_total',
-    'duplicate_enrollment_total', 'progress_regression_total']
+    'duplicate_enrollment_total', 'progress_regression_total',
+    'replicas_insuficientes_total']
     .reduce((acc, n) => acc + (m(n).count || 0), 0);
   return {
     stdout:
@@ -259,6 +292,7 @@ export function handleSummary(data) {
       `intento duplicado : ${m('duplicated_attempt_total').count || 0}\n` +
       `matricula duplicada: ${m('duplicate_enrollment_total').count || 0}\n` +
       `progreso rechazado mal: ${m('progress_regression_total').count || 0}\n` +
+      `replicas insuficientes: ${m('replicas_insuficientes_total').count || 0}\n` +
       (fallos === 0
         ? 'OK: ninguna invariante de integridad fue violada.\n'
         : `FALLO: ${fallos} invariantes violadas. No usar esta corrida como evidencia de capacidad.\n`),

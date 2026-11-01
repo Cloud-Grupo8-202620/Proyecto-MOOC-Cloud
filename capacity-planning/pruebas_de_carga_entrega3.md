@@ -23,7 +23,7 @@ task media:generate
 task seed:all
 ```
 
-El generador debe tener capacidad suficiente. `mooc-loadgen` es opcional y no está aprovisionado: crearlo requiere autorización; si se usa el portátil, registrar ese límite y no atribuir su saturación a la aplicación. Los seeds y datasets contienen sesiones: mantenerlos privados. No publicar logs de Task que impriman contraseñas de parámetros antiguos.
+El generador debe tener capacidad suficiente. `mooc-loadgen` es opcional y no está aprovisionado: crearlo requiere autorización; si se usa el portátil, registrar ese límite y no atribuir su saturación a la aplicación. Los seeds escriben `datasets/*.json` con sesiones del entorno medido: **no se versionan** (están en `.gitignore`) y hay que regenerarlos con `task seed:all` después de cada despliegue. No publicar logs de Task que impriman contraseñas de parámetros antiguos.
 
 ## Escenarios 1 y 2: repetición comparable
 

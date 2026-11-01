@@ -1,6 +1,6 @@
 # Cierre de la entrega 3
 
-Corte: 2026-10-29. La implementación y preparación local no equivalen a una entrega cloud verificada. Completar las celdas pendientes con enlaces a evidencia real.
+Corte: 2026-11-01. La implementación y preparación local no equivalen a una entrega cloud verificada. Completar las celdas pendientes con enlaces a evidencia real.
 
 | Requisito | Preparación en repositorio | Evidencia final pendiente |
 |---|---|---|
@@ -13,14 +13,14 @@ Corte: 2026-10-29. La implementación y preparación local no equivalen a una en
 | Sin pérdida ni efectos duplicados | TaskIDs, estado compartido, reconciliación | Retirada de worker ocupado y trazabilidad por tarea |
 | Repetir escenarios 1 y 2 | k6/corpus e informe E2 disponibles | Corridas E3 repetidas y comparación cuantitativa |
 | Métricas y gráficas | Observador MIG + exportador + gráfica | Series CPU/memoria/DB/cola/errores y tiempos |
-| Calidad | Workflow Sonar efímero y exportación completa | Run sobre SHA final, métricas e inventario revisado |
+| Calidad | Workflow Sonar efímero y exportación completa | [Run 41325127818](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41325127818) sobre `b4d5568`, 0 hallazgos, reporte en [evidencia](evidencia/calidad-b4d5568/README.md) |
 | Arquitectura y costos | Documentos y fuentes Mermaid | Capturas/consumo real y ajuste tras desplegar |
 | Sustentación y entrega | Guion abajo, README enlazado | Video, revisión con Diego, merge y release/tag |
 
 ## Identificadores finales
 
-- Commit y tag/release: **pendiente**.
-- Run GitHub Actions y reporte Sonar completo: **pendiente**.
+- Commit y tag/release: **pendiente**. Código evaluado: `b4d556815b37aadc6480aa00f97c0b7e96f893a3`; el tag `entrega-3` se crea sobre el commit de entrega.
+- Run GitHub Actions y reporte Sonar completo: [41325127818](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41325127818), artefacto `quality-b4d556815b37aadc6480aa00f97c0b7e96f893a3`, copia en [evidencia/calidad-b4d5568](evidencia/calidad-b4d5568/README.md).
 - `image_tag` realmente desplegado: **pendiente** (la imagen anterior `652591e65fc2` no incluye los nuevos flujos).
 - `app_url`, `lb_ip`, certificado: **pendiente**.
 - Directorio/archivo de evidencia de carga y de integridad: **pendiente**.

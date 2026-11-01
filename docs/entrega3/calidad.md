@@ -2,6 +2,35 @@
 
 No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuración queda lista para GitHub Actions sin contratar servicios ni guardar tokens: el job `quality` levanta SonarQube Community dentro del runner, cambia la contraseña inicial, genera una credencial efímera, analiza y exporta el resultado antes de retirar el servidor. No aprovisiona GCP. El historial persistente son los artefactos de Actions, no la base de datos efímera.
 
+## Reporte del commit evaluado
+
+| Campo | Valor |
+|---|---|
+| Ejecución | [run 41325127818](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41325127818) |
+| Commit | `b4d556815b37aadc6480aa00f97c0b7e96f893a3` (`dirty=false`) |
+| Artefacto | `quality-b4d556815b37aadc6480aa00f97c0b7e96f893a3` |
+| Copia en el repositorio | [evidencia/calidad-b4d5568](evidencia/calidad-b4d5568/README.md) |
+| Fecha UTC | 2026-11-01T16:14:54Z |
+| Servidor | SonarQube Community 26.10.0.133078 |
+
+| Indicador | Medido | Umbral |
+|---|---:|---|
+| Líneas de código analizadas | 10.959 (`go=5588; ts=5166; css=171; docker=34`) | — |
+| Duplicación | 0,5% | ≤ 20% |
+| Mantenibilidad | A (`sqale_rating=1.0`) | A, B o C |
+| Deuda técnica estimada | 0 minutos | registrar e interpretar |
+| Bugs / vulnerabilidades / code smells | 0 / 0 / 0 | — |
+| Hallazgos abiertos (`issues.json`) | 0 | Major+ con motivo de aplazamiento |
+| Security hotspots | 0 | revisión humana |
+| Cobertura | 5,7% | informativa |
+
+`dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. La
+copia local previa en `evidencia/local/sonar/` (`pipeline: local`, `dirty=true`) queda como diagnóstico
+intermedio: no se usa como evidencia final. Los commits posteriores a `b4d5568` solo modifican
+documentación; si se cambia código, este reporte deja de representar al commit final y el análisis debe
+repetirse. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
+entrega lo verifica `scripts/quality/sonar.py` sobre las métricas totales, no el gate estándar.
+
 ## Ejecutar y conservar
 
 1. Subir el commit a la rama del PR y abrir **Actions → Verificación entrega 3**. Se ejecuta con push, pull request o Run workflow.

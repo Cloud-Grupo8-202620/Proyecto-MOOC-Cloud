@@ -6,9 +6,9 @@ WORKDIR /app
 # node:lts dejó de incluir corepack y el build de la imagen fallaba con
 # "/bin/sh: corepack: not found". Se fija Node 24 (el mismo de CI) y pnpm por
 # versión exacta, la de package.json, en vez de depender de la imagen móvil.
-RUN npm install -g pnpm@12.15.0
+RUN npm install -g --ignore-scripts pnpm@12.15.0
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY . .
 RUN pnpm run build
 

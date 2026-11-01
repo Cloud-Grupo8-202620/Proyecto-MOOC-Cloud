@@ -57,7 +57,7 @@ while true; do
     codigo="$(curl -sS -o "${RESPUESTA}" -w '%{http_code}' -X POST \
       -H "Authorization: Bearer $(token)" -H "Content-Type: application/json" \
       --data "${cuerpo}" "${API}" 2>/dev/null)"
-    if [ "${codigo}" = "200" ]; then
+    if [[ "${codigo}" = "200" ]]; then
       echo "pending=${pending} active=${active} backlog=${backlog}"
     else
       echo "pending=${pending} active=${active} backlog=${backlog} ERROR http=${codigo} $(head -c 300 "${RESPUESTA}" | tr '\n' ' ')"

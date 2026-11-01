@@ -20,7 +20,9 @@ def main():
     rows = []
     for job in accepted:
         try:
-            req = Request(f"{base}/api/v1/resources/{job['resource_id']}", headers={"Authorization": "Bearer " + token})
+            # El id viene del archivo: solo se acepta un entero para no alterar la ruta.
+            resource_id = int(job["resource_id"])
+            req = Request(f"{base}/api/v1/resources/{resource_id}", headers={"Authorization": "Bearer " + token})
             with urlopen(req, timeout=30) as response: resource = json.load(response)["resource"]
             same = resource["object_key"] == job["object_key"]
             ready = resource["scan_status"] == "clean" and resource["processing_status"] == "ready" and bool(resource.get("hls_key"))

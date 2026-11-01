@@ -21,6 +21,11 @@ resource "google_sql_database_instance" "postgres" {
     backup_configuration {
       enabled = true
     }
+
+    database_flags {
+      name  = "log_connections"
+      value = "on"
+    }
   }
 
   depends_on = [google_service_networking_connection.psa]

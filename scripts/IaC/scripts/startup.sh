@@ -78,7 +78,7 @@ wait_http() {
 ROLE="$(meta mooc-role)"
 PROJECT_ID="$(meta mooc-project-id)"
 INSTANCE="$(curl -fsS -H "Metadata-Flavor: Google" "${META}/instance/name")"
-[ -n "${ROLE}" ] || fail "la VM no tiene mooc-role en los metadatos"
+[[ -n "${ROLE}" ]] || fail "la VM no tiene mooc-role en los metadatos"
 
 guest status booting
 guest ready-uptime-sec ""
@@ -113,9 +113,9 @@ umask 077
 
 log "resolviendo secretos"
 while IFS='=' read -r var nombre; do
-  [ -n "${var}" ] || continue
+  [[ -n "${var}" ]] || continue
   valor="$(retry 5 secret "${nombre}")" || fail "no se pudo leer el secreto ${nombre}"
-  [ -n "${valor}" ] || fail "el secreto ${nombre} está vacío"
+  [[ -n "${valor}" ]] || fail "el secreto ${nombre} está vacío"
   printf '%s=%s\n' "${var}" "${valor}" >> "${ENV_FILE}"
 done <<< "$(meta mooc-secrets)"
 umask 022
@@ -146,7 +146,7 @@ mark_ready() {
 # falta para servir. Corre como unidad transitoria de systemd para que no
 # dependa de que este script siga vivo.
 start_ops_agent() {
-  [ "$(meta mooc-install-ops-agent)" = "true" ] || return 0
+  [[ "$(meta mooc-install-ops-agent)" = "true" ]] || return 0
   meta mooc-ops-agent-script > /usr/local/sbin/mooc-install-ops-agent
   chmod 700 /usr/local/sbin/mooc-install-ops-agent
   systemd-run --unit=mooc-ops-agent-install --collect \
@@ -240,7 +240,7 @@ start_app() {
   ready_path="$(meta mooc-ready-path)"
   stop_timeout="$(meta mooc-stop-timeout)"
   wait_for="$(meta mooc-wait-for)"
-  [ -n "${image}" ] && [ -n "${port}" ] || fail "faltan mooc-image o mooc-port"
+  [[ -n "${image}" && -n "${port}" ]] || fail "faltan mooc-image o mooc-port"
   guest image "${image}"
 
   local registry
@@ -254,7 +254,7 @@ start_app() {
 
   # La API y el worker terminan con panic si Redis no responde al arrancar.
   # Esperarlo aquí evita una tanda de reinicios mientras mooc-queue arranca.
-  if [ -n "${wait_for}" ]; then
+  if [[ -n "${wait_for}" ]]; then
     log "esperando a ${wait_for}"
     wait_tcp "${wait_for}" 900 || fail "${wait_for} no respondió en 15 minutos"
   fi

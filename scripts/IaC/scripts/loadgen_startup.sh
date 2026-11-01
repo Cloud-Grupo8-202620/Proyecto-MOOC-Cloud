@@ -35,7 +35,7 @@ apt-get install -y ca-certificates curl git ffmpeg jq
 if ! command -v k6 >/dev/null 2>&1; then
   echo "==> [${ROLE}] instalando k6 ${K6_VERSION}"
   tmp="$(mktemp -d)"
-  if curl -fsSL -o "${tmp}/k6.deb" \
+  if curl --proto '=https' --tlsv1.2 -fsSL -o "${tmp}/k6.deb" \
     "https://github.com/grafana/k6/releases/download/${K6_VERSION}/k6-${K6_VERSION}-linux-amd64.deb"; then
     dpkg -i "${tmp}/k6.deb" || apt-get install -y -f
   else
@@ -49,10 +49,10 @@ k6 version || true
 # tfvars: las tareas del Taskfile fijan los niveles, las variables y las rutas de
 # resultados, y una corrida debe poder repetirse sin depender de la versión que
 # hubiera publicada ese día.
-if ! command -v task >/dev/null 2>&1 && [ -n "${TASK_VERSION}" ]; then
+if ! command -v task >/dev/null 2>&1 && [[ -n "${TASK_VERSION}" ]]; then
   echo "==> [${ROLE}] instalando task ${TASK_VERSION}"
   tmp="$(mktemp -d)"
-  if curl -fsSL -o "${tmp}/task.deb" \
+  if curl --proto '=https' --tlsv1.2 -fsSL -o "${tmp}/task.deb" \
     "https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_${TASK_VERSION#v}_linux_amd64.deb"; then
     dpkg -i "${tmp}/task.deb" || apt-get install -y -f
   else
@@ -64,7 +64,7 @@ task --version || true
 
 echo "==> [${ROLE}] clonando repositorio"
 mkdir -p "$(dirname "${APP_DIR}")"
-if [ -d "${APP_DIR}/.git" ]; then
+if [[ -d "${APP_DIR}/.git" ]]; then
   git -C "${APP_DIR}" fetch --depth 1 origin "${REPO_BRANCH}"
   git -C "${APP_DIR}" reset --hard "origin/${REPO_BRANCH}"
 else

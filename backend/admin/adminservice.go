@@ -87,15 +87,17 @@ func ListUsers(db *gorm.DB, f UserFilter) ([]auth.UserModel, int64, error) {
 	}
 	sort := "created_at desc"
 	if f.Sort != "" {
-		// whitelist simple: permitir solo columnas conocidas
-		allowed := map[string]bool{"created_at": true, "username": true, "email": true, "role": true, "status": true}
+		// whitelist: la columna sale de constantes, nunca del texto del cliente
+		allowed := map[string]string{"created_at": "created_at", "username": "username", "email": "email", "role": "role", "status": "status"}
 		parts := strings.Fields(f.Sort)
-		if len(parts) > 0 && allowed[parts[0]] {
-			order := "asc"
-			if len(parts) > 1 && strings.ToLower(parts[1]) == "desc" {
-				order = "desc"
+		if len(parts) > 0 {
+			if column, ok := allowed[parts[0]]; ok {
+				order := " asc"
+				if len(parts) > 1 && strings.ToLower(parts[1]) == "desc" {
+					order = " desc"
+				}
+				sort = column + order
 			}
-			sort = parts[0] + " " + order
 		}
 	}
 	var users []auth.UserModel

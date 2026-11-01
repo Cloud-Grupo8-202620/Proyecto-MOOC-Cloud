@@ -10,7 +10,16 @@ No ejecutar `apply`, publicación de imágenes, importación, borrado ni `destro
 4. Ejecutar `terraform init`, `terraform validate` y `terraform plan -out=plan.tfplan`. Revisar el plan nuevo: el plan de 108 recursos del handoff referencia una imagen anterior.
 5. Cuando se autorice publicar código: construir las tres imágenes con `scripts/publish_images.sh`, actualizar image_tag local y rehacer el plan. Cuando se autorice desplegar: aplicar ese plan concreto.
 
-No ejecutar el `-target` del README histórico: Artifact Registry ya existe. No versionar tfvars, estado, plan, credenciales, tokens ni datasets con sesiones.
+No ejecutar el `-target` del README histórico: Artifact Registry ya existe. El repositorio `mooc-images`
+vive fuera del state local, así que el primer `apply` falla con `409 the repository already exists`;
+importarlo antes de aplicar y no recrearlo:
+
+```bash
+terraform import google_artifact_registry_repository.images \
+  projects/proyecto-2-cloud-509714/locations/us-central1/repositories/mooc-images
+```
+
+No versionar tfvars, estado, plan, credenciales, tokens ni datasets con sesiones.
 
 ## Validación posterior
 

@@ -23,25 +23,61 @@ La API conserva el monolito modular. Redis aloja sesiones revocables y la cola `
 ## Despliegue configurado
 
 ```mermaid
-flowchart TB
-  Internet -->|443 HTTPS; 80 redirige| LB[Balanceador global EXTERNAL_MANAGED]
-  subgraph GCP[proyecto-2-cloud-509714 · us-central1 · us-central1-a]
-    LB -->|/api, /api/*, /health, /openapi.json| API[MIG API · 1–3 e2-small]
-    LB -->|otras rutas| FE[MIG frontend · 1 e2-small]
-    API --> Q[mooc-queue · e2-medium · Redis + ClamAV + Mailpit]
-    W[MIG workers · 1–3 e2-small] --> Q
-    API --> SQL[(Cloud SQL · IP privada)]
-    W --> SQL
-    API --> OBJ[(Cloud Storage)]
-    W --> OBJ
-    Q -->|backlog cada 30 s| MON[Cloud Monitoring]
-    MON -->|métrica de grupo| W
-    API --> NAT[Cloud NAT: salida sin IP pública de VM]
-    W --> NAT
+flowchart LR
+  Internet((Internet))
+  k6["Generador k6<br/>mooc-loadgen<br/>e2-highcpu-4<br/>fuera de los grupos"]
+  LB["Balanceador global<br/>EXTERNAL_MANAGED<br/>IP 136.68.131.0<br/>dominio sslip.io<br/>certificado ACTIVE<br/>:443 HTTPS<br/>:80 redirige"]
+
+  subgraph GCP["GCP · proyecto-2-cloud-509714 · us-central1 · zona us-central1-a"]
+    subgraph NET["VPC mooc-vpc · us-central1"]
+      NETINFO["Subred mooc-app-subnet<br/>10.10.1.0/24<br/>private_ip_google_access = true<br/>IP fija de cola 10.10.1.30"]
+      API["MIG mooc-api-mig<br/>1–3 × e2-small<br/>Debian 12 · 30 GiB<br/>api:«image_tag» :8080<br/>autoscaler CPU 0,60<br/>min 1 · max 3<br/>cooldown 180 s<br/>autohealing TCP :8080"]
+      FE["MIG mooc-frontend-mig<br/>1 × e2-small<br/>nginx :3000<br/>frontend:«image_tag»<br/>fijo, sin autoscaling<br/>health HTTP /"]
+      W["MIG mooc-worker-mig<br/>1–3 × e2-small<br/>Debian 12 · 30 GiB<br/>worker:«image_tag» :9101<br/>autoscaler por backlog<br/>4 por instancia<br/>min 1 · max 3<br/>retira 1 / 600 s<br/>autohealing :9101/metrics"]
+      Q["mooc-queue · e2-medium<br/>IP fija 10.10.1.30<br/>Redis :6379<br/>sesiones + cola asynq<br/>ClamAV :3310<br/>Mailpit :1025<br/>fuera de los grupos"]
+      SQL[("Cloud SQL PostgreSQL 17<br/>db-f1-micro<br/>20 GiB PD_SSD · zonal<br/>IP privada 10.86.0.3<br/>max_connections 25<br/>PSA 10.86.0.0/16")]
+      NAT["Cloud NAT + router<br/>salida sin IP pública<br/>AUTO_ONLY · toda la subred"]
+      FW["Firewall por rol<br/>lb→api :8080<br/>lb→frontend :3000<br/>lb→worker :9101<br/>api,worker→queue :6379<br/>worker→queue :3310<br/>api→queue :1025<br/>IAP → :22"]
+    end
+
+    subgraph MANAGED["Servicios administrados"]
+      GCS[("Cloud Storage<br/>originals · hls · public<br/>URL firmada al navegador")]
+      MON["Cloud Monitoring<br/>custom.googleapis.com<br/>/mooc/queue/backlog<br/>cada 30 s"]
+      SM["Secret Manager<br/>7 secretos por rol"]
+      AR["Artifact Registry<br/>mooc-images<br/>etiquetas inmutables"]
+    end
   end
+
+  Internet -->|"HTTPS 443"| LB
+  k6 -->|"k6"| LB
+  LB -->|"/api · /health"| API
+  LB -->|"resto"| FE
+  API -->|"6379"| Q
+  W -->|"6379 · 3310"| Q
+  API -->|"5432"| SQL
+  W -->|"5432"| SQL
+  API -->|"URL firmada"| GCS
+  W -->|"originales y HLS"| GCS
+  Internet -.->|"PUT / GET directo"| GCS
+  Q -->|"backlog 30 s"| MON
+  MON -.->|"autoscaler"| W
+
+  classDef lb fill:#ffec99,stroke:#f08c00,color:#1e1e1e
+  classDef api fill:#b2f2bb,stroke:#2f9e44,color:#1e1e1e
+  classDef worker fill:#d0bfff,stroke:#7048e8,color:#1e1e1e
+  classDef queue fill:#ffd8a8,stroke:#e8590c,color:#1e1e1e
+  classDef data fill:#99e9f2,stroke:#0b7285,color:#1e1e1e
+  classDef ext fill:#f1f3f5,stroke:#868e96,color:#1e1e1e
+  class LB lb
+  class API api
+  class W worker
+  class FE ext
+  class Q queue
+  class SQL,GCS data
+  class Internet,k6,NAT,FW,SM,MON,AR ext
 ```
 
-Fuentes: [componentes.mmd](diagramas/componentes.mmd), [despliegue.mmd](diagramas/despliegue.mmd). Los diagramas Markdown se renderizan en GitHub; no requieren imágenes generadas a mano. Confirmar nombres y tamaños con outputs y `gcloud describe` tras desplegar.
+Fuentes: [componentes.mmd](diagramas/componentes.mmd), [despliegue.mmd](diagramas/despliegue.mmd) y las versiones editables [componentes.excalidraw](diagramas/componentes.excalidraw) y [despliegue.excalidraw](diagramas/despliegue.excalidraw). El diagrama de despliegue detalla la subred (`10.10.1.0/24`, acceso privado a Google, IP fija de la cola), los dos autoscalers con señal, umbral, límites, estabilización y retiro, y los puertos de cada regla de firewall. Confirmar nombres y tamaños con outputs y `gcloud describe` tras desplegar.
 
 ## Plantillas e inicialización
 

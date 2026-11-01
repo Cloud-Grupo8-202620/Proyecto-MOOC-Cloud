@@ -285,3 +285,6 @@ frontend/test-results/
 frontend/playwright-report/
 .scannerwork/
 artifacts/
+
+# Archivo generado por Next en un intento previo; el frontend es Vite.
+frontend/next-env.d.ts

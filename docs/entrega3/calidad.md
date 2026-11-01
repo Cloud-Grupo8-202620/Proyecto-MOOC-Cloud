@@ -6,11 +6,11 @@ No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuraci
 
 | Campo | Valor |
 |---|---|
-| Ejecución | [run 41339407527](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41339407527) |
-| Commit | `c01365c687ceadd0f9a4abf91f1f75e913745d3e` (`dirty=false`) |
-| Artefacto | `quality-c01365c687ceadd0f9a4abf91f1f75e913745d3e` |
-| Copia en el repositorio | [evidencia/calidad-c01365c](evidencia/calidad-c01365c/README.md) |
-| Fecha UTC | 2026-11-01T19:01:58Z |
+| Ejecución | [run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569) |
+| Commit | `84657d63c11e488f68fb736d9278d73963256879` (`dirty=false`) |
+| Artefacto | `quality-84657d63c11e488f68fb736d9278d73963256879` |
+| Copia en el repositorio | [evidencia/calidad-84657d6](evidencia/calidad-84657d6/README.md) |
+| Fecha UTC | 2026-11-01T19:22:08Z |
 | Servidor | SonarQube Community 26.10.0.133078 |
 
 | Indicador | Medido | Umbral |
@@ -27,7 +27,7 @@ No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuraci
 `dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. La
 copia local previa en `evidencia/local/sonar/` (`pipeline: local`, `dirty=true`) queda como diagnóstico
 intermedio: no se usa como evidencia final. Este análisis incluye el `frontend/Dockerfile` corregido y las
-pruebas de navegador ampliadas del commit `c01365c`; los commits posteriores son solo documentación. Si se
+pruebas de navegador ampliadas del commit `84657d6`; los commits posteriores son solo documentación. Si se
 modifica código de aplicación, repetir el job `quality` sobre el commit final antes de cerrar. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
 entrega lo verifica `scripts/quality/sonar.py` sobre las métricas totales, no el gate estándar.
 

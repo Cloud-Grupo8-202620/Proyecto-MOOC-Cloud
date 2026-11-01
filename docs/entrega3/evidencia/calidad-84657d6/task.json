@@ -1,0 +1,19 @@
+{
+  "id": "f437d201-5857-465a-9460-a5364415d56b",
+  "type": "REPORT",
+  "componentId": "bb34a90e-1b10-4d02-a494-9820039892a1",
+  "componentKey": "mooc-cloud",
+  "componentName": "MOOC Cloud",
+  "componentQualifier": "TRK",
+  "analysisId": "49972b1a-5aec-43eb-ac6a-61ea36b2de49",
+  "status": "SUCCESS",
+  "submittedAt": "2026-11-01T19:22:01+0000",
+  "submitterLogin": "admin",
+  "startedAt": "2026-11-01T19:22:02+0000",
+  "executedAt": "2026-11-01T19:22:06+0000",
+  "executionTimeMs": 4361,
+  "hasScannerContext": true,
+  "warningCount": 0,
+  "warnings": [],
+  "infoMessages": []
+}

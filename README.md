@@ -2,7 +2,7 @@
 
 Go API + worker asynq, React/Vite, Redis, ClamAV, PostgreSQL y almacenamiento de objetos. La infraestructura preparada usa dos MIG independientes de 1–3 instancias, API por CPU y workers por backlog, balanceador externo HTTPS y frontend fijo. Redis/ClamAV quedan fuera de los grupos.
 
-**Estado al 2026-11-01:** implementación y preparación de pruebas/documentación en curso. La calidad ya tiene línea base sobre el commit `c01365c` ([run 41339407527](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41339407527)). El despliegue elástico, las mediciones cloud y el video final siguen pendientes. Las imágenes `652591e65fc2` no incluyen los cambios nuevos. La URL pública se registrará después de aplicar y verificar la infraestructura; no hay una URL de entrega 3 acreditada todavía.
+**Estado al 2026-11-01:** implementación y preparación de pruebas/documentación en curso. La calidad ya tiene línea base sobre el commit `84657d6` ([run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569)). El despliegue elástico, las mediciones cloud y el video final siguen pendientes. Las imágenes `652591e65fc2` no incluyen los cambios nuevos. La URL pública se registrará después de aplicar y verificar la infraestructura; no hay una URL de entrega 3 acreditada todavía.
 
 ## Documentación de entrega 3
 

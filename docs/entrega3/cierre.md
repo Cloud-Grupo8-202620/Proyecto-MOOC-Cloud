@@ -13,14 +13,14 @@ Corte: 2026-11-01. La implementación y preparación local no equivalen a una en
 | Sin pérdida ni efectos duplicados | TaskIDs, estado compartido, reconciliación | Retirada de worker ocupado y trazabilidad por tarea |
 | Repetir escenarios 1 y 2 | k6/corpus e informe E2 disponibles | Corridas E3 repetidas y comparación cuantitativa |
 | Métricas y gráficas | Observador MIG + exportador + gráfica | Series CPU/memoria/DB/cola/errores y tiempos |
-| Calidad | Workflow Sonar efímero y exportación completa | [Run 41339407527](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41339407527) sobre `c01365c`, 0 hallazgos, reporte en [evidencia](evidencia/calidad-c01365c/README.md) |
+| Calidad | Workflow Sonar efímero y exportación completa | [Run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569) sobre `84657d6`, 0 hallazgos, reporte en [evidencia](evidencia/calidad-84657d6/README.md) |
 | Arquitectura y costos | Documentos y fuentes Mermaid | Capturas/consumo real y ajuste tras desplegar |
 | Sustentación y entrega | Guion abajo, README enlazado | Video, revisión con Diego, merge y release/tag |
 
 ## Identificadores finales
 
-- Commit y tag/release: **pendiente**. Código evaluado: `c01365c687ceadd0f9a4abf91f1f75e913745d3e`; el tag `entrega-3` se crea sobre el commit de entrega.
-- Run GitHub Actions y reporte Sonar completo: [41339407527](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41339407527), artefacto `quality-c01365c687ceadd0f9a4abf91f1f75e913745d3e`, copia en [evidencia/calidad-c01365c](evidencia/calidad-c01365c/README.md).
+- Commit y tag/release: **pendiente**. Código evaluado: `84657d63c11e488f68fb736d9278d73963256879`; el tag `entrega-3` se crea sobre el commit de entrega.
+- Run GitHub Actions y reporte Sonar completo: [41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569), artefacto `quality-84657d63c11e488f68fb736d9278d73963256879`, copia en [evidencia/calidad-84657d6](evidencia/calidad-84657d6/README.md).
 - `image_tag` realmente desplegado: **pendiente** (la imagen anterior `652591e65fc2` no incluye los nuevos flujos).
 - `app_url`, `lb_ip`, certificado: **pendiente**.
 - Directorio/archivo de evidencia de carga y de integridad: **pendiente**.

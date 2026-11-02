@@ -19,13 +19,13 @@ Corte: 2026-11-01. La implementación y preparación local no equivalen a una en
 
 ## Identificadores finales
 
-- Commit y tag/release: **pendiente**. Código evaluado: `84657d63c11e488f68fb736d9278d73963256879`; el tag `entrega-3` se crea sobre el commit de entrega.
+- Commit y tag/release: `entrega-3` (alias `proyecto-3` y `release-3`) sobre el commit de entrega. Código evaluado: `84657d63c11e488f68fb736d9278d73963256879`.
 - Run GitHub Actions y reporte Sonar completo: [41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569), artefacto `quality-84657d63c11e488f68fb736d9278d73963256879`, copia en [evidencia/calidad-84657d6](evidencia/calidad-84657d6/README.md).
 - `image_tag` realmente desplegado: `b4d5568`; el commit evaluado por Sonar (`84657d6`) solo añade el `Dockerfile` y las pruebas, sin cambios de comportamiento.
 - Proyecto: `proyecto-2-cloud-509714`.
 - `app_url`, `lb_ip`, certificado: <https://136.68.131.0.sslip.io>, `136.68.131.0`, administrado **ACTIVE**.
 - Directorio/archivo de evidencia de carga y de integridad: **pendiente**.
-- Video de entrega 3: **pendiente**; el enlace de entrega 2 no lo sustituye.
+- Video de entrega 3: <https://youtu.be/Us4hav8HZRk>.
 - Evidencia funcional e integridad: [evidencia/2026-11-02](evidencia/2026-11-02/README.md).
 - Informe de capacidad: [pruebas_de_carga_entrega3.md](../../capacity-planning/pruebas_de_carga_entrega3.md).
 - Usuarios de prueba y credenciales: canal privado del curso.

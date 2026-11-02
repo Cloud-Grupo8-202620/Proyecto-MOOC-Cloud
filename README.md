@@ -12,6 +12,7 @@ Go API + worker asynq, React/Vite, Redis, ClamAV, PostgreSQL y almacenamiento de
 - [Calidad SonarQube en GitHub Actions](docs/entrega3/calidad.md) y [deuda técnica](docs/entrega3/deuda-tecnica.md).
 - [Pruebas de carga y elasticidad](capacity-planning/pruebas_de_carga_entrega3.md), [costos](docs/entrega3/costos.md).
 - [Matriz de cierre, identificadores finales y guion del video](docs/entrega3/cierre.md).
+- [Video de sustentación](https://youtu.be/Us4hav8HZRk).
 
 ## Desarrollo local
 

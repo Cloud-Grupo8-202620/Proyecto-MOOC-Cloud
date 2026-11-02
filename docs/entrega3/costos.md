@@ -89,12 +89,32 @@ de cada corrida. Lo que falta para cerrar el criterio es esa exportación, no un
 
 Referencias para completar según consumo: [Storage](https://cloud.google.com/storage/pricing), [Artifact Registry](https://cloud.google.com/artifact-registry/pricing), [Observability](https://cloud.google.com/stackdriver/pricing), [Secret Manager](https://cloud.google.com/secret-manager/pricing), [red/IP](https://cloud.google.com/vpc/network-pricing).
 
-## Gasto real de laboratorio — pendiente
+## Consumo observado (calculado)
 
-Exportar Cloud Billing filtrado por proyecto y ventana UTC de las corridas, con servicio/SKU, costo bruto, descuentos/créditos y neto. Esperar la latencia del reporte. Guardar el CSV/captura sin información de pago ni datos personales y explicar qué parte pertenece a preparación, pruebas e inactividad.
+No hay exportación de Cloud Billing a BigQuery en el proyecto, así que la factura no es consultable
+por API. Lo que sí es auditable es el consumo: se reconstruyeron las vidas de las instancias desde
+Cloud Audit Logs (`compute.instances.insert` / `delete`) y se aplicaron las tarifas de lista ya
+validadas en este documento.
 
-| Ventana UTC | Corridas | Horas por tamaño | Estimado fijo | Gasto bruto observado | Créditos/neto | Diferencia explicada |
-|---|---|---|---|---|---|---|
-| Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente | Pendiente |
+| Concepto | Medido | Tarifa | USD |
+|---|---:|---:|---:|
+| Ventana del despliegue evaluado | 2026-11-01T18:34:55Z → 2026-11-02T01:41:53Z (7,12 h) | — | — |
+| e2-small (API, workers, frontend) | 28,75 instancia-hora | 0,016753/h | 0,48 |
+| e2-medium (cola) | 7,11 instancia-hora | 0,033506/h | 0,24 |
+| e2-highcpu-4 (generador) | 7,11 instancia-hora | 0,098941/h | 0,70 |
+| Discos pd-balanced (30 GiB por VM) | 42,97 VM-hora | 0,10/GiB-mes | 0,18 |
+| Cloud NAT | 42,97 VM-hora | 0,0014/VM-h | 0,06 |
+| Cloud SQL db-f1-micro + 20 GiB SSD | 7,12 h | 0,0105/h + 0,17/GiB-mes | 0,11 |
+| Balanceador global | 7,13 h | 0,025/h | 0,18 |
+| **Total calculado** | | | **≈ 1,95** |
+
+Notas de alcance: el total incluye el generador, que no forma parte de la aplicación; excluye el
+despliegue temporal anterior (17:50–18:19 UTC), el entorno de pruebas, el egreso de GCS y el tráfico
+del balanceador, y Monitoring/Logging por debajo de la franquicia. El consumo real del proyecto es
+algo mayor que esta suma.
+
+La factura con créditos se obtiene en **Facturación → Informes**, filtrando por proyecto y ventana UTC;
+guardar el CSV sin datos de pago. Con 50 USD de crédito y ~3 USD por 7 h de laboratorio con ciclos,
+el margen alcanza para varios días de pruebas.
 
 Conservar evidencia del inventario final. El autoscaling tiene mínimo 1 y no representa un apagado. Cloud SQL, LB, NAT y discos pueden seguir generando cargos mientras existan. Ninguna operación de retiro se ejecuta automáticamente: requiere la instrucción explícita del usuario.

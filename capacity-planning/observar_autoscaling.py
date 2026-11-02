@@ -7,9 +7,28 @@ import json
 from pathlib import Path
 import subprocess
 import time
+from urllib.request import Request, urlopen
+
+
+_TOKEN = {"value": None, "at": 0.0}
+
+
+def rest_get(args, label, path):
+    """gcloud 591 no incluye `compute autoscalers`; se lee por la API REST de Compute."""
+    try:
+        if time.monotonic() - _TOKEN["at"] > 1500 or not _TOKEN["value"]:
+            out = subprocess.run(["gcloud", "auth", "print-access-token"], text=True, capture_output=True, timeout=30, check=True)
+            _TOKEN.update(value=out.stdout.strip(), at=time.monotonic())
+        req = Request(f"https://compute.googleapis.com/compute/v1/projects/{args.project}/{path}", headers={"Authorization": "Bearer " + _TOKEN["value"]})
+        with urlopen(req, timeout=30) as response:
+            return label, json.load(response)
+    except Exception as error:
+        return label, {"error": str(error)}
 
 
 def collect(args, label, command):
+    if command and command[0] == "REST":
+        return rest_get(args, label, command[1])
     try:
         result = subprocess.run(["gcloud", *command, "--project", args.project, "--format=json"], text=True, capture_output=True, timeout=40)
         if result.returncode:
@@ -36,7 +55,7 @@ def main():
             for role in ["api", "worker"]:
                 queries.extend([
                     (role + "_instances", ["compute", "instance-groups", "managed", "list-instances", f"{args.prefix}-{role}-mig", "--zone", args.zone]),
-                    (role + "_autoscaler", ["compute", "autoscalers", "describe", f"{args.prefix}-{role}-autoscaler", "--zone", args.zone]),
+                    (role + "_autoscaler", ["REST", f"zones/{args.zone}/autoscalers/{args.prefix}-{role}-autoscaler"]),
                 ])
             queries.append(("backends", ["compute", "backend-services", "get-health", f"{args.prefix}-api-backend", "--global"]))
             values = dict(pool.map(lambda query: collect(args, *query), queries))

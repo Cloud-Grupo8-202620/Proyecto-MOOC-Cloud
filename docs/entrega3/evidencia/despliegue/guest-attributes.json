@@ -1,0 +1,39 @@
+[
+  {
+    "instance": "mooc-api-5zx8",
+    "attrs": {
+      "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc-images/api:b4d5568",
+      "ready-at": "2026-11-01T18:49:03Z",
+      "ready-uptime-sec": "59",
+      "status": "ready"
+    }
+  },
+  {
+    "instance": "mooc-frontend-fzjx",
+    "attrs": {
+      "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc-images/frontend:b4d5568",
+      "ready-at": "2026-11-01T18:48:59Z",
+      "ready-uptime-sec": "85",
+      "status": "ready"
+    }
+  },
+  {
+    "instance": "mooc-queue",
+    "attrs": {
+      "clamav": "ready",
+      "clamav-uptime-sec": "69",
+      "ready-at": "2026-11-01T18:36:44Z",
+      "ready-uptime-sec": "69",
+      "status": "ready"
+    }
+  },
+  {
+    "instance": "mooc-worker-n3st",
+    "attrs": {
+      "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc-images/worker:b4d5568",
+      "ready-at": "2026-11-01T18:50:22Z",
+      "ready-uptime-sec": "123",
+      "status": "ready"
+    }
+  }
+]

@@ -1,0 +1,5 @@
+T_RETIRO 2026-11-01T23:30:33Z
+Updated [https://www.googleapis.com/compute/v1/projects/proyecto-2-cloud-509714/zones/us-central1-a/instanceGroupManagers/mooc-worker-mig].
+PROJECT                  ZONE           INSTANCE          STATUS
+proyecto-2-cloud-509714  us-central1-a  mooc-worker-hbnf  SUCCESS
+Recursos en transcodificación en el worker retirado (ffmpeg activo): 1102 1107 1108 1109

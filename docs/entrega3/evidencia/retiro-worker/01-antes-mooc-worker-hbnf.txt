@@ -1,0 +1,22 @@
+
+
+# antes 2026-11-01T23:30:30Z
+   15  4:09   /usr/bin/ffmpeg -y -i /tmp/transcode-1102-3969719614/original.mp4 -c:v libx264 -preset veryfast -crf 23 -vf scale=w=-2:h='min(ih,720)' -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type v
+   79  3:48   /usr/bin/ffmpeg -y -i /tmp/transcode-1107-4142603804/original.mp4 -c:v libx264 -preset veryfast -crf 23 -vf scale=w=-2:h='min(ih,720)' -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type v
+  101  3:39   /usr/bin/ffmpeg -y -i /tmp/transcode-1108-4038494248/original.mp4 -c:v libx264 -preset veryfast -crf 23 -vf scale=w=-2:h='min(ih,720)' -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type v
+  102  3:39   /usr/bin/ffmpeg -y -i /tmp/transcode-1109-4171949476/original.mp4 -c:v libx264 -preset veryfast -crf 23 -vf scale=w=-2:h='min(ih,720)' -c:a aac -b:a 128k -hls_time 6 -hls_playlist_type v
+## logs
+2026/11/01 23:26:23 worker: mooc-worker-hbnf escuchando colas media/default (concurrency=4, apagado=1m0s)
+asynq: pid=1 2026/11/01 23:26:23.895381 INFO: Starting processing
+asynq: pid=1 2026/11/01 23:26:23.895943 INFO: Send signal TSTP to stop processing new tasks
+asynq: pid=1 2026/11/01 23:26:23.896043 INFO: Send signal TERM or INT to terminate the process
+2026/11/01 23:26:23 worker: métricas en :9101/metrics (scraping por Ops Agent)
+2026/11/01 23:26:24 worker: recurso 1105 limpio, scan ok
+2026/11/01 23:26:24 worker: recurso 1106 limpio, scan ok
+2026/11/01 23:26:24 worker: recurso 1107 limpio, scan ok
+2026/11/01 23:26:24 worker: recurso 1108 limpio, scan ok
+2026/11/01 23:26:24 worker: recurso 1109 limpio, scan ok
+2026/11/01 23:26:24 worker: recurso 1110 limpio, scan ok
+2026/11/01 23:26:44 worker: recurso 1105 HLS listo en 41b477e2-cd12-4e03-b980-af6596e5830e/index.m3u8
+2026/11/01 23:26:53 worker: recurso 1104 HLS listo en 8995ed0f-f9bd-4a2f-8a69-5fe3c12fdf11/index.m3u8
+2026/11/01 23:26:54 worker: recurso 1103 HLS listo en a979c1cd-7a86-4f34-9460-35e9614e60e0/index.m3u8

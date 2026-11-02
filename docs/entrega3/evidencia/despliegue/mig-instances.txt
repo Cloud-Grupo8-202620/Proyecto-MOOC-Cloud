@@ -1,0 +1,5 @@
+# UTC: 2026-11-01T18:51:35Z
+NAME           ZONE           STATUS   HEALTH_STATE  ACTION  INSTANCE_TEMPLATE                    VERSION_NAME  LAST_ERROR
+mooc-api-5zx8  us-central1-a  RUNNING  HEALTHY       NONE    mooc-api-20261101184456906000000003
+NAME              ZONE           STATUS   HEALTH_STATE  ACTION  INSTANCE_TEMPLATE                       VERSION_NAME  LAST_ERROR
+mooc-worker-n3st  us-central1-a  RUNNING  HEALTHY       NONE    mooc-worker-20261101184456906000000002

@@ -1,0 +1,5 @@
+mooc-worker-n3st 2026/11/01 23:25:05 worker: recurso 1102 limpio, scan ok
+mooc-worker-xk16 2026/11/01 23:34:43 worker: recurso 1108 HLS listo en 4040c038-e0e3-472e-bb67-a6a6a242cdcf/index.m3u8
+mooc-worker-xk16 2026/11/01 23:34:50 worker: recurso 1107 HLS listo en 5f5d1e27-bea5-461c-8ded-27fbb40383f7/index.m3u8
+mooc-worker-xk16 2026/11/01 23:39:17 worker: recurso 1102 HLS listo en 402db4e2-11bd-4d97-b548-b5bbedb98932/index.m3u8
+mooc-worker-xk16 2026/11/01 23:39:22 worker: recurso 1109 HLS listo en d3327c1d-f77c-40ab-918a-147e5aedc312/index.m3u8

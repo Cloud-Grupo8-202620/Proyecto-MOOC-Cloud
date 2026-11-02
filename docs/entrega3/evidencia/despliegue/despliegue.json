@@ -1,0 +1,33 @@
+{
+  "commit": "b4d556815b37aadc6480aa00f97c0b7e96f893a3",
+  "image_tag": "b4d5568",
+  "app_url": "https://136.68.131.0.sslip.io",
+  "lb_ip": "136.68.131.0",
+  "project": "proyecto-2-cloud-509714",
+  "region": "us-central1",
+  "zone": "us-central1-a",
+  "deployed_at_utc": "2026-11-01T18:51:46Z",
+  "api": {
+    "type": "e2-small",
+    "min": 1,
+    "max": 3,
+    "cpu_target": 0.6
+  },
+  "worker": {
+    "type": "e2-small",
+    "min": 1,
+    "max": 3,
+    "concurrency": 4,
+    "signal": "backlog single_instance_assignment=4"
+  },
+  "queue": "e2-medium",
+  "db": "db-f1-micro PG17",
+  "loadgen": "e2-highcpu-4",
+  "cooldown_sec": 180,
+  "startup_ready_sec": {
+    "api": 59,
+    "worker": 123,
+    "frontend": 85,
+    "queue": 69
+  }
+}

@@ -1,0 +1,4 @@
+TIMESTAMP                    METHOD_NAME
+2026-11-01T23:14:31.681654Z  v1.compute.instances.update
+2026-11-01T23:13:47.903061Z  v1.compute.instances.update
+2026-11-01T23:12:21.685559Z  compute.instances.repair.recreateInstance

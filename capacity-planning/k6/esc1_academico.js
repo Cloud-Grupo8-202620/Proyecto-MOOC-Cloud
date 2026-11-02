@@ -151,8 +151,9 @@ function prematricular(estudiantes, cursos, porEstudiante) {
     for (let k = 0; k < porEstudiante; k += 1) {
       // El paso 7 es coprimo con el número habitual de cursos, así que no
       // repite dentro de la misma student'se y reparte sin solapar.
-      const c = cursos[(i * 7 + k) % cursos.length];
-      e.cursos.push(c);
+      const ci = (i * 7 + k) % cursos.length;
+      const c = cursos[ci];
+      e.cursos.push(ci);
       for (const q of c.quizzes) e.quizzes.push(q);
       requests.push({
         method: 'POST',
@@ -225,7 +226,7 @@ export function setup() {
 export function actividadAcademica(data) {
   const est = estudianteDe(data, exec.vu.idInInstance);
   const estCursos = est.cursos;
-  const curso = estCursos[exec.vu.iterationInInstance % estCursos.length];
+  const curso = data.cursos[estCursos[exec.vu.iterationInInstance % estCursos.length]];
   const op = eligeOperacion();
   const t0 = Date.now();
 

@@ -1,0 +1,41 @@
+[
+  {
+    "name": "mooc-api-autoscaler",
+    "status": "ACTIVE",
+    "recommendedSize": 1,
+    "autoscalingPolicy": {
+      "minNumReplicas": 1,
+      "maxNumReplicas": 3,
+      "coolDownPeriodSec": 180,
+      "cpuUtilization": {
+        "utilizationTarget": 0.6,
+        "predictiveMethod": "NONE"
+      },
+      "mode": "ON"
+    }
+  },
+  {
+    "name": "mooc-worker-autoscaler",
+    "status": "ACTIVE",
+    "recommendedSize": 1,
+    "autoscalingPolicy": {
+      "minNumReplicas": 1,
+      "maxNumReplicas": 3,
+      "scaleInControl": {
+        "maxScaledInReplicas": {
+          "fixed": 1
+        },
+        "timeWindowSec": 600
+      },
+      "coolDownPeriodSec": 180,
+      "customMetricUtilizations": [
+        {
+          "metric": "custom.googleapis.com/mooc/queue/backlog",
+          "filter": "resource.type = \"global\" AND metric.labels.queue = \"media\"",
+          "singleInstanceAssignment": 4
+        }
+      ],
+      "mode": "ON"
+    }
+  }
+]

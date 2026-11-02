@@ -47,7 +47,7 @@ const NEGOCIO = {
   // 403 = el estudiante no está matriculado en el curso del quiz. Con la
   // prematricular no debería ocurrir, pero si ocurre es una regla de negocio.
   [OPS.quiz]: [201, 200, 409, 403],
-  [OPS.contenido]: [200, 403, 404],
+  [OPS.contenido]: [200, 403, 404, 409],
   [OPS.heartbeat]: [200, 400],
 };
 

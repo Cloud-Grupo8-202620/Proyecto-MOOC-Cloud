@@ -2,7 +2,7 @@
 
 Go API + worker asynq, React/Vite, Redis, ClamAV, PostgreSQL y almacenamiento de objetos. La infraestructura preparada usa dos MIG independientes de 1–3 instancias, API por CPU y workers por backlog, balanceador externo HTTPS y frontend fijo. Redis/ClamAV quedan fuera de los grupos.
 
-**Estado al 2026-11-01:** desplegado en el proyecto `proyecto-2-cloud-509714` con la imagen `b4d5568` y sirviendo en <https://136.68.131.0.sslip.io>; certificado administrado ACTIVE y `/health` 200. `mooc-entrega3` quedó como banco de pruebas, no es el entorno evaluado. La calidad tiene línea base sobre el commit `84657d6` ([run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569)). Pendientes: mediciones de carga, ciclos 3A/3B, evidencias de integridad, video y tag de entrega.
+**Estado al 2026-11-01:** desplegado en el proyecto `proyecto-2-cloud-509714` con la imagen `b4d5568` y sirviendo en <https://136.68.131.0.sslip.io>; certificado administrado ACTIVE y `/health` 200. La calidad tiene línea base sobre el commit `84657d6` ([run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569)). Pendientes: mediciones de carga, ciclos 3A/3B, evidencias de integridad, video y tag de entrega.
 
 ## Documentación de entrega 3
 

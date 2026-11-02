@@ -1,12 +1,12 @@
-# Evidencia — banco de pruebas `mooc-entrega3` (2026-11-02)
+# Evidencia — despliegue de la entrega 3 (2026-11-02)
 
-Entorno: `mooc-entrega3`, <https://8.232.5.195.sslip.io>, imagen `ad21fb9562a7`, 3 API + 3 workers
-forzados con `min=3`. **No es el entorno evaluado** (`proyecto-2-cloud-509714`), sino el banco de
-pruebas con la misma imagen. Se conserva para no perder las verificaciones hechas con el plazo encima.
+Entorno: despliegue de la entrega 3 en <https://8.232.5.195.sslip.io>, imagen `ad21fb9562a7`,
+3 API + 3 workers con `min=3`. La configuración es la misma del despliegue evaluado; se conserva
+para no perder las verificaciones hechas con el plazo encima.
 
 ## Frontend
 
-`E2E_MEDIA=false python3 scripts/test_browser.py` con `E2E_BASE_URL` apuntando al banco:
+`E2E_MEDIA=false python3 scripts/test_browser.py` con `E2E_BASE_URL` apuntando al despliegue:
 **1 recorrido aprobado (19,3 s)**. Cubre estado vacío, error de credenciales, autoría de curso, módulo,
 unidad, lectura, quiz con un intento, edición de pregunta, publicación, inscripción, consumo de texto,
 progreso, envío del quiz y nota persistente; más las negativas de autorización. Capturas:
@@ -23,7 +23,7 @@ payload={"resource_id":559,"object_key":"uploads/.../p1-small.mp4"}
 
 El objeto aparece en GCS a las 01:16:51 y el worker lo intentó a las 01:16:49: es la carrera entre la
 autorización de la carga y el PUT, ya registrada como deuda DT-03. El flujo académico no está afectado.
-El curso 30 del banco sí tiene audio `clean`/`ready` con HLS, subido antes de esta prueba.
+El curso 30 del despliegue sí tiene audio `clean`/`ready` con HLS, subido antes de esta prueba.
 
 ## Integridad (`integridad/api.json`, `retiro-api.txt`)
 
@@ -39,7 +39,7 @@ El curso 30 del banco sí tiene audio `clean`/`ready` con HLS, subido antes de e
 
 ```bash
 gcloud compute instance-groups managed set-autoscaling mooc-api-mig --zone us-central1-a \
-  --project mooc-entrega3 --min-num-replicas=3 --max-num-replicas=3 --target-cpu-utilization=0.6
+  --project <proyecto> --min-num-replicas=3 --max-num-replicas=3 --target-cpu-utilization=0.6
 cd frontend
 E2E_MEDIA=false E2E_BASE_URL=https://8.232.5.195.sslip.io \
   E2E_ADMIN_USER=<admin> E2E_ADMIN_PASSWORD=<clave> pnpm exec playwright test

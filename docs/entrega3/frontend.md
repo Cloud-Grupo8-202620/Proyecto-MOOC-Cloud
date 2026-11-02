@@ -4,20 +4,20 @@
 
 Implementación React integrada con la API, sin datos simulados. El entorno cloud está desplegado en `proyecto-2-cloud-509714` (<https://136.68.131.0.sslip.io>) con la imagen `b4d5568`. Estado: recorrido académico **verificado en el despliegue** ([evidencia del 2026-11-02](evidencia/2026-11-02/README.md), Playwright 19,3 s con capturas de profesor, estudiante y móvil). El recorrido con medios quedó bloqueado por la carrera entre la autorización de la carga y el PUT, documentada en esa evidencia; la verificación local no lo sustituye.
 
-| Rol / flujo | Ruta | Verificación prevista |
+| Rol / flujo | Ruta | Evidencia |
 |---|---|---|
-| Ambos: entrar y salir | `/ingresar`, menú de cuenta | Login real; logout revoca sesión |
-| Profesor: sus cursos | `/ensenar` | Incluye borradores propios; no cursos de otro profesor |
-| Profesor: crear y editar | `/ensenar`, `/ensenar/:id` | Título, descripción, módulos y unidades persistidos |
-| Profesor: recursos y archivos | `/ensenar/:id/recursos/:resourceId` | Edición, PUT directo al almacenamiento, estado de escaneo/procesamiento |
-| Profesor: quiz | Misma ruta de recurso | Reglas, creación y edición de preguntas; claves solo para autor |
-| Profesor: publicación | `/ensenar/:id` | Validación completa y errores; publicación inmutable; aparición en catálogo |
-| Estudiante: catálogo y detalle | `/`, `/cursos/:id` | Curso publicado por el profesor del recorrido |
-| Estudiante: inscripción y cursos | `/cursos/:id`, `/mis-cursos` | Inscripción real y acceso al contenido |
-| Estudiante: consumo | `/cursos/:id/recursos/:resourceId` | Texto, enlace/documento, imagen y HLS; no servir archivos pendientes |
-| Estudiante: progreso | Recurso y `/cursos/:id` | Heartbeats reales; resumen calculado por el servidor |
-| Estudiante: quiz y nota | Ruta del recurso quiz | Guardar, retomar, enviar y consultar resultado persistido |
-| Autorización | API y rutas protegidas | Estudiante no crea cursos; profesor no modifica cursos ajenos |
+| Ambos: entrar y salir | `/ingresar`, menú de cuenta | Login real y cierre con revocación en el [recorrido del 2026-11-02](evidencia/2026-11-02/frontend/e2e.log) |
+| Profesor: sus cursos | `/ensenar` | `/ensenar` lista solo los del autor; edición ajena rechazada por API en el mismo [recorrido](evidencia/2026-11-02/frontend/e2e.log) |
+| Profesor: crear y editar | `/ensenar`, `/ensenar/:id` | Curso, módulo y unidad creados y persistidos ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Profesor: recursos y archivos | `/ensenar/:id/recursos/:resourceId` | Creación y edición sí; la carga de archivos queda bloqueada por la carrera de DT-03, documentada en la [evidencia](evidencia/2026-11-02/README.md) |
+| Profesor: quiz | Misma ruta de recurso | Quiz creado y pregunta editada, persistente tras recargar ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Profesor: publicación | `/ensenar/:id` | Validación y publicación desde la interfaz; el curso aparece en el catálogo ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Estudiante: catálogo y detalle | `/`, `/cursos/:id` | Curso publicado encontrado y abierto por el estudiante ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Estudiante: inscripción y cursos | `/cursos/:id`, `/mis-cursos` | Inscripción real y acceso al contenido ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Estudiante: consumo | `/cursos/:id/recursos/:resourceId` | Texto verificado; video, PDF, imagen y audio bloqueados por DT-03 ([evidencia](evidencia/2026-11-02/README.md)) |
+| Estudiante: progreso | Recurso y `/cursos/:id` | Heartbeat y resumen del servidor ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Estudiante: quiz y nota | Ruta del recurso quiz | Envío, nota persistida tras recargar y un solo intento ([e2e](evidencia/2026-11-02/frontend/e2e.log)) |
+| Autorización | API y rutas protegidas | Admin anónimo, escalamiento de rol y edición ajena rechazados en el mismo [recorrido](evidencia/2026-11-02/frontend/e2e.log) |
 
 ## Resultado local del 2026-11-01
 

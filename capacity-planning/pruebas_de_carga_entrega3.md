@@ -192,6 +192,17 @@ Lo que sigue no está medido; se deduce de los datos anteriores con supuestos ex
 
 Hay un límite que la proyección no cubre: el máximo del grupo es 3 por la cuota de 16 vCPU. Más allá habría que pedir cuota o usar máquinas más grandes.
 
+## Costo del cambio
+
+El detalle y las fuentes de precio están en [costos.md](../docs/entrega3/costos.md). Con precios de lista de `us-central1` y la configuración medida:
+
+- mínimo (1 API + 1 worker + frontend + cola): **0,15096 USD/h ≈ 110,20 USD/mes**;
+- máximo (3 API + 3 workers): **0,24001 USD/h ≈ 175,21 USD/mes**; cada instancia extra cuesta 0,0223 USD/h, unos 16,25 USD/mes;
+- corrida 3A (34 min): entre 0,09 y 0,14 USD; corrida 3B (40 min): entre 0,10 y 0,16 USD;
+- consumo observado del despliegue: **≈1,95 USD en 7,12 h**, calculado desde las vidas de las instancias en Cloud Audit Logs e incluyendo el generador (no hay exportación de Billing a BigQuery).
+
+El costo de la elasticidad no está en las VM mientras hay carga, sino en el tiempo que tardan en retirarse. El control de 3B retira una instancia cada 10 minutos, así que tras el drenaje el grupo mantiene 2–3 workers durante 17–34 minutos; a 0,0223 USD/h por worker ese retraso cuesta centavos (≈0,01 USD), pero es el precio de no retirar máquinas con trabajo a medias.
+
 ## Conclusiones
 
 Las dos mitades de la plataforma escalan por separado y por la señal que les corresponde. La API sube de 1 a 3 instancias cuando la CPU cruza el objetivo y las tres atienden el mismo caudal; los workers suben cuando el backlog supera 4 por instancia y reducen una instancia cada 10 minutos cuando la cola se vacía. Ambos grupos volvieron al mínimo sin intervención manual. Elasticidad tiene un precio medible: entre el inicio de la carga y la primera petición o trabajo atendido por una máquina nueva pasan unos 5 minutos en los dos grupos, y la vuelta al mínimo tarda entre 26 y 34 minutos, dominada por los controles de estabilización y retiro.

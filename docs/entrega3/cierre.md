@@ -2,20 +2,20 @@
 
 Corte: 2026-11-01. La implementación y preparación local no equivalen a una entrega cloud verificada. Completar las celdas pendientes con enlaces a evidencia real.
 
-| Requisito | Preparación en repositorio | Evidencia final pendiente |
-|---|---|---|
-| MIG independientes, 1–3, cola fuera | Terraform + 17 pruebas de configuración | Plan vigente, apply autorizado, inventario RUNNING |
-| Balanceador HTTPS | Rutas API/frontend, redirección y certificado | Certificado ACTIVE, backends HEALTHY, URL pública |
-| Arranque autónomo y salud | startup/shutdown, guest attributes, autohealing | Reinicio/sustitución y tiempos observados |
-| Flujos profesor y estudiante | UI conectada, prueba Playwright | Recorrido sobre imagen final cloud |
-| Sesiones, consistencia y concurrencia | Redis, migraciones con lock, integración | Sesión entre réplicas, integridad bajo carga |
-| Independencia del escalado | CPU API; backlog workers | Ciclos 3A y 3B con aumento y reducción automáticos |
-| Sin pérdida ni efectos duplicados | TaskIDs, estado compartido, reconciliación | Retirada de worker ocupado y trazabilidad por tarea |
-| Repetir escenarios 1 y 2 | k6/corpus e informe E2 disponibles | Corridas E3 repetidas y comparación cuantitativa |
-| Métricas y gráficas | Observador MIG + exportador + gráfica | Series CPU/memoria/DB/cola/errores y tiempos |
-| Calidad | Workflow Sonar efímero y exportación completa | [Run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569) sobre `84657d6`, 0 hallazgos, reporte en [evidencia](evidencia/calidad-84657d6/README.md) |
-| Arquitectura y costos | Documentos y fuentes Mermaid | Capturas/consumo real y ajuste tras desplegar |
-| Sustentación y entrega | Guion abajo, README enlazado | Video, revisión con Diego, merge y release/tag |
+| Requisito | Evidencia |
+|---|---|
+| MIG independientes, 1–3, cola fuera | Desplegado en `proyecto-2-cloud-509714`; tres MIG y cola en VM aparte ([arquitectura](arquitectura.md)) y ciclos observados en el [informe de capacidad](../../capacity-planning/pruebas_de_carga_entrega3.md) |
+| Balanceador HTTPS | <https://136.68.131.0.sslip.io>, certificado administrado **ACTIVE** y `/health` 200 ([verificación](evidencia/2026-11-02/README.md)) |
+| Arranque autónomo y salud | Tiempos medidos en el informe (API 59–72 s, worker 56–123 s) y retiro de API con reparación del MIG ([integridad](evidencia/2026-11-02/integridad/retiro-api.txt)) |
+| Flujos profesor y estudiante | Recorrido académico completo ([e2e](evidencia/2026-11-02/frontend/e2e.log), capturas en la misma carpeta); medios bloqueados por DT-03 |
+| Sesiones, consistencia y concurrencia | 30/30 lecturas con el mismo token y reparto 11/11/8 entre réplicas; doble envío con una sola nota ([api.json](evidencia/2026-11-02/integridad/api.json)) |
+| Independencia del escalado | 3A y 3B con creación y retorno al mínimo ([informe](../../capacity-planning/pruebas_de_carga_entrega3.md)), figuras `e3-03` y `e3-04` |
+| Sin pérdida ni efectos duplicados | Retiro manual de un worker con cuatro transcodificaciones y reconciliación 65/63/2 ([informe](../../capacity-planning/pruebas_de_carga_entrega3.md)) |
+| Repetir escenarios 1 y 2 | Tabla comparativa E2/E3 en el [informe](../../capacity-planning/pruebas_de_carga_entrega3.md) |
+| Métricas y gráficas | Figuras `e3-01` a `e3-05` en `capacity-planning/graficas/` y resultados en `capacity-planning/results/entrega3/` |
+| Calidad | [Run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569) sobre `84657d6`, 0 hallazgos, reporte en [evidencia](evidencia/calidad-84657d6/README.md) |
+| Arquitectura y costos | [costos.md](costos.md#consumo-observado-calculado) con estimación y consumo observado (≈1,95 USD en 7,12 h) |
+| Sustentación y entrega | **Pendiente**: video y tag/release `entrega-3` |
 
 ## Identificadores finales
 
@@ -26,6 +26,8 @@ Corte: 2026-11-01. La implementación y preparación local no equivalen a una en
 - `app_url`, `lb_ip`, certificado: <https://136.68.131.0.sslip.io>, `136.68.131.0`, administrado **ACTIVE**.
 - Directorio/archivo de evidencia de carga y de integridad: **pendiente**.
 - Video de entrega 3: **pendiente**; el enlace de entrega 2 no lo sustituye.
+- Evidencia funcional e integridad: [evidencia/2026-11-02](evidencia/2026-11-02/README.md).
+- Informe de capacidad: [pruebas_de_carga_entrega3.md](../../capacity-planning/pruebas_de_carga_entrega3.md).
 - Usuarios de prueba y credenciales: canal privado del curso.
 
 ## Guion de sustentación

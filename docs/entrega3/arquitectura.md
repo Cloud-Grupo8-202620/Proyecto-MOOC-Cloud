@@ -1,6 +1,6 @@
 # Entrega 3 — Arquitectura elástica IaaS
 
-Estado al 2026-11-01: **desplegado en `mooc-entrega3`** (us-central1-a) con la imagen `ad21fb9562a7` y sirviendo en <https://8.232.5.195.sslip.io>. Certificado administrado ACTIVE, `/health` 200 y los tres MIG creados. Arranque medido en el primer despliegue: API 53 s y worker 68 s desde el encendido del kernel. Las mediciones de carga y las verificaciones de integridad siguen pendientes; este documento describe la configuración desplegada, no resultados experimentales.
+Estado al 2026-11-01: **desplegado en `proyecto-2-cloud-509714`** (us-central1-a) con la imagen `b4d5568` y sirviendo en <https://136.68.131.0.sslip.io>. Certificado administrado ACTIVE, `/health` 200 y los tres MIG con autoscaling activo. Arranque medido en instancias creadas por el autoscaler: API 72 s y worker 56 s desde el encendido del kernel. Las mediciones de carga y las verificaciones de integridad siguen pendientes; este documento describe la configuración desplegada, no resultados experimentales.
 
 ## Componentes
 
@@ -25,7 +25,7 @@ La API conserva el monolito modular. Redis aloja sesiones revocables y la cola `
 ```mermaid
 flowchart TB
   Internet -->|443 HTTPS; 80 redirige| LB[Balanceador global EXTERNAL_MANAGED]
-  subgraph GCP[mooc-entrega3 · us-central1 · us-central1-a]
+  subgraph GCP[proyecto-2-cloud-509714 · us-central1 · us-central1-a]
     LB -->|/api, /api/*, /health, /openapi.json| API[MIG API · 1–3 e2-small]
     LB -->|otras rutas| FE[MIG frontend · 1 e2-small]
     API --> Q[mooc-queue · e2-medium · Redis + ClamAV + Mailpit]
@@ -41,11 +41,11 @@ flowchart TB
   end
 ```
 
-Fuentes: [componentes.mmd](diagramas/componentes.mmd) y [despliegue.mmd](diagramas/despliegue.mmd); GitHub renderiza Mermaid sin imágenes intermedias. Valores confirmados con los outputs del despliegue: `app_url = https://8.232.5.195.sslip.io`, Cloud SQL en `172.23.0.3`, cola en `10.10.1.30` y buckets `mooc-8b0f70-{originals,hls,public}`.
+Fuentes: [componentes.mmd](diagramas/componentes.mmd) y [despliegue.mmd](diagramas/despliegue.mmd); GitHub renderiza Mermaid sin imágenes intermedias. Valores confirmados con los outputs y la metadata del despliegue: `app_url = https://136.68.131.0.sslip.io`, Cloud SQL en `10.86.0.3`, cola en `10.10.1.30` y buckets `mooc-4012da-{originals,hls,public}`.
 
 ## Plantillas e inicialización
 
-Las plantillas definen SO, CPU/RAM mediante el tipo de máquina, discos, identidad y metadatos por rol. [variables.tf](../../scripts/IaC/variables.tf) es la fuente de valores predeterminados y [compute.tf](../../scripts/IaC/compute.tf) de la configuración efectiva. Los tres contenedores comparten una etiqueta inmutable de Artifact Registry, identificable por commit. El despliegue actual usa `ad21fb9562a7`, publicada desde el árbol de código evaluado por Sonar (`84657d6`); las imágenes anteriores no incluían las pantallas de esta revisión.
+Las plantillas definen SO, CPU/RAM mediante el tipo de máquina, discos, identidad y metadatos por rol. [variables.tf](../../scripts/IaC/variables.tf) es la fuente de valores predeterminados y [compute.tf](../../scripts/IaC/compute.tf) de la configuración efectiva. Los tres contenedores comparten una etiqueta inmutable de Artifact Registry, identificable por commit. El despliegue actual usa `b4d5568`; el commit evaluado por Sonar (`84657d6`) solo añade el `Dockerfile` y las pruebas, sin cambios de comportamiento de la aplicación.
 
 `startup.sh` instala Docker, obtiene secretos de Secret Manager, espera las dependencias, descarga la imagen e inicia el rol. Las migraciones se serializan con `pg_advisory_lock`. Registrar `mooc/status` y `mooc/ready-uptime-sec`: la disponibilidad del proceso se verifica antes de instalar Ops Agent. Probar también un reinicio de cada rol para comprobar que no duplica procesos.
 

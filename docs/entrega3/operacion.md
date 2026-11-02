@@ -4,7 +4,7 @@
 
 No ejecutar `apply`, publicación de imágenes, importación, borrado ni `destroy` sin permiso explícito del responsable en ese momento. Las lecturas y planes están permitidos. Trabajar en el directorio original `scripts/IaC`: el estado es local; no copiarlo a otro worktree.
 
-1. Trabajar en `mooc-entrega3` (`gcloud config set project mooc-entrega3`) y consultar
+1. Trabajar en `proyecto-2-cloud-509714` (`gcloud config set project proyecto-2-cloud-509714`) y consultar
    `gcloud compute instances list --filter='name~^mooc-'`.
 2. Si existen recursos `mooc-*` y falta tfstate, detenerse y mostrar el inventario. No importar ni recrear por cuenta propia.
 3. Comprobar identidad/proyecto, región y cuota, tfvars ignorado, imagen final y ausencia de cambios inesperados.
@@ -16,7 +16,7 @@ Solo si se reutiliza un proyecto con el repositorio ya existente hay que importa
 
 ```bash
 terraform import google_artifact_registry_repository.images \
-  projects/mooc-entrega3/locations/us-central1/repositories/mooc-images
+  projects/proyecto-2-cloud-509714/locations/us-central1/repositories/mooc-images
 ```
 
 No versionar tfvars, estado, plan, credenciales, tokens ni datasets con sesiones.

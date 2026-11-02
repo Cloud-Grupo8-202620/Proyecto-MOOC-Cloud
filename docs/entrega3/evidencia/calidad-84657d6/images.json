@@ -2,13 +2,13 @@
     {
         "Id": "sha256:aa0d41212704d1ed35f7ae3b49886b39f639590baf8020cdb191c2a2eb8f9eae",
         "RepoTags": [
-            "sonarqube:community"
+            "sonarqube@sha256:aa0d41212704d1ed35f7ae3b49886b39f639590baf8020cdb191c2a2eb8f9eae"
         ],
         "RepoDigests": [
             "sonarqube@sha256:aa0d41212704d1ed35f7ae3b49886b39f639590baf8020cdb191c2a2eb8f9eae"
         ],
         "Comment": "buildkit.dockerfile.v0",
-        "Created": "2026-10-27T00:36:19.257327596Z",
+        "Created": "2026-10-27T00:36:15.306174004Z",
         "Config": {
             "User": "sonarqube",
             "ExposedPorts": {
@@ -51,25 +51,24 @@
             },
             "StopSignal": "SIGINT"
         },
-        "Architecture": "arm64",
-        "Variant": "v8",
+        "Architecture": "amd64",
         "Os": "linux",
-        "Size": 1090778064,
+        "Size": 1091497072,
         "RootFS": {
             "Type": "layers",
             "Layers": [
-                "sha256:107ffca6dcd3fc87a7bed8c062f5ddc0d6a4b107205c82c0b49efdb7c1aff967",
-                "sha256:d8b2a30d7a24a8e1fdcadee35d5a3883aa37ebbfeb8a9ddae88f40ebd56a4956",
-                "sha256:6e9dc9d333a1358412bea795b50c505939c6257ef5820d089b3fe0a193163a3e",
+                "sha256:bec87777bc2fb2edcdf9af11df1531469e7df911309c1413082b18fcb8610278",
+                "sha256:5c9985501771d4a8bb1b47acfdd1962cd3b50d99e38b23df2004719c3861bd28",
+                "sha256:2526636d0a325f5c9f30690a8fb5e0b82df6723a6b825747d4de5fbc8510f2e6",
                 "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
-                "sha256:1f7172dd4ab55c9b60f2d3bd4f06680cc55a784381b7d5d1ca71b7a59dc3b1a8",
-                "sha256:3c570fa31a2954d8fa4446864dd852d50b97f3895ad70f06edc7ecd0302e1526",
-                "sha256:6b7893935df7bd356f919f13292228441fb70b89464de510eef978e19ff43c31",
+                "sha256:db0da0c39f66d4578f908cb90e17f37f8af585b423760bc6f8641508f80daf4b",
+                "sha256:78f2900adf88ec6758415d5ede7fe95aad9f67143d9461510a7a07eeb7ae01f3",
+                "sha256:f573eaba481f6e687631de4e321df40c0700ce1080e56f5926cc9738be8b4a0a",
                 "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
             ]
         },
         "Metadata": {
-            "LastTagTime": "2026-10-29T21:24:33.412273172Z"
+            "LastTagTime": "2026-11-01T19:20:19.534739884Z"
         },
         "Descriptor": {
             "mediaType": "application/vnd.oci.image.index.v1+json",
@@ -87,7 +86,7 @@
     {
         "Id": "sha256:47956b669bf486bdad919e1cbd0533223515aa0b6d1d31763e5a3754942df6d7",
         "RepoTags": [
-            "sonarsource/sonar-scanner-cli:latest"
+            "sonarsource/sonar-scanner-cli@sha256:47956b669bf486bdad919e1cbd0533223515aa0b6d1d31763e5a3754942df6d7"
         ],
         "RepoDigests": [
             "sonarsource/sonar-scanner-cli@sha256:47956b669bf486bdad919e1cbd0533223515aa0b6d1d31763e5a3754942df6d7"
@@ -136,7 +135,7 @@
             ]
         },
         "Metadata": {
-            "LastTagTime": "2026-10-29T21:32:53.696370001Z"
+            "LastTagTime": "2026-11-01T19:21:34.016241009Z"
         },
         "Descriptor": {
             "mediaType": "application/vnd.docker.distribution.manifest.v2+json",

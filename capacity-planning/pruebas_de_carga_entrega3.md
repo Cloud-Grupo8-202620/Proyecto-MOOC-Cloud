@@ -23,7 +23,7 @@ task media:generate
 task seed:all
 ```
 
-El generador debe tener capacidad suficiente. `mooc-loadgen` es opcional y no está aprovisionado: crearlo requiere autorización; si se usa el portátil, registrar ese límite y no atribuir su saturación a la aplicación. Los seeds y datasets contienen sesiones: mantenerlos privados. No publicar logs de Task que impriman contraseñas de parámetros antiguos.
+El generador debe tener capacidad suficiente. `mooc-loadgen` es opcional y no está aprovisionado: crearlo requiere autorización; si se usa el portátil, registrar ese límite y no atribuir su saturación a la aplicación. Los seeds escriben `datasets/*.json` con sesiones del entorno medido: **no se versionan** (están en `.gitignore`) y hay que regenerarlos con `task seed:all` después de cada despliegue. No publicar logs de Task que impriman contraseñas de parámetros antiguos.
 
 ## Escenarios 1 y 2: repetición comparable
 
@@ -41,7 +41,7 @@ Repetir actividad académica (login separado del tráfico de lectura/escritura),
 
 ```bash
 export RUN_ID=3a-r1
-python3 observar_autoscaling.py --project proyecto-2-cloud-509714 \
+python3 observar_autoscaling.py --project mooc-entrega3 \
   --duration 2700 --output "results/entrega3/$RUN_ID/autoscaling.jsonl"
 # En otra terminal con el mismo RUN_ID y credenciales:
 task esc3:api
@@ -69,7 +69,7 @@ El manifiesto correlaciona cargas aceptadas con recurso, objeto y tarea. La reco
 El observador hace solo lecturas de MIG, autoscaler y salud del LB cada 30 s; conserva errores y duración de la consulta. Exportar Cloud Monitoring al terminar (esperar la latencia de ingestión):
 
 ```bash
-python3 exportar_prometheus.py --project proyecto-2-cloud-509714 \
+python3 exportar_prometheus.py --project mooc-entrega3 \
   --inicio "$START_UTC" --fin "$END_UTC" --nombre "$RUN_ID" \
   --salida "results/entrega3/$RUN_ID/monitoring"
 python3 -m pip install -r requirements-entrega3.txt

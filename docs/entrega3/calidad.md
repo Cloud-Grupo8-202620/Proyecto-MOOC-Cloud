@@ -2,6 +2,34 @@
 
 No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuración queda lista para GitHub Actions sin contratar servicios ni guardar tokens: el job `quality` levanta SonarQube Community dentro del runner, cambia la contraseña inicial, genera una credencial efímera, analiza y exporta el resultado antes de retirar el servidor. No aprovisiona GCP. El historial persistente son los artefactos de Actions, no la base de datos efímera.
 
+## Reporte del commit evaluado
+
+| Campo | Valor |
+|---|---|
+| Ejecución | [run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569) |
+| Commit | `84657d63c11e488f68fb736d9278d73963256879` (`dirty=false`) |
+| Artefacto | `quality-84657d63c11e488f68fb736d9278d73963256879` |
+| Copia en el repositorio | [evidencia/calidad-84657d6](evidencia/calidad-84657d6/README.md) |
+| Fecha UTC | 2026-11-01T19:22:08Z |
+| Servidor | SonarQube Community 26.10.0.133078 |
+
+| Indicador | Medido | Umbral |
+|---|---:|---|
+| Líneas de código analizadas | 10.959 (`go=5588; ts=5166; css=171; docker=34`) | — |
+| Duplicación | 0,5% | ≤ 20% |
+| Mantenibilidad | A (`sqale_rating=1.0`) | A, B o C |
+| Deuda técnica estimada | 0 minutos | registrar e interpretar |
+| Bugs / vulnerabilidades / code smells | 0 / 0 / 0 | — |
+| Hallazgos abiertos (`issues.json`) | 0 | Major+ con motivo de aplazamiento |
+| Security hotspots | 0 | revisión humana |
+| Cobertura | 5,7% | informativa |
+
+`dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. El diagnóstico local previo (`pipeline: local`, `dirty=true`) no se usa como evidencia final y no se
+conserva en el repositorio. Este análisis incluye el `frontend/Dockerfile` corregido y las
+pruebas de navegador ampliadas del commit `84657d6`; los commits posteriores son solo documentación. Si se
+modifica código de aplicación, repetir el job `quality` sobre el commit final antes de cerrar. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
+entrega lo verifica `scripts/quality/sonar.py` sobre las métricas totales, no el gate estándar.
+
 ## Ejecutar y conservar
 
 1. Subir el commit a la rama del PR y abrir **Actions → Verificación entrega 3**. Se ejecuta con push, pull request o Run workflow.

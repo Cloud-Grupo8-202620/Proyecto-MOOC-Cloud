@@ -2,6 +2,17 @@ import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
+// Rutas relativas a frontend/, que es el cwd de Playwright. Los medios grandes
+// se sobrescriben por entorno para poder usar un fixture sintético en CI.
+const videoPath =
+  process.env.E2E_VIDEO_PATH ??
+  path.resolve(process.cwd(), "../capacity-planning/media/p1-small.mp4");
+const audioPath =
+  process.env.E2E_AUDIO_PATH ??
+  path.resolve(process.cwd(), "../capacity-planning/media/a1-audio.m4a");
+const pdfPath = path.resolve(process.cwd(), "e2e/fixtures/lectura.pdf");
+const imagePath = path.resolve(process.cwd(), "e2e/fixtures/pixel.png");
+
 // Solo las cuentas se preparan por API. Toda la autoría, publicación e inscripción
 // del recorrido se ejecuta desde la interfaz, como exige el enunciado.
 test("profesor publica y estudiante consume, registra progreso y presenta quiz", async ({
@@ -51,8 +62,19 @@ test("profesor publica y estudiante consume, registra progreso y presenta quiz",
     await page.getByRole("button", { name: "Ingresar", exact: true }).click();
     await expect(page).not.toHaveURL(/ingresar/);
   }
+  // Estado de error: la interfaz muestra el mensaje del servidor y no navega.
+  await page.goto("/ingresar");
+  await page.getByLabel("Usuario", { exact: true }).fill(professor);
+  await page
+    .getByLabel("Contraseña", { exact: true })
+    .fill(`${password}-incorrecta`);
+  await page.getByRole("button", { name: "Ingresar", exact: true }).click();
+  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(page).toHaveURL(/ingresar/);
   await login(professor);
   await page.goto("/ensenar");
+  // Estado vacío: el profesor recién creado no tiene cursos todavía.
+  await expect(page.getByText("Tu primer curso empieza aquí")).toBeVisible();
   await page.getByRole("button", { name: "Crear curso", exact: true }).click();
   await page
     .getByLabel("Título", { exact: true })
@@ -109,6 +131,8 @@ test("profesor publica y estudiante consume, registra progreso y presenta quiz",
   await addResource("text", "Lectura inicial");
   await addResource("quiz", "Quiz inicial");
   await page.getByRole("link", { name: /Quiz inicial/ }).click();
+  // Un solo intento permite comprobar después el límite desde la interfaz.
+  await page.getByLabel("Intentos permitidos").fill("1");
   await page.getByRole("button", { name: "Crear quiz", exact: true }).click();
   await page
     .getByLabel("Pregunta", { exact: true })
@@ -120,26 +144,53 @@ test("profesor publica y estudiante consume, registra progreso y presenta quiz",
     .getByRole("button", { name: "Agregar pregunta", exact: true })
     .click();
   await expect(page.getByText("1. ¿Qué comparten los workers?")).toBeVisible();
+  // Edición de una pregunta existente: se cambia el enunciado y se recarga
+  // para comprobar que quedó persistido, no solo en el estado del componente.
+  const pregunta = page
+    .locator("details")
+    .filter({ hasText: "1. ¿Qué comparten los workers?" });
+  await pregunta.locator("summary").click();
+  const formularioPregunta = pregunta.locator("form");
+  const enunciado = formularioPregunta.locator('textarea[name="prompt"]');
+  await expect(enunciado).toBeVisible();
+  await enunciado.fill("¿Qué comparten los workers de la plataforma?");
+  await formularioPregunta
+    .getByRole("button", { name: "Guardar pregunta", exact: true })
+    .click();
+  await expect(
+    page.getByText("1. ¿Qué comparten los workers de la plataforma?"),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByText("1. ¿Qué comparten los workers de la plataforma?"),
+  ).toBeVisible();
   await page.getByRole("link", { name: /Volver al editor/ }).click();
-  if (process.env.E2E_MEDIA !== "false") {
-    await addResource("video", "Video inicial");
-    await page.getByRole("link", { name: /Video inicial/ }).click();
-    await page
-      .getByLabel("Archivo", { exact: true })
-      .setInputFiles(
-        process.env.E2E_VIDEO_PATH ??
-          path.resolve(
-            process.cwd(),
-            "../capacity-planning/media/p1-small.mp4",
-          ),
-      );
+  // Sube el archivo y espera a que la plataforma lo dé por disponible. El
+  // estado intermedio (Escaneando/Procesando) se actualiza cada 5 s y no se
+  // afirma aquí para no depender de lo rápido que termine ffmpeg.
+  async function upload(title: string, file: string) {
+    await page.getByRole("link", { name: new RegExp(title) }).click();
+    await page.getByLabel("Archivo", { exact: true }).setInputFiles(file);
     await page
       .getByRole("button", { name: "Subir archivo", exact: true })
       .click();
+    await expect(
+      page.getByText(/ya tiene una carga asociada/),
+    ).toBeVisible();
     await expect(page.getByText("Disponible", { exact: true })).toBeVisible({
-      timeout: 180_000,
+      timeout: 240_000,
     });
     await page.getByRole("link", { name: /Volver al editor/ }).click();
+  }
+  if (process.env.E2E_MEDIA !== "false") {
+    await addResource("video", "Video inicial");
+    await upload("Video inicial", videoPath);
+    await addResource("pdf", "Documento PDF");
+    await upload("Documento PDF", pdfPath);
+    await addResource("image", "Imagen del curso");
+    await upload("Imagen del curso", imagePath);
+    await addResource("audio", "Audio de la unidad");
+    await upload("Audio de la unidad", audioPath);
   }
   await page.getByRole("button", { name: "Revisar publicación" }).click();
   await expect(page.getByText("Todo listo para publicar.")).toBeVisible();
@@ -174,6 +225,39 @@ test("profesor publica y estudiante consume, registra progreso y presenta quiz",
       timeout: 30_000,
     });
     await page.getByRole("link", { name: /Volver al curso/ }).click();
+    // PDF: el botón abre el documento en otra pestaña y registra la apertura.
+    await page.getByRole("link", { name: "Documento PDF", exact: true }).click();
+    const [pdfTab] = await Promise.all([
+      page.context().waitForEvent("page"),
+      page.getByRole("link", { name: /Abrir documento PDF/ }).click(),
+    ]);
+    await pdfTab.close();
+    await expect(
+      page.getByText("Apertura registrada en tu progreso."),
+    ).toBeVisible();
+    await page.getByRole("link", { name: /Volver al curso/ }).click();
+    // Imagen: se muestra y registra la apertura al cargar.
+    await page
+      .getByRole("link", { name: "Imagen del curso", exact: true })
+      .click();
+    await expect(
+      page.getByRole("img", { name: "Imagen del curso" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Apertura registrada en tu progreso."),
+    ).toBeVisible();
+    await page.getByRole("link", { name: /Volver al curso/ }).click();
+    // Audio: el reproductor registra progreso igual que el video.
+    await page
+      .getByRole("link", { name: "Audio de la unidad", exact: true })
+      .click();
+    const audio = page.locator('video[aria-label="Reproductor de audio"]');
+    await expect(audio).toBeVisible();
+    await audio.evaluate((v: HTMLVideoElement) => v.play());
+    await expect(page.getByText(/Progreso guardado/)).toBeVisible({
+      timeout: 30_000,
+    });
+    await page.getByRole("link", { name: /Volver al curso/ }).click();
   }
   await page.getByRole("link", { name: "Quiz inicial", exact: true }).click();
   await page.getByRole("button", { name: "Comenzar quiz" }).click();
@@ -183,6 +267,10 @@ test("profesor publica y estudiante consume, registra progreso y presenta quiz",
     page.getByRole("heading", { name: "Resultado: 100 / 100" }),
   ).toBeVisible();
   await page.reload();
+  // Con un solo intento permitido, tras enviar ya no se puede empezar otro.
+  await expect(
+    page.getByRole("button", { name: "Intentos agotados" }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Ver resultado" }).click();
   await expect(
     page.getByRole("heading", { name: "Resultado: 100 / 100" }),

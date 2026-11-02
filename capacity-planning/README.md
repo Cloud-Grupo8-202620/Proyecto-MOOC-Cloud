@@ -110,6 +110,12 @@ vez de volver a crearlo. Eso importa porque `courses.slug` y
 valores ocupados. Para partir de cero hay que borrar también los volúmenes del
 entorno local (`docker compose down -v`).
 
+Los archivos de `datasets/` **no se versionan**: contienen tokens de sesión de un
+entorno concreto y dejan de ser válidos al cambiar de despliegue (por eso el
+corpus guarda `entorno` y `baseUrl`). Se regeneran con `task seed:all` contra el
+entorno que se va a medir; el repositorio conserva solo las tareas y los guiones
+que los producen.
+
 ## Qué hay en `k6/`
 
 | Guion | Qué mide |

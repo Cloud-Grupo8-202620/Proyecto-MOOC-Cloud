@@ -1,6 +1,6 @@
 # Costos — Entrega 3
 
-Estimación a precios de lista USD en us-central1, consultados el 2026-10-29. Mes de referencia de 730 horas; día de 24 horas. Sin descuentos, créditos, impuestos ni loadgen. **No es gasto observado ni una cotización completa.** Los importes variables se suman aparte.
+Estimación a precios de lista USD en us-central1, consultados el 2026-10-29. El entorno está desplegado en `mooc-entrega3` desde el 2026-11-01; el gasto observado sigue pendiente. Mes de referencia de 730 horas; día de 24 horas. Sin descuentos, créditos, impuestos ni loadgen. **No es gasto observado ni una cotización completa.** Los importes variables se suman aparte.
 
 ## Base fija: mínimo y máximo configurados
 
@@ -26,6 +26,52 @@ Fórmula reproducible para n API y n workers:
 `USD/h = (2n+1)×0,016752855 + 0,033505710 + (2n+2)×30×0,000136986 + 0,0105 + 20×0,000232877 + 0,025 + (2n+2)×0,0014 + 0,005`.
 
 El costo real de una corrida elástica se integra por tiempo en cada tamaño; no se multiplica toda la corrida por el máximo si solo se alcanzó durante parte de ella.
+
+## Costo por configuración y marginal
+
+Aplicando la fórmula con las tarifas de la tabla anterior:
+
+| Configuración | USD/h | USD/día | USD/mes (730 h) |
+|---|---:|---:|---:|
+| 1 API + 1 worker (mínimo) | 0,15096 | 3,62 | 110,20 |
+| 3 API + 1 worker | 0,19548 | 4,69 | 142,70 |
+| 1 API + 3 workers | 0,19548 | 4,69 | 142,70 |
+| 3 API + 3 workers (máximo) | 0,24001 | 5,76 | 175,21 |
+
+Cada instancia adicional —API o worker— cuesta **0,022262 USD/h**, es decir 0,53 USD/día o 16,25 USD/mes
+(e2-small + disco de 30 GiB + una VM más en NAT). Pasar de una a tres instancias en ambas capas sube el
+costo mensual un 59%; la mayor parte del piso (balanceador, Cloud SQL y la VM de cola) no depende del
+autoscaling.
+
+## Costo de las corridas
+
+| Corrida | Duración | Costo mínimo | Costo al máximo |
+|---|---:|---:|---:|
+| 3A, ciclo de API | 34 min | 0,09 USD | 0,14 USD |
+| 3B, ciclo de workers | 40 min | 0,10 USD | 0,16 USD |
+| Escenarios 1 y 2 completos | ~3 h | 0,45 USD | 0,72 USD |
+| Día completo de pruebas al máximo | 8 h | — | 1,92 USD |
+
+La diferencia entre el mínimo y el máximo en una corrida típica es de centavos: el experimento no es la
+partida cara. Lo es el tiempo encendido. Tres semanas de laboratorio al mínimo (504 h) cuestan **≈76 USD**;
+añadir ocho horas de pruebas al máximo suma **0,71 USD**.
+
+## Consumo variable cuantificado (referencia)
+
+Cifras de partida para completar la tabla de gasto observado; las de almacenamiento y tráfico dependen del
+corpus que use la corrida.
+
+| Concepto | Dato o supuesto | Costo |
+|---|---|---:|
+| Artifact Registry | 0,547 GiB en 47 versiones (medido el 2026-11-01) | ~0,005 USD/mes (0,5 GiB gratis) |
+| Cloud Storage, corpus | 0,5–2 GiB de originales y HLS | 0,01–0,04 USD/mes |
+| Egreso de GCS a Internet | 0,12 USD/GiB | 50 GiB de HLS ≈ 6,00 USD |
+| Datos por el balanceador | 0,008 USD/GiB procesado | 50 GiB ≈ 0,40 USD |
+| Datos por NAT | 0,045 USD/GiB; el acceso a GCS va por red privada (`private_ip_google_access = true`) | arranques de VM ≈ 0,10–0,20 USD por tanda |
+| Monitoring y Logging | 3 series propias + métricas de host | dentro de la franquicia mensual |
+
+No presentar esta tabla como gasto observado: el consumo real se toma de Cloud Billing con la ventana UTC
+de cada corrida. Lo que falta para cerrar el criterio es esa exportación, no una nueva estimación.
 
 ## Consumo variable y otros conceptos
 

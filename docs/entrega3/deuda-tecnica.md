@@ -24,8 +24,8 @@ La herramienta mide el código de aplicación completo, sin exclusiones de códi
 
 Diagnóstico previo (histórico, no es la línea base): análisis local del 2026-10-29 sobre cambios sin
 commit encima de `652591e`, 9.655 líneas, duplicación 0,5%, mantenibilidad A, deuda 0 minutos y cobertura
-5,7%. Su manifiesto quedó en `evidencia/local/sonar/` con `pipeline: local` y `dirty=true`; la ejecución
-en Actions lo reemplaza como evidencia.
+5,7%. La ejecución en Actions lo reemplaza como evidencia; el diagnóstico intermedio no se conserva en el
+repositorio.
 
 El inventario inicial tuvo 3 hallazgos (1 Major y 2 Minor). Se corrigieron en código: rechazo de promesa sin capturar en Mis cursos y ejecución como root por defecto en imágenes de API/worker. **La segunda medición local** analizó 10.952 líneas: duplicación 0,5%, mantenibilidad A, deuda 0 minutos y cobertura 5,5%; 0 bugs/vulnerabilidades/code smells abiertos y 0 hotspots. Los tres hallazgos iniciales aparecen CLOSED. [Reporte local](evidencia/local/sonar/manifest.json) (diagnóstico, `dirty=true`); la evidencia definitiva es el artefacto del commit `84657d6` descrito arriba.
 

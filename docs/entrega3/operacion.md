@@ -4,19 +4,19 @@
 
 No ejecutar `apply`, publicación de imágenes, importación, borrado ni `destroy` sin permiso explícito del responsable en ese momento. Las lecturas y planes están permitidos. Trabajar en el directorio original `scripts/IaC`: el estado es local; no copiarlo a otro worktree.
 
-1. Consultar `gcloud compute instances list --filter='name~^mooc-'` y el resto de recursos de entrega 2.
+1. Trabajar en `mooc-entrega3` (`gcloud config set project mooc-entrega3`) y consultar
+   `gcloud compute instances list --filter='name~^mooc-'`.
 2. Si existen recursos `mooc-*` y falta tfstate, detenerse y mostrar el inventario. No importar ni recrear por cuenta propia.
 3. Comprobar identidad/proyecto, región y cuota, tfvars ignorado, imagen final y ausencia de cambios inesperados.
 4. Ejecutar `terraform init`, `terraform validate` y `terraform plan -out=plan.tfplan`. Revisar el plan nuevo: el plan de 108 recursos del handoff referencia una imagen anterior.
 5. Cuando se autorice publicar código: construir las tres imágenes con `scripts/publish_images.sh`, actualizar image_tag local y rehacer el plan. Cuando se autorice desplegar: aplicar ese plan concreto.
 
-No ejecutar el `-target` del README histórico: Artifact Registry ya existe. El repositorio `mooc-images`
-vive fuera del state local, así que el primer `apply` falla con `409 the repository already exists`;
-importarlo antes de aplicar y no recrearlo:
+En un proyecto creado desde cero el repositorio `mooc-images` lo crea Terraform y no requiere import.
+Solo si se reutiliza un proyecto con el repositorio ya existente hay que importarlo antes de aplicar:
 
 ```bash
 terraform import google_artifact_registry_repository.images \
-  projects/proyecto-2-cloud-509714/locations/us-central1/repositories/mooc-images
+  projects/mooc-entrega3/locations/us-central1/repositories/mooc-images
 ```
 
 No versionar tfvars, estado, plan, credenciales, tokens ni datasets con sesiones.

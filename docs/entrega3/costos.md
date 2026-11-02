@@ -1,6 +1,6 @@
 # Costos — Entrega 3
 
-Estimación a precios de lista USD en us-central1, consultados el 2026-10-29. Mes de referencia de 730 horas; día de 24 horas. Sin descuentos, créditos, impuestos ni loadgen. **No es gasto observado ni una cotización completa.** Los importes variables se suman aparte.
+Estimación a precios de lista USD en us-central1, consultados el 2026-10-29. El entorno está desplegado en `mooc-entrega3` desde el 2026-11-01; el gasto observado sigue pendiente. Mes de referencia de 730 horas; día de 24 horas. Sin descuentos, créditos, impuestos ni loadgen. **No es gasto observado ni una cotización completa.** Los importes variables se suman aparte.
 
 ## Base fija: mínimo y máximo configurados
 

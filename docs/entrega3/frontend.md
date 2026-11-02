@@ -2,7 +2,7 @@
 
 ## Alcance y estado
 
-Implementación React integrada con la API, sin datos simulados. La verificación local no sustituye el recorrido sobre el despliegue cloud. Estado cloud: **pendiente de despliegue autorizado y nueva imagen**.
+Implementación React integrada con la API, sin datos simulados. El entorno cloud está desplegado en `mooc-entrega3` (<https://8.232.5.195.sslip.io>) con la imagen `ad21fb9562a7`. Estado: **recorrido cloud pendiente de ejecutar y capturar**; la verificación local no lo sustituye.
 
 | Rol / flujo | Ruta | Verificación prevista |
 |---|---|---|

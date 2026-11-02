@@ -21,8 +21,9 @@ Corte: 2026-11-01. La implementación y preparación local no equivalen a una en
 
 - Commit y tag/release: **pendiente**. Código evaluado: `84657d63c11e488f68fb736d9278d73963256879`; el tag `entrega-3` se crea sobre el commit de entrega.
 - Run GitHub Actions y reporte Sonar completo: [41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569), artefacto `quality-84657d63c11e488f68fb736d9278d73963256879`, copia en [evidencia/calidad-84657d6](evidencia/calidad-84657d6/README.md).
-- `image_tag` realmente desplegado: **pendiente** (la imagen anterior `652591e65fc2` no incluye los nuevos flujos).
-- `app_url`, `lb_ip`, certificado: **pendiente**.
+- `image_tag` realmente desplegado: `ad21fb9562a7` (árbol de código idéntico al commit evaluado `84657d6`; los commits posteriores solo tocan documentación).
+- Proyecto: `mooc-entrega3` (número `444582133660`).
+- `app_url`, `lb_ip`, certificado: <https://8.232.5.195.sslip.io>, `8.232.5.195`, administrado **ACTIVE**.
 - Directorio/archivo de evidencia de carga y de integridad: **pendiente**.
 - Video de entrega 3: **pendiente**; el enlace de entrega 2 no lo sustituye.
 - Usuarios de prueba y credenciales: canal privado del curso.

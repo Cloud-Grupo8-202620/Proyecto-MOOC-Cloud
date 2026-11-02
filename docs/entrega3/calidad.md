@@ -24,9 +24,8 @@ No hay un proyecto SonarCloud/SonarQube conectado al repositorio. La configuraci
 | Security hotspots | 0 | revisión humana |
 | Cobertura | 5,7% | informativa |
 
-`dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. La
-copia local previa en `evidencia/local/sonar/` (`pipeline: local`, `dirty=true`) queda como diagnóstico
-intermedio: no se usa como evidencia final. Este análisis incluye el `frontend/Dockerfile` corregido y las
+`dirty=false` confirma que el análisis corresponde al commit publicado y no a un árbol con cambios. El diagnóstico local previo (`pipeline: local`, `dirty=true`) no se usa como evidencia final y no se
+conserva en el repositorio. Este análisis incluye el `frontend/Dockerfile` corregido y las
 pruebas de navegador ampliadas del commit `84657d6`; los commits posteriores son solo documentación. Si se
 modifica código de aplicación, repetir el job `quality` sobre el commit final antes de cerrar. El gate exportado no trae condiciones (`gate.json`): el cumplimiento de los umbrales de la
 entrega lo verifica `scripts/quality/sonar.py` sobre las métricas totales, no el gate estándar.

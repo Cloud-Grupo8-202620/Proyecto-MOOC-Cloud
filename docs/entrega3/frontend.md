@@ -2,7 +2,7 @@
 
 ## Alcance y estado
 
-Implementación React integrada con la API, sin datos simulados. El entorno cloud está desplegado en `proyecto-2-cloud-509714` (<https://136.68.131.0.sslip.io>) con la imagen `b4d5568`. Estado: **recorrido cloud pendiente de ejecutar y capturar**; la verificación local no lo sustituye.
+Implementación React integrada con la API, sin datos simulados. El entorno cloud está desplegado en `proyecto-2-cloud-509714` (<https://136.68.131.0.sslip.io>) con la imagen `b4d5568`. Estado: recorrido académico **verificado en el despliegue** ([evidencia del 2026-11-02](evidencia/2026-11-02/README.md), Playwright 19,3 s con capturas de profesor, estudiante y móvil). El recorrido con medios quedó bloqueado por la carrera entre la autorización de la carga y el PUT, documentada en esa evidencia; la verificación local no lo sustituye.
 
 | Rol / flujo | Ruta | Verificación prevista |
 |---|---|---|

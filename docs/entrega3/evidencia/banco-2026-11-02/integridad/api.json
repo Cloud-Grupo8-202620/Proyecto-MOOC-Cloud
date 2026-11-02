@@ -1,0 +1,19 @@
+{
+  "env": "mooc-entrega3",
+  "url": "https://8.232.5.195.sslip.io",
+  "student": "integ-acca4787",
+  "session_codes": {
+    "200": 30
+  },
+  "served_by": {
+    "mooc-api-ms2r": 11,
+    "mooc-api-2g7v": 11,
+    "mooc-api-j5pn": 8
+  },
+  "download_codes": {
+    "200": 20
+  },
+  "distinct_urls": 1,
+  "attempt_id": 5,
+  "duplicate_same": true
+}

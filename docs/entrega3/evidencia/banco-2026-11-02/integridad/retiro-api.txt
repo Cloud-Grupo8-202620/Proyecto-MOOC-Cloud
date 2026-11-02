@@ -1,0 +1,35 @@
+== 2026-11-02T01:29:43Z detener contenedor en mooc-api-ms2r
+mooc-api
+== salud del backend (5 muestras)
+-- 01:30:03
+  - healthState: HEALTHY	mooc-api-j5pn
+  - healthState: HEALTHY	mooc-api-ms2r
+  - healthState: HEALTHY	mooc-api-2g7v
+-- 01:30:20
+  - healthState: HEALTHY	mooc-api-j5pn
+  - healthState: UNHEALTHY	mooc-api-ms2r
+  - healthState: HEALTHY	mooc-api-2g7v
+-- 01:30:36
+  - healthState: HEALTHY	mooc-api-j5pn
+  - healthState: UNHEALTHY	mooc-api-ms2r
+  - healthState: HEALTHY	mooc-api-2g7v
+-- 01:30:53
+  - healthState: HEALTHY	mooc-api-j5pn
+  - healthState: UNHEALTHY	mooc-api-ms2r
+  - healthState: HEALTHY	mooc-api-2g7v
+-- 01:31:10
+  - healthState: HEALTHY	mooc-api-j5pn
+  - healthState: UNHEALTHY	mooc-api-ms2r
+  - healthState: HEALTHY	mooc-api-2g7v
+== 20 peticiones por el LB
+  10 mooc-api-2g7v
+  10 mooc-api-j5pn
+== 2026-11-02T01:31:26Z estado del MIG tras el retiro
+01:31:29 api_vms=3 healthy=2
+01:31:56 api_vms=3 healthy=2
+01:32:23 api_vms=3 healthy=2
+01:32:50 api_vms=3 healthy=2
+01:33:17 api_vms=3 healthy=2
+01:33:44 api_vms=3 healthy=3
+== peticiones con codigo
+  20 200

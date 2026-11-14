@@ -1,4 +1,4 @@
-name: Verificación entrega 3
+name: Verificación entrega 4
 on:
   push:
   pull_request:
@@ -75,11 +75,12 @@ jobs:
         run: |
           cp .env.example .env
           docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml build backend worker
-          docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml up -d --wait --wait-timeout 600
-          for i in $(seq 1 60); do
+          docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml up -d
+          for i in $(seq 1 120); do
             if curl -fsS http://localhost:5180/health; then exit 0; fi
             sleep 2
           done
+          docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml logs --tail=80
           exit 1
       - name: Autoría, procesamiento, inscripción, progreso y evaluación
         run: python3 scripts/test_browser.py
@@ -101,6 +102,12 @@ jobs:
         with:
           terraform_version: 1.14.0
       - working-directory: scripts/IaC
+        run: |
+          terraform init -backend=false
+          terraform fmt -check -recursive
+          terraform validate
+          terraform test
+      - working-directory: scripts/IaC/cloudrun
         run: |
           terraform init -backend=false
           terraform fmt -check -recursive

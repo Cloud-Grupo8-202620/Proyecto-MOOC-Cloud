@@ -84,8 +84,8 @@ func GetJWTSecret() string {
 	return GetEnv("JWT_SECRET", "dev-jwt-secret-change-in-prod")
 }
 
-// RedisAddr y RedisPassword son la conexión a Redis que comparten go-redis (API)
-// y asynq (API y worker): se leen una sola vez para que ambos no puedan divergir.
+// RedisAddr y RedisPassword son la conexión a Redis que usa la API para
+// sesiones revocables, códigos de verificación y locks de TUS.
 func RedisAddr() string {
 	return GetEnv("REDIS_ADDR", "localhost:6379")
 }

@@ -21,7 +21,6 @@ services:
     ports: !reset []
     environment:
       S3_PUBLIC_ENDPOINT: http://localhost:19000
-      WORKER_CONCURRENCY: 4
   frontend:
     image: node:24-alpine
     working_dir: /app

@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	_ "embed"
+	"encoding/json"
 	"errors"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -104,11 +107,6 @@ var (
 
 func init() {
 	metricsRegisterer.MustRegister(requestDuration, requestsTotal, requestsInflight)
-	// El estado de la cola se lee de Redis en cada scrape, no al arrancar.
-	queueCollector := queue.NewCollector(queue.InspectMediaQueue)
-	if err := queueCollector.Register(metricsRegisterer); err != nil {
-		panic("no se pudo registrar el collector de la cola: " + err.Error())
-	}
 }
 
 // instrumentRequest mide cada petición para el scrape de /metrics. Se etiqueta
@@ -243,17 +241,37 @@ func main() {
 	}
 
 	if len(os.Args) == 2 && os.Args[1] == "provision-admin" {
-		if err := auth.ProvisionAdmin(db, os.Stdin); err != nil {
+		// En local el operador envía el JSON por stdin. En Cloud Run no hay
+		// terminal interactiva: el mismo comando se ejecuta como Job y toma
+		// usuario, correo y contraseña (secreto) de variables de entorno.
+		var input io.Reader = os.Stdin
+		if password := os.Getenv("ADMIN_PASSWORD"); password != "" {
+			payload, err := json.Marshal(map[string]string{
+				"username": utils.GetEnv("ADMIN_USERNAME", "admin"),
+				"email":    utils.GetEnv("ADMIN_EMAIL", "admin@example.com"),
+				"password": password,
+			})
+			if err != nil {
+				log.Fatal(err)
+			}
+			input = bytes.NewReader(payload)
+		}
+		if err := auth.ProvisionAdmin(db, input); err != nil {
 			log.Fatal(err)
 		}
 		log.Print("cuenta administrativa creada")
 		return
 	}
 	rdb := initRedisClient()
-	// Cola asynq (publicador) y almacenamiento S3-compatible.
+	// Publicador de Pub/Sub y almacenamiento S3-compatible.
 	// Sin estado local: solo clientes externos, la API escala horizontalmente.
-	qclient := queue.NewClient()
-	defer qclient.Close()
+	qclient, err := queue.NewClient(ctx)
+	if err != nil {
+		log.Printf("advertencia: Pub/Sub no disponible: %v (las cargas responderán 501)", err)
+		qclient = nil
+	} else {
+		defer qclient.Close()
+	}
 	store, err := storage.NewClient()
 	if err != nil {
 		log.Printf("advertencia: almacenamiento no disponible: %v (upload-url retornará 501)", err)

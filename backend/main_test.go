@@ -68,7 +68,7 @@ func TestInstrumentRequestSkipsMetricsEndpoint(t *testing.T) {
 }
 
 // TestMetricsHandlerServesScrape verifica el contrato del endpoint: un scrape
-// Prometheus con la etiqueta component=api, las métricas HTTP y las de la cola.
+// Prometheus con la etiqueta component=api y las métricas HTTP.
 func TestMetricsHandlerServesScrape(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
@@ -91,11 +91,6 @@ func TestMetricsHandlerServesScrape(t *testing.T) {
 		`go_goroutines{component="api"}`,
 		`process_resident_memory_bytes{component="api"}`,
 		`mooc_http_requests_inflight{component="api"}`,
-		// El estado de la cola se scrapea desde la API, que es el único proceso
-		// con acceso a Redis, y por eso debe aparecer en este mismo scrape.
-		`mooc_queue_pending{component="api"}`,
-		`mooc_queue_age_seconds{component="api"}`,
-		`mooc_queue_scrape_ok{component="api"}`,
 	} {
 		if !strings.Contains(body, want) {
 			t.Errorf("falta %q en /metrics", want)

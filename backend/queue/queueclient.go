@@ -1,75 +1,78 @@
 package queue
 
 import (
+	"context"
 	"encoding/json"
-	"time"
+	"errors"
+	"os"
 
+	"cloud.google.com/go/pubsub/v2"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/utils"
-	"github.com/hibiken/asynq"
 )
 
-// Client publica trabajos a Redis vía asynq.
+// Client publica trabajos en un topic de Pub/Sub. El worker los recibe por una
+// suscripción push autenticada; no hay consumidor en este proceso.
 type Client struct {
-	client *asynq.Client
+	client    *pubsub.Client
+	publisher *pubsub.Publisher
 }
 
-// RedisOpt construye la conexión asynq a Redis desde env (compartida API/worker).
-func RedisOpt() asynq.RedisClientOpt {
-	return asynq.RedisClientOpt{
-		Addr:     utils.RedisAddr(),
-		Password: utils.RedisPassword(),
-		DB:       0,
+// NewClient construye el publicador desde variables de entorno. En local,
+// PUBSUB_EMULATOR_HOST hace que el SDK hable con el emulador sin credenciales.
+func NewClient(ctx context.Context) (*Client, error) {
+	projectID := utils.GetEnv("PUBSUB_PROJECT_ID", os.Getenv("GOOGLE_CLOUD_PROJECT"))
+	if projectID == "" {
+		return nil, errors.New("PUBSUB_PROJECT_ID no está definido")
 	}
-}
-
-// NewClient crea un cliente asynq contra Redis.
-func NewClient() *Client {
-	return &Client{
-		client: asynq.NewClient(RedisOpt()),
+	topicID := utils.GetEnv("PUBSUB_TOPIC", "media-jobs")
+	client, err := pubsub.NewClient(ctx, projectID)
+	if err != nil {
+		return nil, err
 	}
+	return &Client{client: client, publisher: client.Publisher(topicID)}, nil
 }
 
-// Close libera conexiones.
+// Close libera el publicador y sus conexiones.
 func (c *Client) Close() error {
-	if c == nil || c.client == nil {
+	if c == nil {
 		return nil
 	}
-	return c.client.Close()
+	if c.publisher != nil {
+		c.publisher.Stop()
+	}
+	if c.client != nil {
+		return c.client.Close()
+	}
+	return nil
 }
 
-// enqueue publica un trabajo idempotente (TaskID = clave, DLQ tras reintentos).
-func (c *Client) enqueue(taskType string, payload interface{}, timeout time.Duration, idempotencyKey string) (string, error) {
-	data, _ := json.Marshal(payload)
-	task := asynq.NewTask(taskType, data)
-	opts := []asynq.Option{
-		asynq.MaxRetry(3),
-		asynq.Timeout(timeout),
-		asynq.Queue(MediaQueue),
-		asynq.Unique(24 * time.Hour),
+// enqueue publica un trabajo. El message_id que devuelve Pub/Sub es el
+// identificador que se registra y se muestra como task_id.
+func (c *Client) enqueue(ctx context.Context, taskType string, payload interface{}, idempotencyKey string) (string, error) {
+	if c == nil || c.publisher == nil {
+		return "", errors.New("publicador de Pub/Sub no configurado")
 	}
-	if idempotencyKey != "" {
-		opts = append(opts, asynq.TaskID(idempotencyKey))
-	}
-	info, err := c.client.Enqueue(task, opts...)
+	data, err := json.Marshal(payload)
 	if err != nil {
-		// Si ya existe (entrega duplicada con misma clave), no es error fatal.
-		if err == asynq.ErrTaskIDConflict {
-			return idempotencyKey, nil
-		}
 		return "", err
 	}
-	return info.ID, nil
+	attributes := map[string]string{"type": taskType}
+	if idempotencyKey != "" {
+		attributes["idempotency_key"] = idempotencyKey
+	}
+	result := c.publisher.Publish(ctx, &pubsub.Message{Data: data, Attributes: attributes})
+	return result.Get(ctx)
 }
 
 // EnqueueTranscode publica un trabajo de transcodificación HLS.
-func (c *Client) EnqueueTranscode(p TranscodePayload, idempotencyKey string) (string, error) {
+func (c *Client) EnqueueTranscode(ctx context.Context, p TranscodePayload, idempotencyKey string) (string, error) {
 	if idempotencyKey == "" {
 		idempotencyKey = p.IdempotencyKey
 	}
-	return c.enqueue(TypeMediaTranscode, p, 30*time.Minute, idempotencyKey)
+	return c.enqueue(ctx, TypeMediaTranscode, p, idempotencyKey)
 }
 
 // EnqueueScan publica un trabajo de escaneo antimalware (fail-closed).
-func (c *Client) EnqueueScan(p ScanPayload, idempotencyKey string) (string, error) {
-	return c.enqueue(TypeMediaScan, p, 10*time.Minute, idempotencyKey)
+func (c *Client) EnqueueScan(ctx context.Context, p ScanPayload, idempotencyKey string) (string, error) {
+	return c.enqueue(ctx, TypeMediaScan, p, idempotencyKey)
 }

@@ -1,0 +1,18 @@
+flowchart TB
+  Internet -->|HTTPS| FE[Cloud Run frontend\n0–3 instancias]
+  FE -->|HTTPS /api| BE[Cloud Run backend\n1–3 instancias]
+  BE -->|publish| TOPIC[Pub/Sub topic\nmedia-jobs]
+  TOPIC -->|push + OIDC| W[Cloud Run worker\n0–3 instancias]
+  W -->|ack| TOPIC
+  TOPIC --> DLQ[Pub/Sub DLQ]
+  BE --> SQL[(Cloud SQL\nPostgreSQL)]
+  W --> SQL
+  BE --> REDIS[(Memorystore\nRedis)]
+  BE --> GCS[(Cloud Storage)]
+  W --> GCS
+  W --> SUPPORT[VM soporte\nClamAV + Mailpit]
+  BE --> SUPPORT
+  IAM[IAM: push SA solo run.invoker] -.-> W
+  SM[Secret Manager] -.-> BE
+  SM -.-> W
+  SM -.-> JOB[Cloud Run Job\nprovision-admin]

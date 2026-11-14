@@ -2,49 +2,36 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/courses"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/queue"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/storage"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/utils"
-	"github.com/hibiken/asynq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-// retryDelay es el backoff exponencial de reintentos (DLQ tras MaxRetry): 30s, 2m, 8m.
-func retryDelay(n int, _ error, _ *asynq.Task) time.Duration {
-	jobs.RetryScheduled()
-	switch n {
-	case 1:
-		return 30 * time.Second
-	case 2:
-		return 2 * time.Minute
-	default:
-		return 8 * time.Minute
-	}
-}
-
 func main() {
-	redisOpt := queue.RedisOpt()
-	concurrency := utils.GetEnvInt("WORKER_CONCURRENCY", 10)
-
 	dsn := utils.GetPostgresDSN()
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("worker: no se pudo conectar a Postgres: %v", err)
 	}
-	// Tope bajo: el worker compite por las mismas 25 conexiones de Cloud SQL que
+	// Tope bajo: el worker compite por las mismas conexiones de Cloud SQL que
 	// la API y solo necesita una por trabajo concurrente en vuelo. Con varias
 	// réplicas lo fija el despliegue (POSTGRES_MAX_OPEN_CONNS).
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalf("worker: no se pudo obtener el pool de Postgres: %v", err)
 	}
-	maxConns := utils.GetEnvInt("POSTGRES_MAX_OPEN_CONNS", 4)
+	maxConns := utils.GetEnvInt("POSTGRES_MAX_OPEN_CONNS", 2)
 	sqlDB.SetMaxOpenConns(maxConns)
 	sqlDB.SetMaxIdleConns(maxConns)
 	sqlDB.SetConnMaxLifetime(5 * time.Minute)
@@ -66,51 +53,47 @@ func main() {
 		log.Fatalf("worker: no se pudo crear cliente S3: %v", err)
 	}
 
-	qclient := queue.NewClient()
+	qclient, err := queue.NewClient(context.Background())
+	if err != nil {
+		log.Fatalf("worker: no se pudo crear el publicador de Pub/Sub: %v", err)
+	}
 	defer qclient.Close()
 
 	h := &MediaHandler{
-		DB:       db,
-		Store:    store,
-		Queue:    qclient,
-		ClamHost: utils.GetEnv("CLAMAV_HOST", "clamav:3310"),
+		DB:               db,
+		Store:            store,
+		Queue:            qclient,
+		ClamHost:         utils.GetEnv("CLAMAV_HOST", "clamav:3310"),
+		MaxAttempts:      utils.GetEnvInt("WORKER_MAX_ATTEMPTS", 5),
+		TranscodeTimeout: utils.GetEnvDuration("WORKER_TRANSCODE_TIMEOUT", 9*time.Minute),
 	}
 
-	// Al retirar una instancia, asynq deja de tomar trabajos y espera a los que
-	// están en curso hasta ShutdownTimeout; los que no terminan vuelven a la
-	// cola y los toma otra réplica. El arranque lo alinea con el tiempo que la
-	// VM concede al script de apagado.
-	shutdownTimeout := utils.GetEnvDuration("WORKER_SHUTDOWN_TIMEOUT", 8*time.Second)
-
-	srv := asynq.NewServer(redisOpt, asynq.Config{
-		Concurrency:     concurrency,
-		ShutdownTimeout: shutdownTimeout,
-		Queues: map[string]int{
-			queue.MediaQueue: 6,
-			"default":        3,
-		},
-		RetryDelayFunc: retryDelay,
-		ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
-			// Tras agotar reintentos asynq archiva (DLQ) y reporta aquí: emitir alerta observable.
-			retried, _ := asynq.GetRetryCount(ctx)
-			log.Printf("ALERT worker task=%s archived/failed retry=%d err=%v payload=%s", task.Type(), retried, err, string(task.Payload()))
-		}),
-	})
-
-	mux := asynq.NewServeMux()
-	mux.HandleFunc(queue.TypeMediaScan, instrumentar(h.HandleScan))
-	mux.HandleFunc(queue.TypeMediaTranscode, instrumentar(h.HandleTranscode))
-
-	// Telemetría del worker, cancelada con el contexto para no dejar el servidor
-	// de métricas vivo si el servidor asynq devuelve.
-	metricsCtx, stopMetrics := context.WithCancel(context.Background())
-	defer stopMetrics()
-	go serveMetrics(metricsCtx, metricsAddr())
-
-	log.Printf("worker: %s escuchando colas %s/default (concurrency=%d, apagado=%s)",
-		utils.InstanceName(), queue.MediaQueue, concurrency, shutdownTimeout)
-	if err := srv.Run(mux); err != nil {
-		log.Fatalf("worker: %v", err)
-		os.Exit(1)
+	port := utils.GetEnv("PORT", "8080")
+	srv := &http.Server{
+		Addr:              ":" + port,
+		Handler:           h.Handler(),
+		ReadHeaderTimeout: 10 * time.Second,
 	}
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("worker: %v", err)
+		}
+	}()
+	log.Printf("worker: %s escuchando en %s (push de Pub/Sub)", utils.InstanceName(), srv.Addr)
+
+	// Cloud Run concede unos segundos tras SIGTERM. Si una tarea no termina en
+	// este margen, el proceso sale sin confirmar el mensaje y Pub/Sub lo
+	// reentrega; la idempotencia del recurso evita efectos duplicados.
+	sigCtx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, os.Interrupt)
+	defer stop()
+	<-sigCtx.Done()
+
+	timeout := utils.GetEnvDuration("WORKER_SHUTDOWN_TIMEOUT", 8*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		log.Printf("worker: apagado forzado: %v", err)
+		return
+	}
+	log.Print("worker: apagado ordenado completo")
 }

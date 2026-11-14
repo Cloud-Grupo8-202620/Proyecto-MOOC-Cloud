@@ -113,6 +113,13 @@ run "observabilidad_y_tls" {
   }
 
   assert {
+    condition = contains([
+      for flag in google_sql_database_instance.postgres.settings[0].database_flags : flag.name
+    ], "log_lock_waits")
+    error_message = "Cloud SQL debe registrar esperas de locks"
+  }
+
+  assert {
     condition     = google_compute_subnetwork.app.log_config[0].flow_sampling == 0.5
     error_message = "La subred debe tener VPC Flow Logs"
   }

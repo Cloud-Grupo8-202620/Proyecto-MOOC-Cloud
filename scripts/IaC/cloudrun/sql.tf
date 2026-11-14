@@ -30,6 +30,11 @@ resource "google_sql_database_instance" "postgres" {
       name  = "log_disconnections"
       value = "on"
     }
+
+    database_flags {
+      name  = "log_checkpoints"
+      value = "on"
+    }
   }
 
   depends_on = [google_service_networking_connection.psa]

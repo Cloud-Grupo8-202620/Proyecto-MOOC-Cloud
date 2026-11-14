@@ -3,17 +3,30 @@ resource "random_id" "bucket_suffix" {
 }
 
 # Bucket privado para los access logs de los otros tres buckets. No se le
-# habilita logging para evitar recursión.
-resource "google_storage_bucket" "logs" {
+# habilita logging para evitar recursión; # NOSONAR documenta la excepción.
+resource "google_storage_bucket" "logs" { # NOSONAR: bucket de logs sin auto-logging.
   name                        = local.bucket_logs
   location                    = var.region
   storage_class               = "STANDARD"
   force_destroy               = true
   uniform_bucket_level_access = true
 
+  versioning {
+    enabled = true
+  }
+
   lifecycle_rule {
     condition {
       age = 30
+    }
+    action {
+      type = "Delete"
+    }
+  }
+
+  lifecycle_rule {
+    condition {
+      days_since_noncurrent_time = 7
     }
     action {
       type = "Delete"

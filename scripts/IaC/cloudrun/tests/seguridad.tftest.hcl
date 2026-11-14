@@ -106,6 +106,13 @@ run "observabilidad_y_tls" {
   }
 
   assert {
+    condition = contains([
+      for flag in google_sql_database_instance.postgres.settings[0].database_flags : flag.name
+    ], "log_checkpoints")
+    error_message = "Cloud SQL debe registrar checkpoints"
+  }
+
+  assert {
     condition     = google_compute_subnetwork.app.log_config[0].flow_sampling == 0.5
     error_message = "La subred debe tener VPC Flow Logs"
   }
@@ -118,6 +125,11 @@ run "observabilidad_y_tls" {
   assert {
     condition     = google_storage_bucket.originals.logging[0].log_bucket == google_storage_bucket.logs.name
     error_message = "El bucket de originales debe escribir access logs"
+  }
+
+  assert {
+    condition     = google_storage_bucket.logs.versioning[0].enabled == true
+    error_message = "El bucket de logs debe tener versionado"
   }
 
   assert {

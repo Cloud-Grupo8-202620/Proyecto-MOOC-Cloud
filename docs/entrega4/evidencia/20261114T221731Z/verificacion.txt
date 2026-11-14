@@ -1,0 +1,29 @@
+fecha_utc=2026-11-14T22:20:34Z
+--- frontend /health
+HTTP/2 200 
+content-type: application/json; charset=utf-8
+x-served-by: localhost
+x-cloud-trace-context: 35958c82f1407a24cfc55a6c79968218;o=1
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+date: Sat, 14 Nov 2026 22:20:34 GMT
+server: Google Frontend
+content-length: 15
+
+{"status":"ok"}
+--- backend /health
+HTTP/2 200 
+content-type: application/json; charset=utf-8
+x-served-by: localhost
+x-cloud-trace-context: 6a7eeb6856f5823ab5af2d54ccd3612d
+date: Sat, 14 Nov 2026 22:20:35 GMT
+server: Google Frontend
+content-length: 15
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+
+{"status":"ok"}
+--- servicios
+NAME            URL
+mooc4-backend   https://mooc4-backend-e5xkihk7sa-uc.a.run.app
+mooc4-frontend  https://mooc4-frontend-e5xkihk7sa-uc.a.run.app
+mooc4-worker    https://mooc4-worker-e5xkihk7sa-uc.a.run.app

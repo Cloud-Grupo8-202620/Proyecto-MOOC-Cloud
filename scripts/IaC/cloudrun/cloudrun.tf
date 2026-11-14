@@ -44,10 +44,11 @@ locals {
 }
 
 resource "google_cloud_run_v2_service" "frontend" {
-  name     = local.frontend_service
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
-  labels   = local.labels
+  name                = local.frontend_service
+  location            = var.region
+  deletion_protection = false
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  labels              = local.labels
 
   template {
     service_account                  = google_service_account.role["frontend"].email
@@ -110,10 +111,11 @@ resource "google_cloud_run_v2_service" "frontend" {
 }
 
 resource "google_cloud_run_v2_service" "backend" {
-  name     = local.backend_service
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
-  labels   = local.labels
+  name                = local.backend_service
+  location            = var.region
+  deletion_protection = false
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  labels              = local.labels
 
   template {
     service_account                  = google_service_account.role["backend"].email
@@ -204,8 +206,9 @@ resource "google_cloud_run_v2_service" "backend" {
 }
 
 resource "google_cloud_run_v2_service" "worker" {
-  name     = local.worker_service
-  location = var.region
+  name                = local.worker_service
+  location            = var.region
+  deletion_protection = false
   # Pub/Sub llega por Internet, no por la VPC. La protección es IAM: solo la
   # cuenta push tiene run.invoker; no existe binding para allUsers.
   ingress = "INGRESS_TRAFFIC_ALL"
@@ -326,9 +329,10 @@ resource "google_cloud_run_v2_service_iam_member" "worker_push" {
 # Job de una sola ejecución para crear el administrador inicial. Toma la
 # contraseña de Secret Manager, nunca de argumentos ni logs.
 resource "google_cloud_run_v2_job" "admin" {
-  name     = local.admin_job
-  location = var.region
-  labels   = local.labels
+  name                = local.admin_job
+  location            = var.region
+  labels              = local.labels
+  deletion_protection = false
 
   template {
     template {

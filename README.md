@@ -2,10 +2,7 @@
 
 API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, ClamAV y almacenamiento de objetos, desplegados como **tres servicios Cloud Run** con **Pub/Sub** como mecanismo de mensajería. El frontend es nginx y hace proxy de la API para conservar el mismo origen.
 
-**Estado:** desplegado el 2026-11-14 en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`. Frontend, backend y worker operativos; Pub/Sub, Memorystore, Cloud SQL, Cloud Storage y ClamAV integrados. El recorrido Playwright completo pasó contra Cloud Run. Evidencias en [RESUMEN-2026-11-14](docs/entrega4/evidencia/RESUMEN-2026-11-14.md).
-
-- Frontend: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app>
-- Backend: <https://mooc4-backend-e5xkihk7sa-uc.a.run.app>
+**Estado:** desplegado y verificado el 2026-11-14 con la imagen `ed67d93c2666`; **retirado el mismo día** con `terraform destroy`. La evidencia histórica está en [RESUMEN-2026-11-14](docs/entrega4/evidencia/RESUMEN-2026-11-14.md). Queda pendiente que Cloud Run libere la IP serverless de la subred (1–2 h) para eliminar la VPC; ver [RETIRO-2026-11-14](docs/entrega4/evidencia/RETIRO-2026-11-14.md).
 
 ## Arquitectura
 

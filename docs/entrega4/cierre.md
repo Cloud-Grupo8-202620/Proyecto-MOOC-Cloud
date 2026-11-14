@@ -18,6 +18,7 @@
 | Dead-letter | `mooc4-media-jobs-dlq` |
 | Evidencia | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
 | Video | `<pendiente>` |
+| Retiro | `terraform destroy` el 2026-11-14; VPC pendiente de liberación de IP serverless |
 
 ## Checklist de evidencias
 
@@ -33,6 +34,7 @@
 - [x] Reentrega del mismo mensaje sin duplicar HLS.
 - [x] Escalamiento observado: worker y backend a 3; frontend a 2 con máximo 3.
 - [x] Recorrido Playwright completo contra Cloud Run.
+- [x] Retiro de los servicios y dependencias; VPC/subred pendientes de liberación de IP serverless.
 - [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 

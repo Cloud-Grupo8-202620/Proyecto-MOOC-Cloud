@@ -4,10 +4,12 @@ Proyecto: `proyecto-2-cloud-509714`.
 Región: `us-central1`.
 Prefijo de recursos: `mooc4`.
 
-Estado: **desplegado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen
-`ed67d93c2666`. Apply de 103 recursos, Job de administrador ejecutado y recorrido
-Playwright completo contra Cloud Run aprobado. Evidencias en
-[RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md).
+Estado: **desplegado y verificado el 2026-11-14** en `proyecto-2-cloud-509714`
+con la imagen `ed67d93c2666`; **retirado** con `terraform destroy` el mismo día.
+Apply de 103 recursos, Job de administrador ejecutado y recorrido Playwright
+completo contra Cloud Run aprobado. Evidencias en
+[RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) y
+[RETIRO-2026-11-14.md](evidencia/RETIRO-2026-11-14.md).
 
 ## 1. Requisitos
 

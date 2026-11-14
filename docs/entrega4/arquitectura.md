@@ -1,6 +1,6 @@
 # Entrega 4 — Arquitectura Cloud Run y Pub/Sub
 
-Estado: **desplegado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`. El recorrido Playwright completo y las evidencias están en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
+Estado: **desplegado y verificado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`, y **retirado** con `terraform destroy` el mismo día. Evidencias en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md) y detalle del retiro en [RETIRO-2026-11-14](evidencia/RETIRO-2026-11-14.md).
 
 ## Componentes
 

@@ -91,7 +91,7 @@ gcloud compute ssh mooc4-support --zone us-central1-a --tunnel-through-iap \
 | `frontend_min_instances` / `frontend_max_instances` | Escala del frontend | `0` / `3` |
 | `backend_min_instances` / `backend_max_instances` | Escala del backend | `1` / `3` |
 | `worker_min_instances` / `worker_max_instances` | Escala del worker | `0` / `3` |
-| `frontend_concurrency` / `backend_concurrency` / `worker_concurrency` | Concurrencia | `20` / `10` / `1` |
+| `frontend_concurrency` / `backend_concurrency` / `worker_concurrency` | Concurrencia | `5` / `10` / `1` |
 | `backend_db_max_open_conns` / `worker_db_max_open_conns` | Pool de PostgreSQL por réplica | `4` / `2` |
 | `db_tier` | Tier de Cloud SQL | `db-f1-micro` |
 | `redis_memory_gb` | Memoria de Memorystore | `1` |

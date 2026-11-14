@@ -4,12 +4,10 @@ Proyecto: `proyecto-2-cloud-509714`.
 Región: `us-central1`.
 Prefijo de recursos: `mooc4`.
 
-Estado de esta rama: código, Terraform y documentación preparados; `terraform
-validate`, `terraform test` y un `terraform plan` de 103 recursos se ejecutaron
-sin crear infraestructura. El recorrido Playwright completo con el emulador
-local de Pub/Sub pasó (incluye ClamAV, transcodificación HLS y consulta del
-estado final). Las evidencias de funcionamiento en GCP se capturan después del
-apply autorizado.
+Estado: **desplegado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen
+`ed67d93c2666`. Apply de 103 recursos, Job de administrador ejecutado y recorrido
+Playwright completo contra Cloud Run aprobado. Evidencias en
+[RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md).
 
 ## 1. Requisitos
 
@@ -54,7 +52,7 @@ Valores esperados:
 
 | Servicio | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---:|---:|---:|---:|---:|---:|
-| `mooc4-frontend` | 0 | 3 | 1 | 512Mi | 20 | 300 s |
+| `mooc4-frontend` | 0 | 3 | 1 | 512Mi | 5 | 300 s |
 | `mooc4-backend` | 1 | 3 | 1 | 512Mi | 10 | 300 s |
 | `mooc4-worker` | 0 | 3 | 2 | 2Gi | 1 | 590 s |
 
@@ -110,8 +108,7 @@ Después de que el recurso esté `ready`, publicar de nuevo el mismo mensaje:
 ```bash
 gcloud pubsub topics publish mooc4-media-jobs \
   --message="{\"resource_id\":<ID>,\"object_key\":\"<OBJECT_KEY>\",\"mime_type\":\"video/mp4\",\"idempotency_key\":\"transcode-<STABLE_ID>\"}" \
-  --attribute=type=media.transcode \
-  --attribute=idempotency_key=transcode-<STABLE_ID>
+  --attribute="type=media.transcode,idempotency_key=transcode-<STABLE_ID>"
 ```
 
 El worker debe registrar `ya procesado (idempotente), skip`, responder 204 y no

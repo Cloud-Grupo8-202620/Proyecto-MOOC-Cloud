@@ -1,0 +1,15 @@
+fecha_utc=2026-11-14T22:08:53Z
+carga=k6 50 VUs frontend + 50 VUs backend durante 30s
+peticiones=19806
+errores=0
+frontend_url=https://mooc4-frontend-e5xkihk7sa-uc.a.run.app
+backend_url=https://mooc4-backend-e5xkihk7sa-uc.a.run.app
+segunda_carga=k6 100 VUs frontend + 100 VUs backend, sin reutilizar conexiones, 30s
+segunda_peticiones=6206
+segunda_errores=17
+tercera_carga=k6 100 VUs descargando asset JS del frontend, 30s
+tercera_iteraciones=2119
+cuarta_carga=k6 100 VUs asset frontend con concurrencia 5, 30s
+cuarta_iteraciones=2137
+quinta_carga=k6 100 VUs asset frontend 90s
+quinta_iteraciones=6066

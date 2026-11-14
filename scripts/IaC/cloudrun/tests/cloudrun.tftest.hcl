@@ -66,7 +66,7 @@ run "limites_de_ejecucion" {
 
   assert {
     condition = (
-      google_cloud_run_v2_service.frontend.template[0].max_instance_request_concurrency == 20 &&
+      google_cloud_run_v2_service.frontend.template[0].max_instance_request_concurrency == 5 &&
       google_cloud_run_v2_service.backend.template[0].max_instance_request_concurrency == 10 &&
       google_cloud_run_v2_service.worker.template[0].max_instance_request_concurrency == 1
     )

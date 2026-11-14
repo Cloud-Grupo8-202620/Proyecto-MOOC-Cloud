@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:mooc4-pubsub-push@proyecto-2-cloud-509714.iam.gserviceaccount.com"
+      ],
+      "role": "roles/run.invoker"
+    }
+  ],
+  "etag": "BwZgQ501MpI=",
+  "version": 1
+}

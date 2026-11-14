@@ -69,8 +69,7 @@ OBJECT_KEY=<object_key>
 gcloud pubsub topics publish mooc4-media-jobs \
   --project proyecto-2-cloud-509714 \
   --message="{\"resource_id\":$RESOURCE_ID,\"object_key\":\"$OBJECT_KEY\",\"mime_type\":\"video/mp4\",\"idempotency_key\":\"transcode-$STABLE_ID\"}" \
-  --attribute=type=media.transcode \
-  --attribute=idempotency_key=transcode-$STABLE_ID
+  --attribute="type=media.transcode,idempotency_key=transcode-$STABLE_ID"
 ```
 
 Evidencia esperada:
@@ -92,7 +91,7 @@ intentos:
 gcloud pubsub topics publish mooc4-media-jobs \
   --project proyecto-2-cloud-509714 \
   --message='{"resource_id":0}' \
-  --attribute=type=media.scan
+  --attribute="type=media.scan"
 
 gcloud pubsub subscriptions pull mooc4-media-jobs-dlq-sub \
   --project proyecto-2-cloud-509714 --limit=5 --auto-ack

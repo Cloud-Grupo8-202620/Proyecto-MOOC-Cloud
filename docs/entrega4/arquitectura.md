@@ -1,6 +1,6 @@
 # Entrega 4 — Arquitectura Cloud Run y Pub/Sub
 
-Estado: **infraestructura y código preparados en la rama `entrega4-cloudrun-pubsub`**. El despliegue en `proyecto-2-cloud-509714` y las evidencias de funcionamiento se completan siguiendo [despliegue.md](despliegue.md).
+Estado: **desplegado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`. El recorrido Playwright completo y las evidencias están en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
 
 ## Componentes
 
@@ -27,7 +27,7 @@ El frontend conserva rutas relativas: nginx reenvía `/api`, `/health` y `/opena
 
 | Servicio | Responsabilidad | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---|---:|---:|---:|---:|---:|---:|
-| `mooc4-frontend` | SPA React servida por nginx y proxy de la API | 0 | 3 | 1 | 512 MiB | 20 | 300 s |
+| `mooc4-frontend` | SPA React servida por nginx y proxy de la API | 0 | 3 | 1 | 512 MiB | 5 | 300 s |
 | `mooc4-backend` | API REST, autenticación y publicación de tareas | 1 | 3 | 1 | 512 MiB | 10 | 300 s |
 | `mooc4-worker` | Push de Pub/Sub, ClamAV y transcodificación HLS | 0 | 3 | 2 | 2 GiB | 1 | 590 s |
 

@@ -1,0 +1,6 @@
+course=3 module=3 unit=3 resource=7 stable=335cb390-a04a-4285-9b35-0d411793f527 task_id=23381838894513194 object_key=uploads/335cb390-a04a-4285-9b35-0d411793f527/journey.mp4
+upload_http=200
+poll=1 pending pending
+poll=2 pending pending
+poll=3 pending pending
+poll=4 clean ready

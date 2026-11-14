@@ -34,6 +34,9 @@ gcloud iam service-accounts list --project "$PROJECT_ID" \
 gcloud projects get-iam-policy "$PROJECT_ID" --format=json > "${OUT}/project-iam.json"
 
 terraform -chdir="${IAC_DIR}" output -json > "${OUT}/despliegue.json" 2>/dev/null || true
+gcloud artifacts docker images list "${REGION}-docker.pkg.dev/${PROJECT_ID}/mooc4-images" \
+  --include-tags --format='table(package,version,tags)' \
+  > "${OUT}/imagenes.txt" 2>/dev/null || true
 
 # Últimos logs de los tres servicios; sirven para localizar un message_id.
 for s in backend worker frontend; do

@@ -33,8 +33,7 @@ if [[ "$MESSAGES" -gt 0 && -n "${RESOURCE_ID:-}" && -n "${OBJECT_KEY:-}" ]]; the
   for i in $(seq 1 "$MESSAGES"); do
     gcloud pubsub topics publish mooc4-media-jobs --project "$PROJECT_ID" \
       --message="{\"resource_id\":${RESOURCE_ID},\"object_key\":\"${OBJECT_KEY}\",\"transcode_key\":\"transcode-${RESOURCE_ID}\"}" \
-      --attribute=type=media.scan \
-      --attribute=idempotency_key="scan-${RESOURCE_ID}-${i}" >/dev/null
+      --attribute="type=media.scan,idempotency_key=scan-${RESOURCE_ID}-${i}" >/dev/null
   done
 fi
 

@@ -2,7 +2,10 @@
 
 API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, ClamAV y almacenamiento de objetos, desplegados como **tres servicios Cloud Run** con **Pub/Sub** como mecanismo de mensajería. El frontend es nginx y hace proxy de la API para conservar el mismo origen.
 
-**Estado de esta rama (`entrega4-cloudrun-pubsub`):** código, Terraform y documentación preparados; `go test -race ./...`, build del frontend, `terraform validate`, `terraform test` y un `terraform plan` de 103 recursos ejecutados sin crear infraestructura. El recorrido Playwright completo (curso, video, ClamAV, Pub/Sub, worker y HLS) pasó con el emulador local de Pub/Sub. El despliegue en `proyecto-2-cloud-509714` y las evidencias se completan con [la guía de despliegue](docs/entrega4/despliegue.md).
+**Estado:** desplegado el 2026-11-14 en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`. Frontend, backend y worker operativos; Pub/Sub, Memorystore, Cloud SQL, Cloud Storage y ClamAV integrados. El recorrido Playwright completo pasó contra Cloud Run. Evidencias en [RESUMEN-2026-11-14](docs/entrega4/evidencia/RESUMEN-2026-11-14.md).
+
+- Frontend: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app>
+- Backend: <https://mooc4-backend-e5xkihk7sa-uc.a.run.app>
 
 ## Arquitectura
 

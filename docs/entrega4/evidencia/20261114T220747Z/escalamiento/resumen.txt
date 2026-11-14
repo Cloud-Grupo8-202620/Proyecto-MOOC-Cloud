@@ -1,0 +1,5 @@
+fecha_utc=2026-11-14T22:07:47Z
+frontend_url=https://mooc4-frontend-e5xkihk7sa-uc.a.run.app
+backend_url=https://mooc4-backend-e5xkihk7sa-uc.a.run.app
+n=100
+parallel=30

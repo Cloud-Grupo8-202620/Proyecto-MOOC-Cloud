@@ -90,7 +90,7 @@ variable "worker_max_instances" {
 variable "frontend_concurrency" {
   description = "Solicitudes simultáneas por instancia del frontend"
   type        = number
-  default     = 20
+  default     = 5
 }
 
 variable "backend_concurrency" {

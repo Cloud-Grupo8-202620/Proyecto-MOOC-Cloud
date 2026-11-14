@@ -1,0 +1,48 @@
+{
+  "timeSeries": [
+    {
+      "metric": {
+        "type": "pubsub.googleapis.com/subscription/num_undelivered_messages"
+      },
+      "resource": {
+        "type": "pubsub_subscription",
+        "labels": {
+          "subscription_id": "mooc4-media-jobs-push",
+          "project_id": "proyecto-2-cloud-509714"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:08:00Z",
+            "endTime": "2026-11-14T22:08:00Z"
+          },
+          "value": {
+            "int64Value": "5"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:07:00Z",
+            "endTime": "2026-11-14T22:07:00Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:00Z",
+            "endTime": "2026-11-14T22:06:00Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        }
+      ]
+    }
+  ],
+  "unit": "1"
+}

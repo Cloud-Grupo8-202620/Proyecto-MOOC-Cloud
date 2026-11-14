@@ -1,0 +1,104 @@
+{
+  "admin_email": {
+    "sensitive": false,
+    "type": "string",
+    "value": "admin@example.com"
+  },
+  "admin_password_secret": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mooc4-admin-password"
+  },
+  "admin_username": {
+    "sensitive": false,
+    "type": "string",
+    "value": "admin"
+  },
+  "backend_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://mooc4-backend-e5xkihk7sa-uc.a.run.app"
+  },
+  "frontend_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app"
+  },
+  "image_repository": {
+    "sensitive": false,
+    "type": "string",
+    "value": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images"
+  },
+  "image_tag": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ed67d93c2666"
+  },
+  "postgres_private_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.103.0.3"
+  },
+  "project_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "proyecto-2-cloud-509714"
+  },
+  "pubsub_dlq_topic": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mooc4-media-jobs-dlq"
+  },
+  "pubsub_subscription": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mooc4-media-jobs-push"
+  },
+  "pubsub_topic": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mooc4-media-jobs"
+  },
+  "redis_host": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.103.3.51"
+  },
+  "region": {
+    "sensitive": false,
+    "type": "string",
+    "value": "us-central1"
+  },
+  "service_accounts": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "backend": "string",
+        "frontend": "string",
+        "job_admin": "string",
+        "pubsub_push": "string",
+        "support": "string",
+        "worker": "string"
+      }
+    ],
+    "value": {
+      "backend": "mooc4-backend@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+      "frontend": "mooc4-frontend@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+      "job_admin": "mooc4-job-admin@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+      "pubsub_push": "mooc4-pubsub-push@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+      "support": "mooc4-support@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+      "worker": "mooc4-worker@proyecto-2-cloud-509714.iam.gserviceaccount.com"
+    }
+  },
+  "support_internal_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.10.1.30"
+  },
+  "worker_url": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app"
+  }
+}

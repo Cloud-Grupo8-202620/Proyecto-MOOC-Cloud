@@ -1,8 +1,5 @@
 # Cierre de la entrega 4
 
-Completar únicamente con valores observados después del apply. No rellenar con
-supuestos.
-
 ## Identificadores
 
 | Campo | Valor |
@@ -10,31 +7,32 @@ supuestos.
 | Proyecto | `proyecto-2-cloud-509714` |
 | Región | `us-central1` |
 | Rama | `entrega4-cloudrun-pubsub` |
-| Commit | `<sha>` |
-| Etiqueta de imágenes | `<image_tag>` |
-| Fecha UTC del despliegue | `<fecha>` |
-| URL frontend | `<frontend_url>` |
-| URL backend | `<backend_url>` |
-| URL worker | `<worker_url>` |
+| Commit de la imagen | `ed67d93` |
+| Etiqueta de imágenes | `ed67d93c2666` |
+| Fecha UTC del despliegue | `2026-11-14` |
+| URL frontend | https://mooc4-frontend-e5xkihk7sa-uc.a.run.app |
+| URL backend | https://mooc4-backend-e5xkihk7sa-uc.a.run.app |
+| URL worker | https://mooc4-worker-e5xkihk7sa-uc.a.run.app |
 | Topic | `mooc4-media-jobs` |
 | Suscripción push | `mooc4-media-jobs-push` |
 | Dead-letter | `mooc4-media-jobs-dlq` |
-| Evidencia | `docs/entrega4/evidencia/<fecha>/` |
-| Video | `<enlace>` |
+| Evidencia | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
+| Video | `<pendiente>` |
 
 ## Checklist de evidencias
 
-- [ ] Tres servicios Cloud Run operativos y con URL.
-- [ ] Imágenes en Artifact Registry con etiqueta inmutable.
-- [ ] Límites: mínimo/máximo, CPU, memoria, concurrencia y timeout.
-- [ ] Worker sin `allUsers`; solo `mooc4-pubsub-push` con `run.invoker`.
-- [ ] Suscripción push con OIDC y audience del worker.
-- [ ] Topic, suscripción, retry y DLQ documentados.
-- [ ] Secretos listados sin valores; sin credenciales en repo ni imágenes.
-- [ ] Recorrido de una tarea desde `publish` hasta `ready`.
-- [ ] Acknowledgment después de persistir; `num_undelivered_messages` vuelve a 0.
-- [ ] Reentrega del mismo mensaje sin duplicar HLS.
-- [ ] Escalamiento observado: instancias y mensajes pendientes.
+- [x] Tres servicios Cloud Run operativos y con URL.
+- [x] Imágenes en Artifact Registry con etiqueta inmutable `ed67d93c2666`.
+- [x] Límites: mínimo/máximo, CPU, memoria, concurrencia y timeout.
+- [x] Worker sin `allUsers`; solo `mooc4-pubsub-push` con `run.invoker`.
+- [x] Suscripción push con OIDC y audience del worker.
+- [x] Topic, suscripción, retry y DLQ documentados.
+- [x] Secretos listados sin valores; sin credenciales en repo ni imágenes.
+- [x] Recorrido de una tarea desde `publish` hasta `ready`.
+- [x] Acknowledgment después de persistir; `num_undelivered_messages` vuelve a 0.
+- [x] Reentrega del mismo mensaje sin duplicar HLS.
+- [x] Escalamiento observado: worker y backend a 3; frontend a 2 con máximo 3.
+- [x] Recorrido Playwright completo contra Cloud Run.
 - [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 
@@ -48,6 +46,9 @@ gcloud pubsub subscriptions describe mooc4-media-jobs-push
 gcloud run services get-iam-policy mooc4-worker --region us-central1
 gcloud run jobs execute mooc4-provision-admin --region us-central1 --wait
 ```
+
+El administrador inicial es `admin`; la contraseña está en el secreto
+`mooc4-admin-password` y no se versiona. Entregarla por el canal privado.
 
 ## Decisiones
 

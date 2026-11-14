@@ -34,7 +34,8 @@ resource "google_compute_instance" "support" {
   }
 
   metadata = {
-    "startup-script" = file("${path.module}/scripts/support_startup.sh")
+    "startup-script"         = file("${path.module}/scripts/support_startup.sh")
+    "block-project-ssh-keys" = "TRUE"
   }
 
   scheduling {

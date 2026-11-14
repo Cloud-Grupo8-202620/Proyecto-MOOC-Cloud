@@ -89,10 +89,12 @@ sequenceDiagram
 
 ## Red y dependencias
 
-- VPC `mooc4-vpc`, subred `10.10.1.0/24`, Private Service Access `10.86.0.0/16`.
+- VPC `mooc4-vpc`, subred `10.10.1.0/24` con VPC Flow Logs al 50 % cada 10 minutos, Private Service Access `10.86.0.0/16`.
 - Backend y worker usan Direct VPC Egress con etiquetas `backend` y `worker` para Cloud SQL, Memorystore y la VM de soporte.
-- La VM de soporte (`mooc4-support`, `10.10.1.30`) no tiene IP pública y solo acepta ClamAV desde workers y SMTP desde el backend.
+- La VM de soporte (`mooc4-support`, `10.10.1.30`) no tiene IP pública, bloquea claves SSH de proyecto y solo acepta ClamAV desde workers y SMTP desde el backend.
 - Cloud NAT permite a la VM descargar imágenes; Cloud Run usa la red de Google para APIs públicas.
+- Cloud SQL exige TLS (`ENCRYPTED_ONLY`; los clientes usan `sslmode=require`) y registra conexiones y desconexiones.
+- Cloud Storage tiene versionado, access logs en un bucket privado y lifecycle de versiones no actuales.
 - Memorystore Redis es administrado y requiere AUTH; no hay Redis en disco local.
 
 ## Límites conocidos

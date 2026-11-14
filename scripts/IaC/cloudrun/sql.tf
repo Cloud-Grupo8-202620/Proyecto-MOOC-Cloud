@@ -14,6 +14,7 @@ resource "google_sql_database_instance" "postgres" {
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.main.id
+      ssl_mode        = "ENCRYPTED_ONLY"
     }
 
     backup_configuration {
@@ -22,6 +23,11 @@ resource "google_sql_database_instance" "postgres" {
 
     database_flags {
       name  = "log_connections"
+      value = "on"
+    }
+
+    database_flags {
+      name  = "log_disconnections"
       value = "on"
     }
   }

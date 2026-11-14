@@ -24,6 +24,7 @@ locals {
   bucket_originals = "${var.name_prefix}-${random_id.bucket_suffix.hex}-originals"
   bucket_hls       = "${var.name_prefix}-${random_id.bucket_suffix.hex}-hls"
   bucket_public    = "${var.name_prefix}-${random_id.bucket_suffix.hex}-public"
+  bucket_logs      = "${var.name_prefix}-${random_id.bucket_suffix.hex}-logs"
 
   # Nombres de Pub/Sub.
   pubsub_topic        = "${var.name_prefix}-media-jobs"
@@ -47,7 +48,7 @@ locals {
     POSTGRES_PORT    = "5432"
     POSTGRES_USER    = google_sql_user.app.name
     POSTGRES_DB      = google_sql_database.app.name
-    POSTGRES_SSLMODE = "disable"
+    POSTGRES_SSLMODE = "require"
   }
 
   storage_env = {

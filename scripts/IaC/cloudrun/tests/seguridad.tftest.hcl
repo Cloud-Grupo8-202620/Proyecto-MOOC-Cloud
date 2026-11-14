@@ -89,3 +89,39 @@ run "pools_caben_en_cloud_sql" {
     error_message = "Los pools de backend y worker deben caber en db_max_connections"
   }
 }
+
+run "observabilidad_y_tls" {
+  command = plan
+
+  assert {
+    condition     = google_sql_database_instance.postgres.settings[0].ip_configuration[0].ssl_mode == "ENCRYPTED_ONLY"
+    error_message = "Cloud SQL debe exigir conexiones cifradas"
+  }
+
+  assert {
+    condition = contains([
+      for flag in google_sql_database_instance.postgres.settings[0].database_flags : flag.name
+    ], "log_disconnections")
+    error_message = "Cloud SQL debe registrar desconexiones"
+  }
+
+  assert {
+    condition     = google_compute_subnetwork.app.log_config[0].flow_sampling == 0.5
+    error_message = "La subred debe tener VPC Flow Logs"
+  }
+
+  assert {
+    condition     = google_storage_bucket.originals.versioning[0].enabled == true
+    error_message = "Los originales deben tener versionado"
+  }
+
+  assert {
+    condition     = google_storage_bucket.originals.logging[0].log_bucket == google_storage_bucket.logs.name
+    error_message = "El bucket de originales debe escribir access logs"
+  }
+
+  assert {
+    condition     = google_compute_instance.support.metadata["block-project-ssh-keys"] == "TRUE"
+    error_message = "La VM de soporte debe bloquear claves SSH de proyecto"
+  }
+}

@@ -2,12 +2,40 @@ resource "random_id" "bucket_suffix" {
   byte_length = 3
 }
 
+# Bucket privado para los access logs de los otros tres buckets. No se le
+# habilita logging para evitar recursión.
+resource "google_storage_bucket" "logs" {
+  name                        = local.bucket_logs
+  location                    = var.region
+  storage_class               = "STANDARD"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+
+  lifecycle_rule {
+    condition {
+      age = 30
+    }
+    action {
+      type = "Delete"
+    }
+  }
+}
+
 resource "google_storage_bucket" "originals" {
   name                        = local.bucket_originals
   location                    = var.region
   storage_class               = "STANDARD"
   force_destroy               = true
   uniform_bucket_level_access = true
+
+  logging {
+    log_bucket        = google_storage_bucket.logs.name
+    log_object_prefix = "originals/"
+  }
+
+  versioning {
+    enabled = true
+  }
 
   cors {
     origin          = var.cors_origins
@@ -26,6 +54,15 @@ resource "google_storage_bucket" "originals" {
       type = "Delete"
     }
   }
+
+  lifecycle_rule {
+    condition {
+      days_since_noncurrent_time = 7
+    }
+    action {
+      type = "Delete"
+    }
+  }
 }
 
 resource "google_storage_bucket" "hls" {
@@ -35,11 +72,28 @@ resource "google_storage_bucket" "hls" {
   force_destroy               = true
   uniform_bucket_level_access = true
 
+  logging {
+    log_bucket        = google_storage_bucket.logs.name
+    log_object_prefix = "hls/"
+  }
+
+  versioning {
+    enabled = true
+  }
+
   cors {
     origin          = var.cors_origins
     method          = ["GET", "HEAD", "OPTIONS"]
     response_header = ["Content-Type", "Content-Length", "Content-Range", "Accept-Ranges", "ETag"]
     max_age_seconds = 3600
+  }
+  lifecycle_rule {
+    condition {
+      days_since_noncurrent_time = 7
+    }
+    action {
+      type = "Delete"
+    }
   }
 }
 
@@ -50,11 +104,28 @@ resource "google_storage_bucket" "public" {
   force_destroy               = true
   uniform_bucket_level_access = true
 
+  logging {
+    log_bucket        = google_storage_bucket.logs.name
+    log_object_prefix = "public/"
+  }
+
+  versioning {
+    enabled = true
+  }
+
   cors {
     origin          = var.cors_origins
     method          = ["GET", "HEAD", "OPTIONS"]
     response_header = ["Content-Type", "Content-Length", "ETag"]
     max_age_seconds = 3600
+  }
+  lifecycle_rule {
+    condition {
+      days_since_noncurrent_time = 7
+    }
+    action {
+      type = "Delete"
+    }
   }
 }
 
@@ -63,13 +134,13 @@ resource "google_storage_bucket" "public" {
 resource "google_storage_bucket_iam_member" "hls_public" {
   bucket = google_storage_bucket.hls.name
   role   = "roles/storage.objectViewer"
-  member = "allUsers"
+  member = "allUsers" # NOSONAR: HLS público por diseño; la API decide qué URL revelar.
 }
 
 resource "google_storage_bucket_iam_member" "public_public" {
   bucket = google_storage_bucket.public.name
   role   = "roles/storage.objectViewer"
-  member = "allUsers"
+  member = "allUsers" # NOSONAR: imágenes y badges públicos por diseño.
 }
 
 locals {

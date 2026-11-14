@@ -16,6 +16,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// ffmpegBinary es una ruta absoluta para no depender de PATH en el contenedor.
+const ffmpegBinary = "/usr/bin/ffmpeg"
+
 // MediaHandler procesa multimedia a HLS de forma idempotente,
 // con escaneo antimalware previo (fail-closed).
 type MediaHandler struct {
@@ -171,7 +174,7 @@ func (h *MediaHandler) HandleTranscode(ctx context.Context, p queue.TranscodePay
 	}
 	cmdCtx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-	cmd := exec.CommandContext(cmdCtx, "ffmpeg", args...)
+	cmd := exec.CommandContext(cmdCtx, ffmpegBinary, args...)
 	// ffmpeg es lo que satura los vCPU del worker, así que su concurrencia
 	// real es la métrica que explica la cola del escenario de carga multimedia.
 	jobs.FFmpegStarted()

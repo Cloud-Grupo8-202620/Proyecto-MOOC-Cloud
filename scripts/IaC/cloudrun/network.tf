@@ -17,6 +17,14 @@ resource "google_compute_subnetwork" "app" {
   region                   = var.region
   network                  = google_compute_network.main.id
   private_ip_google_access = true
+
+  # VPC Flow Logs: muestreo del 50 % cada 10 minutos para diagnosticar tráfico
+  # privado entre Cloud Run, Cloud SQL, Memorystore y la VM de soporte.
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
 }
 
 # IP fija de la VM de soporte: los servicios Cloud Run la reciben por entorno.

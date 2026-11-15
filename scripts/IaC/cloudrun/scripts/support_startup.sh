@@ -16,7 +16,7 @@ docker volume create mooc-mailpit >/dev/null
 echo "==> ClamAV"
 docker rm -f mooc-clamav >/dev/null 2>&1 || true
 docker run -d --name mooc-clamav --restart unless-stopped \
-  --memory 1500m \
+  --memory 3g \
   -p 3310:3310 \
   -v mooc-clamav:/var/lib/clamav \
   clamav/clamav:stable

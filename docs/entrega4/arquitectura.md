@@ -1,6 +1,6 @@
 # Entrega 4 — Arquitectura Cloud Run y Pub/Sub
 
-Estado: **desplegado y verificado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`, y **retirado** con `terraform destroy` el mismo día. Evidencias en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md) y detalle del retiro en [RETIRO-2026-11-14](evidencia/RETIRO-2026-11-14.md).
+Estado: **redesplegado y verificado el 2026-11-15** en `proyecto-2-cloud-509714` con la imagen `b8f32af9643a`. Evidencia vigente en [RESUMEN-2026-11-15](evidencia/RESUMEN-2026-11-15.md). El despliegue del 2026-11-14 y su retiro quedan como histórico en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
 
 ## Componentes
 

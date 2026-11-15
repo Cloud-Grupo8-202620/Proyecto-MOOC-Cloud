@@ -88,6 +88,22 @@ resource "google_compute_firewall" "clamav" {
   }
 }
 
+# Frontend -> Mailpit UI. La VM no tiene IP pública: el único acceso es el
+# proxy HTTPS de Cloud Run en /mailpit/.
+resource "google_compute_firewall" "mailpit_ui" {
+  name        = "${var.name_prefix}-allow-mailpit-ui"
+  network     = google_compute_network.main.name
+  direction   = "INGRESS"
+  priority    = 1000
+  source_tags = ["frontend"]
+  target_tags = ["support"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8025"]
+  }
+}
+
 # Backend -> Mailpit (correo de verificación; en producción se sustituye por SMTP real).
 resource "google_compute_firewall" "smtp" {
   name        = "${var.name_prefix}-allow-smtp"

@@ -1,0 +1,9 @@
+{
+  "labels": {
+    "environment": "entrega4",
+    "goog-terraform-provisioned": "true",
+    "managed_by": "terraform",
+    "project": "mooc4"
+  },
+  "name": "projects/proyecto-2-cloud-509714/topics/mooc4-media-jobs"
+}

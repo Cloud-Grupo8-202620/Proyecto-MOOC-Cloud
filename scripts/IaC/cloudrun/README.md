@@ -7,7 +7,7 @@ prefijo `mooc4` evita colisiones con recursos antiguos.
 ```
 Cloud Run frontend (nginx, 0–3)
         │ proxy /api
-Cloud Run backend (Go, 1–3) ──publish──> Pub/Sub topic media-jobs
+Cloud Run backend (Go, 0–3) ──publish──> Pub/Sub topic media-jobs
         │                                      │ push OIDC
         ├── Cloud SQL PostgreSQL               ▼
         ├── Memorystore Redis          Cloud Run worker (0–3)
@@ -89,7 +89,7 @@ gcloud compute ssh mooc4-support --zone us-central1-a --tunnel-through-iap \
 | `name_prefix` | Prefijo de recursos | `mooc4` |
 | `image_tag` | Etiqueta de Artifact Registry | — |
 | `frontend_min_instances` / `frontend_max_instances` | Escala del frontend | `0` / `3` |
-| `backend_min_instances` / `backend_max_instances` | Escala del backend | `1` / `3` |
+| `backend_min_instances` / `backend_max_instances` | Escala del backend | `0` / `3` |
 | `worker_min_instances` / `worker_max_instances` | Escala del worker | `0` / `3` |
 | `frontend_concurrency` / `backend_concurrency` / `worker_concurrency` | Concurrencia | `5` / `10` / `1` |
 | `backend_db_max_open_conns` / `worker_db_max_open_conns` | Pool de PostgreSQL por réplica | `4` / `2` |

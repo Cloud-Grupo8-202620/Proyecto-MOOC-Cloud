@@ -7,23 +7,27 @@
 | Proyecto | `proyecto-2-cloud-509714` |
 | Región | `us-central1` |
 | Rama | `entrega4-cloudrun-pubsub` |
-| Commit de la imagen | `ed67d93` |
-| Etiqueta de imágenes | `ed67d93c2666` |
-| Fecha UTC del despliegue | `2026-11-14` |
+| Commit de la imagen | `060d840` |
+| Etiqueta de imágenes | `060d840f5c48` |
+| Fecha UTC del despliegue | `2026-11-15` |
 | URL frontend | https://mooc4-frontend-e5xkihk7sa-uc.a.run.app |
 | URL backend | https://mooc4-backend-e5xkihk7sa-uc.a.run.app |
 | URL worker | https://mooc4-worker-e5xkihk7sa-uc.a.run.app |
 | Topic | `mooc4-media-jobs` |
 | Suscripción push | `mooc4-media-jobs-push` |
 | Dead-letter | `mooc4-media-jobs-dlq` |
-| Evidencia | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
-| Video | `<pendiente>` |
-| Retiro | `terraform destroy` el 2026-11-14; VPC pendiente de liberación de IP serverless |
+| Evidencia vigente | [RESUMEN-2026-11-15.md](evidencia/RESUMEN-2026-11-15.md) |
+| Evidencia Mailpit | [mailpit.txt](evidencia/20261115T185942Z/mailpit.txt) |
+| Evidencia histórica | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
+| Mailpit | `https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/` |
+| Credencial Mailpit | usuario `viewer`; contraseña en `mooc4-mailpit-auth` |
+| Video | https://youtu.be/vMCBK4uZPUE |
+| Escalamiento | 0–3 en frontend, backend y worker; máximo 3 a nivel de servicio |
 
 ## Checklist de evidencias
 
 - [x] Tres servicios Cloud Run operativos y con URL.
-- [x] Imágenes en Artifact Registry con etiqueta inmutable `ed67d93c2666`.
+- [x] Imágenes en Artifact Registry con etiqueta inmutable `060d840f5c48`.
 - [x] Límites: mínimo/máximo, CPU, memoria, concurrencia y timeout.
 - [x] Worker sin `allUsers`; solo `mooc4-pubsub-push` con `run.invoker`.
 - [x] Suscripción push con OIDC y audience del worker.
@@ -33,9 +37,10 @@
 - [x] Acknowledgment después de persistir; `num_undelivered_messages` vuelve a 0.
 - [x] Reentrega del mismo mensaje sin duplicar HLS.
 - [x] Escalamiento observado: worker y backend a 3; frontend a 2 con máximo 3.
-- [x] Recorrido Playwright completo contra Cloud Run.
-- [x] Retiro de los servicios y dependencias; VPC/subred pendientes de liberación de IP serverless.
-- [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
+- [x] Recorrido Playwright completo contra Cloud Run (**1.8 min**).
+- [x] ClamAV en la VM de soporte `healthy`; límite de memoria corregido a 3 GB.
+- [x] Mailpit accesible en `/mailpit/` mediante HTTPS y Basic Auth (`401` sin credenciales, `200` con credenciales).
+- [x] Video de sustentación: https://youtu.be/vMCBK4uZPUE
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 
 ## Comandos de referencia
@@ -56,6 +61,6 @@ El administrador inicial es `admin`; la contraseña está en el secreto
 
 - Pub/Sub sustituye a asynq/Redis como mensajería.
 - Redis queda solo para sesiones, códigos y locks TUS, en Memorystore.
-- ClamAV y Mailpit quedan en una VM de soporte sin IP pública.
+- ClamAV y Mailpit quedan en una VM de soporte sin IP pública; Mailpit se publica en `/mailpit/` a través del frontend HTTPS con Basic Auth.
 - El frontend hace proxy de la API para conservar el mismo origen.
 - El worker se protege con IAM y OIDC, no con una URL secreta.

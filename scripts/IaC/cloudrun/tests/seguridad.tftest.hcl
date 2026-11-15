@@ -144,3 +144,23 @@ run "observabilidad_y_tls" {
     error_message = "La VM de soporte debe bloquear claves SSH de proyecto"
   }
 }
+
+run "mailpit_publico_solo_por_el_frontend" {
+  command = plan
+
+  assert {
+    condition     = google_cloud_run_v2_service.frontend.template[0].vpc_access[0].network_interfaces[0].tags[0] == "frontend"
+    error_message = "El frontend debe usar la VPC con la etiqueta frontend para llegar a Mailpit"
+  }
+
+  assert {
+    condition     = toset(google_compute_firewall.mailpit_ui.source_tags) == toset(["frontend"])
+    error_message = "Solo el frontend puede alcanzar la UI de Mailpit"
+  }
+
+  assert {
+    condition     = google_compute_instance.support.metadata["mailpit-auth-secret"] == "mooc4-mailpit-auth"
+    error_message = "La VM de soporte debe recibir el nombre del secreto de Mailpit"
+  }
+}
+

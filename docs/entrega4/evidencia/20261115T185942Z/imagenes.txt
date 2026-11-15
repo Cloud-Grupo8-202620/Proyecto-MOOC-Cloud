@@ -1,0 +1,17 @@
+IMAGE                                                                     DIGEST                                                                   TAGS
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/backend   sha256:2e061a4686fe4d2a4273932e64ee05ceea3253038f619675840bcec2f12efc4d
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/backend   sha256:6d7a19359110b445ea51fbf7027779386207a4213e0d3152955070d3b6032bb7  b8f32af9643a
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/backend   sha256:961d98f2503075f21eda5701f7d7a6a80f71683172555815010d6694b5852d91
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/backend   sha256:9802d3fad32a0178d833a7c8e2d191b70724d2dc354d303516bd8b31bff5b044
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/backend   sha256:9b34efb1f8d7f333e2f56c640060cac1722951731a882db568727a58f0ea7bb4  060d840f5c48
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:32b8ff3facf95c37dbee61a9236940bbfa7e140d7d2886fead0bcaf87556d47f
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:3eb9d46776dd8a883977b5d39ad41222a29def0804728d29bd96e5506957f76e  b8f32af9643a
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:45658a362ddefb31f318d4e2b0ad4dbe4ac7fe64cf3270bb58c98541e8f3173e
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:88c66fbb999d96693033fbe723925ef6233880ef19db828b8dcf3fa05cb93f0b
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:9ea029949debe9c0f71b63658029d11252331cfb90b1f4248c677fef36013f76
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend  sha256:a96c105e1e060746b26e523c39ae1e207700bce27a685b7502e72b46b5538ed1  060d840f5c48
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker    sha256:5d6f18069eb3142807b3fcdf137ef90cbb0731791be23dd8fc54087ef7d45ad7
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker    sha256:70e0de6232f80188bd482e5fc7efa256bdee26b8ea9aac2d73887e4ce88271e3
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker    sha256:8e5d93c8f5fb2fcd371d8efad425863999c7802b77f6d6d20fa500e71e5a1383  b8f32af9643a
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker    sha256:d94dda1b1e4782507d1b6f582de81d8cd81815680e94231bf6fba804e0bbbf52  060d840f5c48
+us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker    sha256:f7c2537f8eb26b8aa670e3776840d6b610a1a8ef99a1c75daf1a12550cc641b7

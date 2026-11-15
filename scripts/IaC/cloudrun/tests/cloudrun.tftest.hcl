@@ -31,11 +31,29 @@ run "tres_servicios_con_maximo_tres" {
 
   assert {
     condition = (
+      google_cloud_run_v2_service.frontend.scaling[0].max_instance_count == 3 &&
+      google_cloud_run_v2_service.backend.scaling[0].max_instance_count == 3 &&
+      google_cloud_run_v2_service.worker.scaling[0].max_instance_count == 3
+    )
+    error_message = "El escalamiento a nivel de servicio debe tener máximo 3"
+  }
+
+  assert {
+    condition = (
+      google_cloud_run_v2_service.frontend.scaling[0].min_instance_count == 0 &&
+      google_cloud_run_v2_service.backend.scaling[0].min_instance_count == 0 &&
+      google_cloud_run_v2_service.worker.scaling[0].min_instance_count == 0
+    )
+    error_message = "Los tres servicios deben poder escalar desde 0"
+  }
+
+  assert {
+    condition = (
       google_cloud_run_v2_service.frontend.template[0].scaling[0].min_instance_count == 0 &&
-      google_cloud_run_v2_service.backend.template[0].scaling[0].min_instance_count == 1 &&
+      google_cloud_run_v2_service.backend.template[0].scaling[0].min_instance_count == 0 &&
       google_cloud_run_v2_service.worker.template[0].scaling[0].min_instance_count == 0
     )
-    error_message = "Los mínimos documentados son 0, 1 y 0"
+    error_message = "Los mínimos documentados son 0, 0 y 0"
   }
 }
 

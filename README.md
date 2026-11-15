@@ -2,12 +2,16 @@
 
 API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, ClamAV y almacenamiento de objetos, desplegados como **tres servicios Cloud Run** con **Pub/Sub** como mecanismo de mensajería. El frontend es nginx y hace proxy de la API para conservar el mismo origen.
 
-**Estado:** desplegado y verificado el 2026-11-14 con la imagen `ed67d93c2666`; **retirado el mismo día** con `terraform destroy`. La evidencia histórica está en [RESUMEN-2026-11-14](docs/entrega4/evidencia/RESUMEN-2026-11-14.md). Queda pendiente que Cloud Run libere la IP serverless de la subred (1–2 h) para eliminar la VPC; ver [RETIRO-2026-11-14](docs/entrega4/evidencia/RETIRO-2026-11-14.md).
+**Estado:** **redesplegado y verificado el 2026-11-15** con la imagen `060d840f5c48`. Frontend, backend y worker están operativos; ClamAV quedó healthy tras corregir su límite de memoria. Evidencia vigente en [RESUMEN-2026-11-15](docs/entrega4/evidencia/RESUMEN-2026-11-15.md).
+
+- Frontend: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app>
+- Backend: <https://mooc4-backend-e5xkihk7sa-uc.a.run.app>
+- Mailpit: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/> (usuario `viewer`; contraseña en `mooc4-mailpit-auth`)
 
 ## Arquitectura
 
 ```
-Navegador → Cloud Run frontend (0–3) → proxy /api → Cloud Run backend (1–3)
+Navegador → Cloud Run frontend (0–3) → proxy /api → Cloud Run backend (0–3)
                                                       │ publish
                                                       ▼
                                                 Pub/Sub topic
@@ -28,7 +32,7 @@ Worker → ClamAV (VM de soporte) · Backend → Mailpit (VM de soporte)
 - [Arquitectura y decisiones](docs/entrega4/arquitectura.md), con [diagramas](docs/entrega4/diagramas/).
 - [Guía de despliegue reproducible](docs/entrega4/despliegue.md).
 - [Operación, logs, reentrega y escalamiento](docs/entrega4/operacion.md).
-- [Cierre, checklist y video](docs/entrega4/cierre.md).
+- [Cierre y checklist](docs/entrega4/cierre.md).
 - [Terraform Cloud Run](scripts/IaC/cloudrun/README.md).
 - [Evidencias](docs/entrega4/evidencia/README.md).
 
@@ -67,5 +71,7 @@ cd cloudrun && terraform init -backend=false && terraform validate && terraform 
 ## Despliegue
 
 Seguir [docs/entrega4/despliegue.md](docs/entrega4/despliegue.md): publicar imágenes en Artifact Registry, aplicar el root `scripts/IaC/cloudrun` en `proyecto-2-cloud-509714`, ejecutar el Job de administrador y capturar evidencias. No aplicar planes viejos ni ejecutar `destroy` sin autorización.
+
+Video de sustentación: <https://youtu.be/vMCBK4uZPUE>.
 
 Histórico: [entrega 3](docs/entrega3/arquitectura.md), [entrega 2](docs/entrega2/arquitectura.md). El tag y el video se registran en [cierre.md](docs/entrega4/cierre.md).

@@ -8,6 +8,25 @@ server {
     root /usr/share/nginx/html;
     client_max_body_size 0;
 
+    # Mailpit se sirve bajo el mismo origen HTTPS. Mailpit usa MP_WEBROOT
+    # /mailpit/ y Basic Auth propia; el proxy conserva el path para la UI y sus
+    # WebSockets.
+    location = /mailpit {
+        return 302 /mailpit/;
+    }
+
+    location /mailpit/ {
+        proxy_pass ${MAILPIT_URL};
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_buffering off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+
     # API en el mismo origen: se conserva el uso de rutas relativas y no hace
     # falta CORS en el backend. El streaming de TUS necesita no almacenar el
     # cuerpo completo antes de reenviarlo.

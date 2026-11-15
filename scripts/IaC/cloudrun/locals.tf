@@ -41,6 +41,7 @@ locals {
   secret_worker_s3_access  = "${var.name_prefix}-worker-s3-access-key"
   secret_worker_s3_secret  = "${var.name_prefix}-worker-s3-secret-key"
   secret_admin_password    = "${var.name_prefix}-admin-password"
+  secret_mailpit_auth      = "${var.name_prefix}-mailpit-auth"
 
   # Entorno común de los servicios que hablan con PostgreSQL y Cloud Storage.
   postgres_env = {

@@ -1,6 +1,6 @@
 # Entrega 4 — Arquitectura Cloud Run y Pub/Sub
 
-Estado: **desplegado y verificado el 2026-11-14** en `proyecto-2-cloud-509714` con la imagen `ed67d93c2666`, y **retirado** con `terraform destroy` el mismo día. Evidencias en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md) y detalle del retiro en [RETIRO-2026-11-14](evidencia/RETIRO-2026-11-14.md).
+Estado: **redesplegado y verificado el 2026-11-15** en `proyecto-2-cloud-509714` con la imagen `060d840f5c48`. Evidencia vigente en [RESUMEN-2026-11-15](evidencia/RESUMEN-2026-11-15.md). El despliegue del 2026-11-14 y su retiro quedan como histórico en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
 
 ## Componentes
 
@@ -19,16 +19,17 @@ flowchart LR
   W --> GCS
   W --> CLAM[VM de soporte\nClamAV]
   BE --> MAIL[VM de soporte\nMailpit]
+  FE -->|/mailpit/ · Basic Auth| MAIL
 ```
 
-El frontend conserva rutas relativas: nginx reenvía `/api`, `/health` y `/openapi.json` al backend, así que no hace falta CORS en la API. Los buckets de Cloud Storage sí tienen CORS para las subidas firmadas y la reproducción HLS.
+El frontend conserva rutas relativas: nginx reenvía `/api`, `/health` y `/openapi.json` al backend, así que no hace falta CORS en la API. También publica Mailpit en `/mailpit/` mediante la VPC y Basic Auth; la VM sigue sin IP pública. Los buckets de Cloud Storage sí tienen CORS para las subidas firmadas y la reproducción HLS.
 
 ## Servicios Cloud Run
 
 | Servicio | Responsabilidad | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | SPA React servida por nginx y proxy de la API | 0 | 3 | 1 | 512 MiB | 5 | 300 s |
-| `mooc4-backend` | API REST, autenticación y publicación de tareas | 1 | 3 | 1 | 512 MiB | 10 | 300 s |
+| `mooc4-backend` | API REST, autenticación y publicación de tareas | 0 | 3 | 1 | 512 MiB | 10 | 300 s |
 | `mooc4-worker` | Push de Pub/Sub, ClamAV y transcodificación HLS | 0 | 3 | 2 | 2 GiB | 1 | 590 s |
 
 - Región: `us-central1`.
@@ -91,7 +92,7 @@ sequenceDiagram
 
 - VPC `mooc4-vpc`, subred `10.10.1.0/24` con VPC Flow Logs al 50 % cada 10 minutos, Private Service Access `10.86.0.0/16`.
 - Backend y worker usan Direct VPC Egress con etiquetas `backend` y `worker` para Cloud SQL, Memorystore y la VM de soporte.
-- La VM de soporte (`mooc4-support`, `10.10.1.30`) no tiene IP pública, bloquea claves SSH de proyecto y solo acepta ClamAV desde workers y SMTP desde el backend.
+- La VM de soporte (`mooc4-support`, `10.10.1.30`) no tiene IP pública, bloquea claves SSH de proyecto y solo acepta ClamAV desde workers, SMTP desde el backend y la UI de Mailpit desde el frontend (8025).
 - Cloud NAT permite a la VM descargar imágenes; Cloud Run usa la red de Google para APIs públicas.
 - Cloud SQL exige TLS (`ENCRYPTED_ONLY`; los clientes usan `sslmode=require`) y registra conexiones y desconexiones.
 - Cloud Storage tiene versionado, access logs en un bucket privado y lifecycle de versiones no actuales.
@@ -102,7 +103,7 @@ sequenceDiagram
 - El ack deadline de Pub/Sub push es 600 s: un video cuya transcodificación exceda 540 s quedará marcado como `failed`.
 - `db-f1-micro` admite 25 conexiones; los pools se presupuestan para 3 backend × 4 + 3 workers × 2 + 3 reservadas.
 - Memorystore Basic no tiene alta disponibilidad; la VM de ClamAV/Mailpit es un punto único de falla.
-- El frontend hace proxy de la API: el tráfico de API comparte el límite de 3 instancias del frontend.
+- El frontend hace proxy de la API y de Mailpit: ese tráfico comparte el límite de 3 instancias del frontend.
 - Las subidas normales usan URL firmada directa a Cloud Storage; TUS pasa por el timeout de 300 s del backend.
 
 Fuentes de diagramas: [componentes.mmd](diagramas/componentes.mmd) y [despliegue.mmd](diagramas/despliegue.mmd).

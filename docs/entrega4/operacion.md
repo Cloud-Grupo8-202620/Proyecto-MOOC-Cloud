@@ -135,10 +135,22 @@ Registrar en la evidencia:
 - si Cloud Run superó el máximo temporalmente, anotarlo como comportamiento de
   la plataforma, no como error de configuración.
 
+## Mailpit
+
+La UI se consulta en `https://<frontend_url>/mailpit/` con Basic Auth:
+
+- usuario: `viewer`
+- contraseña: `gcloud secrets versions access latest --secret=mooc4-mailpit-auth`
+
+La VM no tiene IP pública. El frontend accede por la VPC; el firewall de Mailpit
+solo acepta el puerto 8025 desde la etiqueta `frontend`. El SMTP (1025) sigue
+privado para el backend.
+
 ## Limitaciones que deben quedar escritas
 
 - Ack deadline máximo 600 s; ffmpeg 540 s.
 - Memorystore Basic sin HA.
 - VM de ClamAV/Mailpit como punto único de falla.
+- Mailpit queda expuesto con Basic Auth a través del frontend; es una utilidad de prueba, no un servicio de correo de producción.
 - Cloud SQL `db-f1-micro` con 25 conexiones.
 - El frontend comparte su límite de 3 instancias con el tráfico de API.

@@ -72,6 +72,11 @@ resource "random_password" "admin" {
   special = false
 }
 
+resource "random_password" "mailpit" {
+  length  = 24
+  special = false
+}
+
 locals {
   secret_values = {
     (local.secret_postgres_password) = random_password.postgres.result
@@ -82,6 +87,7 @@ locals {
     (local.secret_worker_s3_access)  = google_storage_hmac_key.role["worker"].access_id
     (local.secret_worker_s3_secret)  = google_storage_hmac_key.role["worker"].secret
     (local.secret_admin_password)    = random_password.admin.result
+    (local.secret_mailpit_auth)      = random_password.mailpit.result
   }
 
   # Qué secretos puede leer cada identidad: exactamente los que usa.
@@ -101,6 +107,9 @@ locals {
     job_admin = [
       local.secret_postgres_password,
       local.secret_admin_password,
+    ]
+    support = [
+      local.secret_mailpit_auth,
     ]
   }
 

@@ -32,7 +32,7 @@ Worker → ClamAV (VM de soporte) · Backend → Mailpit (VM de soporte)
 - [Arquitectura y decisiones](docs/entrega4/arquitectura.md), con [diagramas](docs/entrega4/diagramas/).
 - [Guía de despliegue reproducible](docs/entrega4/despliegue.md).
 - [Operación, logs, reentrega y escalamiento](docs/entrega4/operacion.md).
-- [Cierre, checklist y video](docs/entrega4/cierre.md).
+- [Cierre y checklist](docs/entrega4/cierre.md).
 - [Terraform Cloud Run](scripts/IaC/cloudrun/README.md).
 - [Evidencias](docs/entrega4/evidencia/README.md).
 
@@ -71,5 +71,7 @@ cd cloudrun && terraform init -backend=false && terraform validate && terraform 
 ## Despliegue
 
 Seguir [docs/entrega4/despliegue.md](docs/entrega4/despliegue.md): publicar imágenes en Artifact Registry, aplicar el root `scripts/IaC/cloudrun` en `proyecto-2-cloud-509714`, ejecutar el Job de administrador y capturar evidencias. No aplicar planes viejos ni ejecutar `destroy` sin autorización.
+
+Video de sustentación: <https://youtu.be/vMCBK4uZPUE>.
 
 Histórico: [entrega 3](docs/entrega3/arquitectura.md), [entrega 2](docs/entrega2/arquitectura.md). El tag y el video se registran en [cierre.md](docs/entrega4/cierre.md).

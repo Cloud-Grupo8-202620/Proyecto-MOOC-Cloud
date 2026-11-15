@@ -21,7 +21,7 @@
 | Evidencia histórica | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
 | Mailpit | `https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/` |
 | Credencial Mailpit | usuario `viewer`; contraseña en `mooc4-mailpit-auth` |
-| Video | `<pendiente>` |
+| Video | https://youtu.be/vMCBK4uZPUE |
 | Escalamiento | 0–3 en frontend, backend y worker; máximo 3 a nivel de servicio |
 
 ## Checklist de evidencias
@@ -40,7 +40,7 @@
 - [x] Recorrido Playwright completo contra Cloud Run (**1.8 min**).
 - [x] ClamAV en la VM de soporte `healthy`; límite de memoria corregido a 3 GB.
 - [x] Mailpit accesible en `/mailpit/` mediante HTTPS y Basic Auth (`401` sin credenciales, `200` con credenciales).
-- [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
+- [x] Video de sustentación: https://youtu.be/vMCBK4uZPUE
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 
 ## Comandos de referencia

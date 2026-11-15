@@ -59,6 +59,7 @@ export function resourceStatus(r: Resource) {
   if (["text", "link", "iframe"].includes(r.type)) return "Contenido";
   if (!r.object_key) return "Sin archivo";
   if (r.scan_status === "infected") return "Archivo rechazado";
+  if (r.scan_status === "failed") return "Escaneo fallido";
   if (r.processing_status === "failed") return "Procesamiento fallido";
   if (r.scan_status !== "clean") return "Escaneando";
   if (["video", "audio"].includes(r.type) && r.processing_status !== "ready")

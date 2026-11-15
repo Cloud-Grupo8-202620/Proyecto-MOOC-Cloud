@@ -1,0 +1,14 @@
+flowchart LR
+  U[Navegador] --> FE[Cloud Run frontend · nginx]
+  FE -->|proxy /api| BE[Cloud Run backend · Go]
+  BE -->|publish| PS[(Pub/Sub media-jobs)]
+  PS -->|push OIDC| W[Cloud Run worker · Go/ffmpeg]
+  W -->|ack tras persistir| PS
+  PS --> DLQ[(DLQ media-jobs-dlq)]
+  BE --> SQL[(Cloud SQL PostgreSQL)]
+  W --> SQL
+  BE --> REDIS[(Memorystore Redis)]
+  BE --> GCS[(Cloud Storage)]
+  W --> GCS
+  W --> CLAM[VM soporte · ClamAV]
+  BE --> MAIL[VM soporte · Mailpit]

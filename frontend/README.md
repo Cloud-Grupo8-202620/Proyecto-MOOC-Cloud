@@ -11,10 +11,10 @@ Tailwind CSS v4, servida por nginx en el puerto 3000.
 | `/ingresar` | Ingreso, registro de estudiantes y verificación con el código de 6 dígitos |
 | `/estado` | `/health` y prueba de balanceo: 24 peticiones y la instancia que atendió cada una (`X-Served-By`) |
 
-Las rutas no pisan `/api`, `/health` ni `/openapi.json`, que el balanceador manda
-a la API. Todas las llamadas usan rutas relativas: en GCP el balanceador sirve
-frontend y API en el mismo origen; en desarrollo el servidor de Vite hace de
-proxy, así que la API no necesita CORS.
+Las rutas no pisan `/api`, `/health` ni `/openapi.json`: nginx las reenvía al
+backend de Cloud Run. Todas las llamadas usan rutas relativas. En desarrollo el
+servidor de Vite hace de proxy; en GCP el frontend y la API comparten origen a
+través de nginx, así que la API no necesita CORS.
 
 ## Diseño
 
@@ -47,4 +47,6 @@ docker buildx build --platform linux/amd64 -t mooc-frontend .
 
 El build de Vite corre nativo en la máquina que construye (los archivos son
 iguales en cualquier arquitectura) y solo la etapa de nginx es `linux/amd64`.
-En el despliegue la publica `scripts/IaC/scripts/publish_images.sh`.
+La URL del backend no se hornea: `nginx.conf.template` se resuelve al arrancar
+con la variable `BACKEND_URL` que define Cloud Run. En el despliegue la publica
+`scripts/IaC/cloudrun/scripts/publish_images.sh`.

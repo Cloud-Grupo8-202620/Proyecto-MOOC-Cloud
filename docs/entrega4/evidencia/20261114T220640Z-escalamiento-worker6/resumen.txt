@@ -1,0 +1,20 @@
+resource=11 stable=5eb14061-66dd-499e-b0ea-a4167e2ca543 task_id=23382371161511899 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p3-large.mp4
+resource=12 stable=46e028f2-14f4-44d6-8981-1378c55813a8 task_id=23381989955633078 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p2-medium.mp4
+resource=13 stable=03e1e32c-8575-4501-acb9-6c656d67df62 task_id=22615570732704902 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p3-large.mp4
+upload_11=200
+resource=14 stable=00a08803-16fc-4374-8e5a-55cb0c12746f task_id=23383552527493667 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p2-medium.mp4
+upload_12=200
+upload_13=200
+resource=15 stable=9002ce16-2f55-4e65-ace4-2a2bf6b59d2e task_id=23382220608139666 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p3-large.mp4
+resource=16 stable=6d166f80-d4e1-40ab-81e6-1d0f5c942cd5 task_id=23382802392629158 file=/Users/diegocrea/Proyecto-1-Cloud/capacity-planning/media/p2-medium.mp4
+upload_14=200
+upload_15=200
+upload_16=200
+poll=1 ready=0
+poll=2 ready=0
+poll=3 ready=0
+poll=4 ready=1
+poll=5 ready=1
+poll=6 ready=2
+poll=7 ready=4
+poll=8 ready=6

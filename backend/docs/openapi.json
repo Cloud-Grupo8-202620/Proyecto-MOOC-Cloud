@@ -70,18 +70,6 @@
                 },
                 "type": "object"
             },
-            "admin.QueueStatsResponse": {
-                "properties": {
-                    "queues": {
-                        "items": {
-                            "$ref": "#/components/schemas/queue.QueueStats"
-                        },
-                        "type": "array",
-                        "uniqueItems": false
-                    }
-                },
-                "type": "object"
-            },
             "admin.RevokeSessionsResponse": {
                 "properties": {
                     "count": {
@@ -1116,71 +1104,6 @@
                 },
                 "type": "object"
             },
-            "queue.QueueStats": {
-                "properties": {
-                    "active": {
-                        "type": "integer"
-                    },
-                    "age_oldest_pending_sec": {
-                        "description": "AgeOldestPendingSec es la antigüedad del trabajo pendiente más viejo: la\nmedida directa de si los workers dan abasto a la tasa de entrada.",
-                        "type": "number"
-                    },
-                    "aggregating": {
-                        "type": "integer"
-                    },
-                    "archived": {
-                        "type": "integer"
-                    },
-                    "completed": {
-                        "type": "integer"
-                    },
-                    "exists": {
-                        "type": "boolean"
-                    },
-                    "failed_today": {
-                        "type": "integer"
-                    },
-                    "failed_total": {
-                        "type": "integer"
-                    },
-                    "groups": {
-                        "type": "integer"
-                    },
-                    "memory_usage_bytes": {
-                        "description": "MemoryUsageBytes es el uso aproximado de Redis de la cola y sus trabajos.",
-                        "type": "integer"
-                    },
-                    "observed_at": {
-                        "type": "string"
-                    },
-                    "paused": {
-                        "type": "boolean"
-                    },
-                    "pending": {
-                        "type": "integer"
-                    },
-                    "processed_today": {
-                        "description": "Processed y Failed reinician a medianoche; los *Total son acumulados desde\nque existe la cola. Se exponen ambos para no leer un contador diario como\nsi fuera histórico.",
-                        "type": "integer"
-                    },
-                    "processed_total": {
-                        "type": "integer"
-                    },
-                    "queue": {
-                        "type": "string"
-                    },
-                    "retry": {
-                        "type": "integer"
-                    },
-                    "scheduled": {
-                        "type": "integer"
-                    },
-                    "size": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
             "quiz.AddQuestionsRequest": {
                 "properties": {
                     "questions": {
@@ -1499,7 +1422,7 @@
         },
         "securitySchemes": {
             "BearerAuth": {
-                "description": "Token JWT de sesión. Formato: `Bearer \u003ctoken\u003e`.",
+                "description": "Token JWT de sesión. Formato: `Bearer <token>`.",
                 "in": "header",
                 "name": "Authorization",
                 "type": "apiKey"
@@ -1507,7 +1430,7 @@
         }
     },
     "info": {
-        "description": "API REST del monolito modular: identidad y sesiones, administración y auditoría, autoría de cursos versionados y carga multimedia con procesamiento asíncrono a HLS.\nAutenticación con JWT revocable: iniciar sesión en /api/v1/auth/login y enviar `Authorization: Bearer \u003ctoken\u003e`.",
+        "description": "API REST del monolito modular: identidad y sesiones, administración y auditoría, autoría de cursos versionados y carga multimedia con procesamiento asíncrono a HLS.\nAutenticación con JWT revocable: iniciar sesión en /api/v1/auth/login y enviar `Authorization: Bearer <token>`.",
         "title": "Plataforma MOOC - API",
         "version": "1.0"
     },
@@ -1521,7 +1444,7 @@
                 "description": "Registros inmutables de acciones administrativas, filtrables por actor, objetivo, acción y rango de fechas.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -1621,79 +1544,12 @@
                 ]
             }
         },
-        "/api/v1/admin/queue": {
-            "get": {
-                "description": "Instantánea de la cola asynq leída desde Redis: trabajos pendientes, en ejecución, programados, en reintento y archivados (DLQ), antigüedad del pendiente más viejo y totales procesados y fallidos. Si la cola aún no existe responde con exists=false y todos los contadores en cero.",
-                "parameters": [
-                    {
-                        "description": "Bearer \u003ctoken de admin\u003e",
-                        "in": "header",
-                        "name": "Authorization",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/admin.QueueStatsResponse"
-                                }
-                            }
-                        },
-                        "description": "Estado de la cola"
-                    },
-                    "401": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/utils.ErrorResponse"
-                                }
-                            }
-                        },
-                        "description": "No autenticado"
-                    },
-                    "403": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/utils.ErrorResponse"
-                                }
-                            }
-                        },
-                        "description": "Se requiere rol admin"
-                    },
-                    "500": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/utils.ErrorResponse"
-                                }
-                            }
-                        },
-                        "description": "No se pudo leer la cola"
-                    }
-                },
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "summary": "Estado de la cola de trabajos",
-                "tags": [
-                    "Administración"
-                ]
-            }
-        },
         "/api/v1/admin/sessions": {
             "delete": {
                 "description": "Revoca el token indicado (cuerpo o query) con registro en auditoría.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -1770,7 +1626,7 @@
                 "description": "Totales de usuarios por estado y administradores activos.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -1807,7 +1663,7 @@
                 "description": "Lista paginada de usuarios con búsqueda por texto, filtros por rol, estado y verificación.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -1932,7 +1788,7 @@
                 "description": "Soft delete con auditoría y revocación de sesiones. Protege al último administrador activo.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2006,7 +1862,7 @@
                 "description": "Retorna la representación pública de un usuario (sin contraseña).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2092,7 +1948,7 @@
                 "description": "Revierte el soft delete de un usuario, con registro en auditoría.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2158,7 +2014,7 @@
                 "description": "Actualiza el rol de un usuario y registra la acción en auditoría. No permite degradar al último administrador activo.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2247,7 +2103,7 @@
                 "description": "Elimina todos los tokens activos de un usuario, con registro en auditoría.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2311,7 +2167,7 @@
                 "description": "Retorna los JWT activos de un usuario, purgando expirados perezosamente.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2377,7 +2233,7 @@
                 "description": "Actualiza el estado (active, inactive, blocked) con auditoría. Desactivar o bloquear revoca todas las sesiones. Protege al último admin activo.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2466,7 +2322,7 @@
                 "description": "Score y feedback solo tras el envío, según la política del quiz.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2520,7 +2376,7 @@
                 "description": "Solo sobre intentos en borrador vigente; valida rangos en servidor.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2609,7 +2465,7 @@
                 "description": "Calcula la nota en servidor desde el snapshot; nunca confía en el cliente.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2739,7 +2595,7 @@
                 "description": "Invalida el token de la petición actual. Es idempotente.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2786,7 +2642,7 @@
                 "description": "Retorna el username y rol asociados al token de la petición.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -2833,7 +2689,7 @@
                 "description": "Registra estudiantes de forma pública. Crear profesores o administradores requiere el token de un administrador.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e (obligatorio para professor o admin)",
+                        "description": "Bearer <token> (obligatorio para professor o admin)",
                         "in": "header",
                         "name": "Authorization",
                         "schema": {
@@ -3189,7 +3045,7 @@
                 "description": "Retorna las insignias emitidas al estudiante (incluye IDs para gestión).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3268,7 +3124,7 @@
                 "description": "Marca RevokedAt; la URL pública deja de validar.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken de admin\u003e",
+                        "description": "Bearer <token de admin>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3398,7 +3254,7 @@
                 "description": "Crea el curso (borrador) con su versión 1 draft. Requiere rol professor o admin.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3503,7 +3359,7 @@
                 "description": "Borra árbol, quizzes, intentos, progreso, inscripciones e insignias, más objetos en S3 (best-effort). Requiere ser el autor o admin.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3576,7 +3432,7 @@
                         }
                     },
                     {
-                        "description": "Bearer \u003ctoken\u003e (obligatorio para borradores)",
+                        "description": "Bearer <token> (obligatorio para borradores)",
                         "in": "header",
                         "name": "Authorization",
                         "schema": {
@@ -3645,7 +3501,7 @@
                 "description": "Edita título, descripción o miniatura. Un curso publicado debe despublicarse primero (MVP).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3744,7 +3600,7 @@
                 "description": "Solo el autor propietario o admin. Los retirados no aparecen.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3810,7 +3666,7 @@
                 "description": "Agrega un módulo al final del borrador editable del curso.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3909,7 +3765,7 @@
                 "description": "Asigna posiciones 1-based según el orden de IDs recibido, en transacción.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -3998,7 +3854,7 @@
                 "description": "Valida y publica el borrador: la versión se vuelve inmutable y pasa a ser la vigente.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4074,7 +3930,7 @@
                 "description": "La edición de un curso publicado exige despublicarlo temporalmente durante el MVP.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4140,7 +3996,7 @@
                 "description": "Verifica metadatos, estructura mínima, criterios de aprobación y disponibilidad de recursos visibles.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4206,7 +4062,7 @@
                 "description": "Clona módulos, unidades y recursos preservando los stable_id para conservar el progreso.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4282,7 +4138,7 @@
                 "description": "Lista cursos con inscripción del estudiante, incluyendo retirados (progreso conservado).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4317,7 +4173,7 @@
                 "description": "Crea o reactiva la inscripción; re-POST no duplica ni borra progreso.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4397,7 +4253,7 @@
                 "description": "Marca Inscrito=false; el progreso y las notas se conservan para reinscripción.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4453,7 +4309,7 @@
                 "description": "Reactiva la inscripción sin tocar progreso ni notas.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4568,7 +4424,7 @@
                 "description": "Agrega una unidad al final del módulo indicado.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4667,7 +4523,7 @@
                 "description": "Asigna posiciones 1-based según el orden de IDs recibido, en transacción.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4756,7 +4612,7 @@
                 "description": "Reporta posición y duración; el servidor decide la finalización. Enviar percent/completed es 400 y se audita.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4836,7 +4692,7 @@
                 "description": "Lo que el visor/reproductor necesita para continuar donde quedó, incluso en recursos no visibles.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4902,7 +4758,7 @@
                 "description": "Calcula % sobre recursos obligatorios; al aprobar emite la insignia (idempotente).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -4968,7 +4824,7 @@
                 "description": "Define intentos, límite de tiempo y retroalimentación sobre un recurso quiz del borrador.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5058,7 +4914,7 @@
                 "description": "Borra el quiz con sus preguntas e intentos. Solo en versión borrador de curso no publicado.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5132,7 +4988,7 @@
                 "description": "Incluye correct_index; solo professor/admin propietarios.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5198,7 +5054,7 @@
                 "description": "Visible para autor/admin: incluye respuestas y notas (la clave vive en las preguntas).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5280,7 +5136,7 @@
                 "description": "Congela un snapshot de preguntas; reintento con la misma clave retorna el mismo intento.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5354,7 +5210,7 @@
                 "description": "La clave correcta queda solo en servidor; el cliente jamás la recibe.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5443,7 +5299,7 @@
                 "description": "Los intentos existentes conservan su snapshot y siguen calificando.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5516,7 +5372,7 @@
                 "description": "Actualiza prompt, opciones y clave. Los intentos ya iniciados conservan su snapshot.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5614,7 +5470,7 @@
                 "description": "Solo en versión borrador de curso no publicado. Con quiz asociado pide borrar el quiz primero.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5698,7 +5554,7 @@
                 "description": "Devuelve el recurso con su estado (scan_status, processing_status, hls_key, object_key) tras verificar acceso: autor o admin, o bien curso publicado con recurso visible e inscripción activa. Es la vía para seguir una carga sin releer el árbol completo del curso.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5772,7 +5628,7 @@
                 "description": "Actualiza los campos indicados; los no enviados conservan su valor. Solo en versión borrador.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5871,7 +5727,7 @@
                 "description": "Verifica propiedad o inscripción y curso publicado con recurso visible. Si hay HLS listo retorna su URL pública; si no, una URL firmada de 15 min. Devuelve 404 si el recurso no tiene archivo asociado, que es el caso de los recursos de texto, PDF o quiz.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -5973,7 +5829,7 @@
                 "description": "Genera una URL prefirmada PUT válida 24h para carga directa a objetos. LEGADO: preferir TUS en /api/v1/uploads (reanudable). Siempre encola escaneo antimalware (fail-closed); si está limpio y es video/audio, encadena transcode HLS idempotente (header Idempotency-Key recomendado).",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -6119,7 +5975,7 @@
                 "description": "Tipos: text, image, video, audio, pdf, slides, file, iframe, link, quiz. Video/audio quedan en processing pending hasta el transcode.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,
@@ -6218,7 +6074,7 @@
                 "description": "Asigna posiciones 1-based según el orden de IDs recibido, en transacción.",
                 "parameters": [
                     {
-                        "description": "Bearer \u003ctoken\u003e",
+                        "description": "Bearer <token>",
                         "in": "header",
                         "name": "Authorization",
                         "required": true,

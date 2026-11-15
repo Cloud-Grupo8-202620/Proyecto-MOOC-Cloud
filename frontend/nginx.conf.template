@@ -1,0 +1,60 @@
+# Sirve la SPA en el puerto 3000 y hace proxy de la API al backend de Cloud Run.
+# El entrypoint oficial de nginx sustituye ${BACKEND_URL} al arrancar; así la
+# URL del backend, que Cloud Run asigna después de crear el servicio, no queda
+# horneada en la imagen.
+server {
+    listen 3000;
+    server_name _;
+    root /usr/share/nginx/html;
+    client_max_body_size 0;
+
+    # API en el mismo origen: se conserva el uso de rutas relativas y no hace
+    # falta CORS en el backend. El streaming de TUS necesita no almacenar el
+    # cuerpo completo antes de reenviarlo.
+    location /api/ {
+        proxy_pass ${BACKEND_URL};
+        proxy_http_version 1.1;
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_ssl_server_name on;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_connect_timeout 10s;
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+    }
+
+    location = /health {
+        proxy_pass ${BACKEND_URL};
+        proxy_http_version 1.1;
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ssl_server_name on;
+        proxy_connect_timeout 10s;
+        proxy_read_timeout 10s;
+    }
+
+    location = /openapi.json {
+        proxy_pass ${BACKEND_URL};
+        proxy_http_version 1.1;
+        proxy_set_header Host $proxy_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ssl_server_name on;
+    }
+
+    # Los assets llevan hash en el nombre: se pueden cachear sin límite.
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files $uri =404;
+    }
+
+    # index.html no se cachea, para que una imagen nueva se vea al recargar.
+    location / {
+        add_header Cache-Control "no-cache";
+        try_files $uri /index.html;
+    }
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+}

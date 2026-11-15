@@ -1,10 +1,12 @@
 package uploads
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/auth"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/courses"
@@ -180,11 +182,13 @@ func (h *tusHandler) finish(event handler.HookEvent) {
 		return
 	}
 	key := "scan-" + r.StableID
-	if _, err := h.Queue.EnqueueScan(queue.ScanPayload{
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if _, err := h.Queue.EnqueueScan(ctx, queue.ScanPayload{
 		ResourceID:   r.ID,
 		ObjectKey:    r.ObjectKey,
 		TranscodeKey: "transcode-" + r.StableID,
 	}, key); err != nil {
-		log.Printf("tus: no se pudo encolar scan recurso %d: %v", id, err)
+		log.Printf("tus: no se pudo publicar scan recurso %d: %v", id, err)
 	}
 }

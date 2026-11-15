@@ -135,6 +135,7 @@ const (
 	ScanPending  = "pending"
 	ScanClean    = "clean"
 	ScanInfected = "infected"
+	ScanFailed   = "failed"
 )
 
 // Resource es el nivel hoja: contenido o quiz.

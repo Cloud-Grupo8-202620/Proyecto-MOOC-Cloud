@@ -1,0 +1,677 @@
+{
+  "timeSeries": [
+    {
+      "metric": {
+        "labels": {
+          "state": "active"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "configuration_name": "mooc4-backend",
+          "location": "us-central1",
+          "revision_name": "mooc4-backend-00001-qrt",
+          "service_name": "mooc4-backend",
+          "project_id": "proyecto-2-cloud-509714"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "metric": {
+        "labels": {
+          "state": "idle"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "service_name": "mooc4-backend",
+          "revision_name": "mooc4-backend-00001-qrt",
+          "configuration_name": "mooc4-backend",
+          "project_id": "proyecto-2-cloud-509714",
+          "location": "us-central1"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "metric": {
+        "labels": {
+          "state": "active"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "location": "us-central1",
+          "configuration_name": "mooc4-frontend",
+          "service_name": "mooc4-frontend",
+          "revision_name": "mooc4-frontend-00001-2c4",
+          "project_id": "proyecto-2-cloud-509714"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "metric": {
+        "labels": {
+          "state": "idle"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "project_id": "proyecto-2-cloud-509714",
+          "service_name": "mooc4-frontend",
+          "revision_name": "mooc4-frontend-00001-2c4",
+          "location": "us-central1",
+          "configuration_name": "mooc4-frontend"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        }
+      ]
+    },
+    {
+      "metric": {
+        "labels": {
+          "state": "active"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "service_name": "mooc4-worker",
+          "project_id": "proyecto-2-cloud-509714",
+          "location": "us-central1",
+          "configuration_name": "mooc4-worker",
+          "revision_name": "mooc4-worker-00001-pw2"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "3"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "2"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "2"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        }
+      ]
+    },
+    {
+      "metric": {
+        "labels": {
+          "state": "idle"
+        },
+        "type": "run.googleapis.com/container/instance_count"
+      },
+      "resource": {
+        "type": "cloud_run_revision",
+        "labels": {
+          "configuration_name": "mooc4-worker",
+          "location": "us-central1",
+          "revision_name": "mooc4-worker-00001-pw2",
+          "project_id": "proyecto-2-cloud-509714",
+          "service_name": "mooc4-worker"
+        }
+      },
+      "metricKind": "GAUGE",
+      "valueType": "INT64",
+      "points": [
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:06:51Z",
+            "endTime": "2026-11-14T22:06:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:05:51Z",
+            "endTime": "2026-11-14T22:05:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:04:51Z",
+            "endTime": "2026-11-14T22:04:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:03:51Z",
+            "endTime": "2026-11-14T22:03:51Z"
+          },
+          "value": {
+            "int64Value": "2"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:02:51Z",
+            "endTime": "2026-11-14T22:02:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:01:51Z",
+            "endTime": "2026-11-14T22:01:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T22:00:51Z",
+            "endTime": "2026-11-14T22:00:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:59:51Z",
+            "endTime": "2026-11-14T21:59:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:58:51Z",
+            "endTime": "2026-11-14T21:58:51Z"
+          },
+          "value": {
+            "int64Value": "1"
+          }
+        },
+        {
+          "interval": {
+            "startTime": "2026-11-14T21:57:51Z",
+            "endTime": "2026-11-14T21:57:51Z"
+          },
+          "value": {
+            "int64Value": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "unit": "1"
+}

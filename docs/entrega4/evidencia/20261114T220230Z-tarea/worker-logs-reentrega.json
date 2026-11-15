@@ -1,0 +1,22 @@
+[
+  {
+    "insertId": "6af8dabb000c588de3ab0233",
+    "labels": {
+      "instanceId": "00e8a408bd4cb18ce056cc88e1996eb014ed96f67369fe5f3076512794a2999dceea755576f5ac7e495d86112500c64b6acc936afaa024163387096e7c74ac9a6f89fdea543e8a41af8967348d4306bb76ef170c7cf5d80f758ef2e2a27a9d60"
+    },
+    "logName": "projects/proyecto-2-cloud-509714/logs/run.googleapis.com%2Fstderr",
+    "receiveTimestamp": "2026-11-14T22:03:40.142998983Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mooc4-worker",
+        "location": "us-central1",
+        "project_id": "proyecto-2-cloud-509714",
+        "revision_name": "mooc4-worker-00001-pw2",
+        "service_name": "mooc4-worker"
+      },
+      "type": "cloud_run_revision"
+    },
+    "textPayload": "2026/11/14 22:03:39 worker: recurso 7 ya procesado (idempotente), skip",
+    "timestamp": "2026-11-14T22:03:39.809101Z"
+  }
+]

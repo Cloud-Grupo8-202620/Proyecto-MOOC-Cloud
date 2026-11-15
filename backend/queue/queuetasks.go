@@ -2,10 +2,11 @@ package queue
 
 import "encoding/json"
 
-// Tipos de tareas asynq. La API publica, el worker consume.
+// Tipos de tarea. El backend publica y el worker consume por la suscripción
+// push; el tipo viaja en los atributos del mensaje.
 const (
-	TypeMediaTranscode = "media:transcode"
-	TypeMediaScan      = "media:scan"
+	TypeMediaTranscode = "media.transcode"
+	TypeMediaScan      = "media.scan"
 )
 
 // TranscodePayload es el payload para transcodificar un recurso a HLS.

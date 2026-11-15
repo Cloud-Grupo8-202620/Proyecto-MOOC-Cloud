@@ -724,7 +724,7 @@ func (h *Handler) UploadURL(c *gin.Context) {
 		writeErr(c, err)
 		return
 	}
-	taskID, err := queueClient.EnqueueScan(queue.ScanPayload{
+	taskID, err := queueClient.EnqueueScan(c.Request.Context(), queue.ScanPayload{
 		ResourceID:   r.ID,
 		ObjectKey:    r.ObjectKey,
 		TranscodeKey: transcodeKey,

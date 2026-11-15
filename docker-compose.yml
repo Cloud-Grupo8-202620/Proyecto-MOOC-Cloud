@@ -1,4 +1,4 @@
-# Entorno compartido API/worker (Postgres, Redis, S3/MinIO).
+# Entorno compartido API/worker (Postgres, Redis, S3 y Pub/Sub).
 x-common-env: &common-env
   POSTGRES_HOST: postgres
   POSTGRES_PORT: 5432
@@ -17,6 +17,10 @@ x-common-env: &common-env
   S3_BUCKET_ORIGINALS: originals
   S3_BUCKET_HLS: hls
   S3_BUCKET_PUBLIC: public
+  # Emulador local de Pub/Sub: sustituye a Redis/asynq para la mensajería.
+  PUBSUB_EMULATOR_HOST: pubsub:8085
+  PUBSUB_PROJECT_ID: mooc-local
+  PUBSUB_TOPIC: media-jobs
 
 services:
   postgres:
@@ -85,6 +89,39 @@ services:
     volumes:
       - clamav_data:/var/lib/clamav
 
+  # El emulador reproduce topic, suscripción push, reintentos y ack. En GCP lo
+  # sustituyen los recursos de Pub/Sub creados por Terraform.
+  pubsub:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators
+    platform: linux/amd64
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "-c"]
+    command: ["gcloud beta emulators pubsub start --host-port=0.0.0.0:8085"]
+    environment:
+      CLOUDSDK_CORE_PROJECT: mooc-local
+      PATH: /google-cloud-sdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+  pubsub-init:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators
+    platform: linux/amd64
+    depends_on:
+      - pubsub
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        # El emulador expone REST además de gRPC; así no hace falta una cuenta
+        # de gcloud para inicializarlo.
+        for i in $$(seq 1 90); do
+          curl -sf http://pubsub:8085/v1/projects/mooc-local/topics >/dev/null && break
+          sleep 1
+        done
+        curl -sS -X PUT http://pubsub:8085/v1/projects/mooc-local/topics/media-jobs >/dev/null
+        curl -sS -X PUT http://pubsub:8085/v1/projects/mooc-local/subscriptions/media-jobs-push \
+          -H 'Content-Type: application/json' \
+          -d '{"topic":"projects/mooc-local/topics/media-jobs","pushConfig":{"pushEndpoint":"http://worker:8080/pubsub/push"},"ackDeadlineSeconds":600}' \
+          >/dev/null || true
+        curl -sf http://pubsub:8085/v1/projects/mooc-local/subscriptions/media-jobs-push >/dev/null
+
   backend:
     build:
       context: ./backend
@@ -97,6 +134,8 @@ services:
         condition: service_started
       s3:
         condition: service_started
+      pubsub-init:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
     env_file:
@@ -116,23 +155,26 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_started
       s3:
         condition: service_started
       clamav:
         condition: service_started
+      pubsub-init:
+        condition: service_completed_successfully
     env_file:
       - .env
     environment:
       <<: *common-env
       CLAMAV_HOST: clamav:3310
-      WORKER_CONCURRENCY: 10
-      # /metrics del worker. En la nube se publica solo en loopback para el
-      # Ops Agent; en local se deja accesible para desarrollar y depurar.
-      METRICS_ADDR: ":9101"
-    ports:
-      - "127.0.0.1:9101:9101"
+      WORKER_MAX_ATTEMPTS: 5
+      WORKER_TRANSCODE_TIMEOUT: 9m
+    expose:
+      - "8080"
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health >/dev/null" ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
     command: [ "./worker" ]
     # Escalamiento horizontal (stateless, idempotente): docker compose up --scale worker=2
 

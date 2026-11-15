@@ -1,0 +1,13 @@
+# Proyecto de la entrega 4. No versionar el tfvars real.
+project_id = "proyecto-2-cloud-509714"
+
+# Etiqueta que imprime scripts/publish_images.sh. Es obligatoria para crear los
+# servicios Cloud Run.
+image_tag = "CAMBIAR_POR_LA_ETIQUETA"
+
+# Valores por defecto: us-central1, prefijo mooc4, máximo 3 por servicio.
+# Ajustar solo si se documenta en la evidencia.
+# backend_min_instances = 1
+# frontend_min_instances = 0
+# worker_min_instances = 0
+# cors_origins = ["*"]

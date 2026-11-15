@@ -1,60 +1,71 @@
-# Plataforma MOOC — Entrega 3, ISIS4426
+# Plataforma MOOC — Entrega 4, ISIS4426
 
-Go API + worker asynq, React/Vite, Redis, ClamAV, PostgreSQL y almacenamiento de objetos. La infraestructura preparada usa dos MIG independientes de 1–3 instancias, API por CPU y workers por backlog, balanceador externo HTTPS y frontend fijo. Redis/ClamAV quedan fuera de los grupos.
+API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, ClamAV y almacenamiento de objetos, desplegados como **tres servicios Cloud Run** con **Pub/Sub** como mecanismo de mensajería. El frontend es nginx y hace proxy de la API para conservar el mismo origen.
 
-**Estado al 2026-11-01:** desplegado en el proyecto `proyecto-2-cloud-509714` con la imagen `b4d5568` y sirviendo en <https://136.68.131.0.sslip.io>; certificado administrado ACTIVE y `/health` 200. La calidad tiene línea base sobre el commit `84657d6` ([run 41341119569](https://github.com/Cloud-Grupo8-202620/Proyecto-MOOC-Cloud/actions/runs/41341119569)). Pendientes: mediciones de carga, ciclos 3A/3B, evidencias de integridad, video y tag de entrega.
+**Estado:** desplegado y verificado el 2026-11-14 con la imagen `ed67d93c2666`; **retirado el mismo día** con `terraform destroy`. La evidencia histórica está en [RESUMEN-2026-11-14](docs/entrega4/evidencia/RESUMEN-2026-11-14.md). Queda pendiente que Cloud Run libere la IP serverless de la subred (1–2 h) para eliminar la VPC; ver [RETIRO-2026-11-14](docs/entrega4/evidencia/RETIRO-2026-11-14.md).
 
-## Documentación de entrega 3
+## Arquitectura
 
-- [Arquitectura y decisiones](docs/entrega3/arquitectura.md), con [fuentes de diagramas](docs/entrega3/diagramas/).
-- [Flujos del frontend y prueba de navegador](docs/entrega3/frontend.md).
-- [Operación y verificación del despliegue](docs/entrega3/operacion.md).
-- [Calidad SonarQube en GitHub Actions](docs/entrega3/calidad.md) y [deuda técnica](docs/entrega3/deuda-tecnica.md).
-- [Pruebas de carga y elasticidad](capacity-planning/pruebas_de_carga_entrega3.md), [costos](docs/entrega3/costos.md).
-- [Matriz de cierre, identificadores finales y guion del video](docs/entrega3/cierre.md).
-- [Video de sustentación](https://youtu.be/Us4hav8HZRk).
+```
+Navegador → Cloud Run frontend (0–3) → proxy /api → Cloud Run backend (1–3)
+                                                      │ publish
+                                                      ▼
+                                                Pub/Sub topic
+                                                      │ push OIDC
+                                                      ▼
+                                                Cloud Run worker (0–3)
+Backend/worker → Cloud SQL · Cloud Storage · Memorystore Redis
+Worker → ClamAV (VM de soporte) · Backend → Mailpit (VM de soporte)
+```
+
+- Máximo configurado: **3 instancias por servicio**, un contenedor por instancia.
+- Worker privado: solo `mooc4-pubsub-push` tiene `run.invoker`; no hay `allUsers`.
+- Secretos en Secret Manager; sin credenciales en el repositorio ni en las imágenes.
+- Ack de Pub/Sub después de persistir; dead-letter a los 5 intentos y reentregas idempotentes.
+
+## Documentación de entrega 4
+
+- [Arquitectura y decisiones](docs/entrega4/arquitectura.md), con [diagramas](docs/entrega4/diagramas/).
+- [Guía de despliegue reproducible](docs/entrega4/despliegue.md).
+- [Operación, logs, reentrega y escalamiento](docs/entrega4/operacion.md).
+- [Cierre, checklist y video](docs/entrega4/cierre.md).
+- [Terraform Cloud Run](scripts/IaC/cloudrun/README.md).
+- [Evidencias](docs/entrega4/evidencia/README.md).
 
 ## Desarrollo local
 
-Requiere Docker Compose reciente con soporte `!override`/`!reset`. Crear `.env` desde `.env.example` si todavía no existe; las credenciales de ejemplo son solo locales.
+Requiere Docker Compose reciente con soporte `!override`/`!reset`. Crear `.env` desde `.env.example`; las credenciales de ejemplo son solo locales.
 
 ```bash
 # Desde la raíz; conserva los datos existentes.
 docker compose -p mooc-local -f docker-compose.yml -f compose.dev.yml up -d --build
 ```
 
-Abrir <http://localhost:5180> o <http://mooc.localhost:5180>. El frontend conecta con la API por el proxy de Vite; los archivos se cargan directamente al almacenamiento local. Esperar a que ClamAV esté healthy antes de probar medios. En equipos con poca memoria, ejecutar Sonar y compilaciones por separado del recorrido multimedia.
+Compose levanta el emulador de Pub/Sub, crea el topic y la suscripción push al worker, además de PostgreSQL, Redis, MinIO/RustFS, ClamAV y Mailpit. Abrir <http://localhost:5180> o <http://mooc.localhost:5180>. El frontend conecta con la API por el proxy de Vite.
 
-El registro público solo permite estudiantes. Para preparar un administrador local, `./main provision-admin` lee un objeto JSON con `username`, `email`, `password` por stdin dentro del contenedor de la API (operador autenticado; no endpoint público). La contraseña debe tener 12–72 bytes y no debe pasarse por argumentos o guardarse en el repo. El comando no sobrescribe cuentas existentes. Para la prueba automática, el wrapper siguiente crea una cuenta temporal sin imprimir su contraseña:
+El registro público solo permite estudiantes. Para preparar un administrador local:
 
 ```bash
-cd frontend
-corepack enable
-pnpm install --frozen-lockfile
-pnpm exec playwright install chromium
-cd ..
-# Descargar los medios Git LFS o indicar E2E_VIDEO_PATH=/ruta/a/video-real.mp4.
-python3 scripts/test_browser.py
+docker exec -i mooc-local-backend-1 ./main provision-admin <<'JSON'
+{"username":"admin","email":"admin@test.invalid","password":"una-contraseña-de-12-a-72-bytes"}
+JSON
 ```
+
+La contraseña no debe quedar en argumentos, repositorio ni logs.
 
 ## Verificación
 
-GitHub Actions ejecuta Go con race detector, integración PostgreSQL/Redis, build TypeScript/Vite, recorrido de navegador, Terraform con mocks y SonarQube efímero. No requiere conectar una cuenta SonarCloud ni crea recursos de GCP. El reporte completo queda como artefacto por SHA; conservarlo para la entrega.
+GitHub Actions ejecuta Go con race detector, integración PostgreSQL/Redis, build TypeScript/Vite, recorrido de navegador con Pub/Sub local, Terraform con mocks (IaaS y Cloud Run) y SonarQube efímero.
 
 ```bash
 cd backend && go test ./...
-# La integración requiere POSTGRES_TEST_DSN y REDIS_TEST_ADDR; ver workflow.
-cd ../scripts/IaC
-terraform init -backend=false
-terraform fmt -check -recursive
-terraform validate
-terraform test
+cd ../frontend && pnpm run build
+cd ../scripts/IaC && terraform init -backend=false && terraform validate && terraform test
+cd cloudrun && terraform init -backend=false && terraform validate && terraform test
 ```
 
-## Despliegue y sustentación
+## Despliegue
 
-La preparación del repositorio **no autoriza crear recursos**. Seguir [operacion.md](docs/entrega3/operacion.md): inventario de recursos `mooc-*`, comprobación de state local, publicación de nuevas imágenes solo con permiso, plan actualizado y revisión antes del apply autorizado. No aplicar el plan antiguo para probar estos cambios. No importar, borrar ni ejecutar destroy automáticamente. No versionar tfvars, state ni planes.
+Seguir [docs/entrega4/despliegue.md](docs/entrega4/despliegue.md): publicar imágenes en Artifact Registry, aplicar el root `scripts/IaC/cloudrun` en `proyecto-2-cloud-509714`, ejecutar el Job de administrador y capturar evidencias. No aplicar planes viejos ni ejecutar `destroy` sin autorización.
 
-Tras verificar cloud, registrar `app_url`, `lb_ip`, `image_tag`, SHA, run de Actions, evidencia de carga y enlace del video en [cierre.md](docs/entrega3/cierre.md). Credenciales de prueba por el canal privado del curso. La revisión/merge del PR #1 y la release/tag final se coordinan con Diego.
-
-Histórico: [arquitectura entrega 2](docs/entrega2/arquitectura.md), [informe de carga entrega 2](capacity-planning/pruebas_de_carga_entrega2.md), tag `entrega-2` y [video de entrega 2](https://youtu.be/WeTkZry5aL4). No sustituyen la evidencia requerida para entrega 3.
+Histórico: [entrega 3](docs/entrega3/arquitectura.md), [entrega 2](docs/entrega2/arquitectura.md). El tag y el video se registran en [cierre.md](docs/entrega4/cierre.md).

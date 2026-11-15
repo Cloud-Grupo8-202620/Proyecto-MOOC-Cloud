@@ -1,0 +1,5 @@
+fecha_utc=2026-11-15T19:00:03Z
+mailpit_url=https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/
+sin_auth=401
+con_auth=200
+api_auth=200

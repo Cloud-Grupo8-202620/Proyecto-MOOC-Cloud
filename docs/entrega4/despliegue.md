@@ -5,7 +5,7 @@ Región: `us-central1`.
 Prefijo de recursos: `mooc4`.
 
 Estado: **redesplegado y verificado el 2026-11-15** en
-`proyecto-2-cloud-509714` con la imagen `b8f32af9643a`. Apply de 104 cambios,
+`proyecto-2-cloud-509714` con la imagen `060d840f5c48`. Apply de 104 cambios,
 Job de administrador ejecutado y recorrido Playwright completo contra Cloud Run
 aprobado (**1.8 min**). Evidencia vigente en
 [RESUMEN-2026-11-15.md](evidencia/RESUMEN-2026-11-15.md).
@@ -54,7 +54,7 @@ Valores esperados:
 | Servicio | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | 0 | 3 | 1 | 512Mi | 5 | 300 s |
-| `mooc4-backend` | 1 | 3 | 1 | 512Mi | 10 | 300 s |
+| `mooc4-backend` | 0 | 3 | 1 | 512Mi | 10 | 300 s |
 | `mooc4-worker` | 0 | 3 | 2 | 2Gi | 1 | 590 s |
 
 ## 4. Crear el administrador inicial

@@ -1,6 +1,6 @@
 # Entrega 4 — Arquitectura Cloud Run y Pub/Sub
 
-Estado: **redesplegado y verificado el 2026-11-15** en `proyecto-2-cloud-509714` con la imagen `b8f32af9643a`. Evidencia vigente en [RESUMEN-2026-11-15](evidencia/RESUMEN-2026-11-15.md). El despliegue del 2026-11-14 y su retiro quedan como histórico en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
+Estado: **redesplegado y verificado el 2026-11-15** en `proyecto-2-cloud-509714` con la imagen `060d840f5c48`. Evidencia vigente en [RESUMEN-2026-11-15](evidencia/RESUMEN-2026-11-15.md). El despliegue del 2026-11-14 y su retiro quedan como histórico en [RESUMEN-2026-11-14](evidencia/RESUMEN-2026-11-14.md).
 
 ## Componentes
 
@@ -29,7 +29,7 @@ El frontend conserva rutas relativas: nginx reenvía `/api`, `/health` y `/opena
 | Servicio | Responsabilidad | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | SPA React servida por nginx y proxy de la API | 0 | 3 | 1 | 512 MiB | 5 | 300 s |
-| `mooc4-backend` | API REST, autenticación y publicación de tareas | 1 | 3 | 1 | 512 MiB | 10 | 300 s |
+| `mooc4-backend` | API REST, autenticación y publicación de tareas | 0 | 3 | 1 | 512 MiB | 10 | 300 s |
 | `mooc4-worker` | Push de Pub/Sub, ClamAV y transcodificación HLS | 0 | 3 | 2 | 2 GiB | 1 | 590 s |
 
 - Región: `us-central1`.

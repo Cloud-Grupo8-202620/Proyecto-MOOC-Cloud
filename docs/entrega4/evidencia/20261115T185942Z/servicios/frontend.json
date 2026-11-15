@@ -1,0 +1,131 @@
+{
+  "apiVersion": "serving.knative.dev/v1",
+  "kind": "Service",
+  "metadata": {
+    "annotations": {
+      "run.googleapis.com/ingress": "all",
+      "run.googleapis.com/ingress-status": "all",
+      "run.googleapis.com/maxScale": "3",
+      "run.googleapis.com/operation-id": "83af7bc4-051e-4ef8-9d05-71312ffeedee",
+      "run.googleapis.com/scalingMode": "automatic",
+      "run.googleapis.com/urls": "[\"https://mooc4-frontend-414694464069.us-central1.run.app\",\"https://mooc4-frontend-e5xkihk7sa-uc.a.run.app\"]",
+      "serving.knative.dev/creator": "dialmupe@gmail.com",
+      "serving.knative.dev/lastModifier": "dialmupe@gmail.com"
+    },
+    "creationTimestamp": "2026-11-15T18:21:34.099363Z",
+    "generation": 3,
+    "labels": {
+      "cloud.googleapis.com/location": "us-central1",
+      "environment": "entrega4",
+      "goog-terraform-provisioned": "true",
+      "managed_by": "terraform",
+      "project": "mooc4"
+    },
+    "name": "mooc4-frontend",
+    "namespace": "414694464069",
+    "resourceVersion": "AAZgVSgRL5s",
+    "selfLink": "/apis/serving.knative.dev/v1/namespaces/414694464069/services/mooc4-frontend",
+    "uid": "33108ab6-76e6-4277-aa3f-c15dbe330a1f"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "annotations": {
+          "autoscaling.knative.dev/maxScale": "3",
+          "autoscaling.knative.dev/minScale": "0",
+          "run.googleapis.com/cpu-throttling": "true",
+          "run.googleapis.com/execution-environment": "gen2",
+          "run.googleapis.com/network-interfaces": "[{\"network\":\"projects/proyecto-2-cloud-509714/global/networks/mooc4-vpc\",\"subnetwork\":\"projects/proyecto-2-cloud-509714/regions/us-central1/subnetworks/mooc4-app-subnet\",\"tags\":[\"frontend\"]}]",
+          "run.googleapis.com/sessionAffinity": "false",
+          "run.googleapis.com/startup-cpu-boost": "true",
+          "run.googleapis.com/vpc-access-egress": "private-ranges-only"
+        },
+        "labels": {
+          "run.googleapis.com/startupProbeType": "Custom"
+        }
+      },
+      "spec": {
+        "containerConcurrency": 5,
+        "containers": [
+          {
+            "env": [
+              {
+                "name": "BACKEND_URL",
+                "value": "https://mooc4-backend-e5xkihk7sa-uc.a.run.app"
+              },
+              {
+                "name": "MAILPIT_URL",
+                "value": "http://10.10.1.30:8025"
+              }
+            ],
+            "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend:060d840f5c48",
+            "name": "frontend",
+            "ports": [
+              {
+                "containerPort": 3000,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "memory": "512Mi"
+              }
+            },
+            "startupProbe": {
+              "failureThreshold": 3,
+              "httpGet": {
+                "path": "/",
+                "port": 3000
+              },
+              "initialDelaySeconds": 2,
+              "periodSeconds": 10,
+              "timeoutSeconds": 5
+            }
+          }
+        ],
+        "serviceAccountName": "mooc4-frontend@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+        "timeoutSeconds": 300
+      }
+    },
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100
+      }
+    ]
+  },
+  "status": {
+    "address": {
+      "url": "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app"
+    },
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-11-15T18:52:00.965531Z",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-11-15T18:51:55.400884Z",
+        "status": "True",
+        "type": "ConfigurationsReady"
+      },
+      {
+        "lastTransitionTime": "2026-11-15T18:52:00.926467Z",
+        "status": "True",
+        "type": "RoutesReady"
+      }
+    ],
+    "latestCreatedRevisionName": "mooc4-frontend-00002-8vh",
+    "latestReadyRevisionName": "mooc4-frontend-00002-8vh",
+    "observedGeneration": 3,
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "mooc4-frontend-00002-8vh"
+      }
+    ],
+    "url": "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app"
+  }
+}

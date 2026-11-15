@@ -22,7 +22,7 @@ SECRET_NAME="$(meta instance/attributes/mailpit-auth-secret)"
 TOKEN="$(meta instance/service-accounts/default/token | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')"
 SECRET_JSON="$(curl -fsS -H "Authorization: Bearer ${TOKEN}" \
   "https://secretmanager.googleapis.com/v1/projects/${PROJECT_ID}/secrets/${SECRET_NAME}/versions/latest:access")"
-MAILPIT_UI_PASSWORD="$(printf '%s' "${SECRET_JSON}" | sed -n 's/.*"data":"\([^"]*\)".*/\1/p' | base64 -d)"
+MAILPIT_UI_PASSWORD="$(printf '%s' "${SECRET_JSON}" | tr -d '[:space:]' | sed -n 's/.*"data":"\([^"]*\)".*/\1/p' | base64 -d)"
 [ -n "${MAILPIT_UI_PASSWORD}" ] || { echo "no se pudo leer la contraseña de Mailpit" >&2; exit 1; }
 MAILPIT_UI_AUTH="viewer:${MAILPIT_UI_PASSWORD}"
 

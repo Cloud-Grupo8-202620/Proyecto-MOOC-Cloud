@@ -1,0 +1,122 @@
+{
+  "name": "projects/proyecto-2-cloud-509714/locations/us-central1/services/mooc4-frontend",
+  "uid": "33108ab6-76e6-4277-aa3f-c15dbe330a1f",
+  "generation": "3",
+  "labels": {
+    "environment": "entrega4",
+    "goog-terraform-provisioned": "true",
+    "managed_by": "terraform",
+    "project": "mooc4"
+  },
+  "createTime": "2026-11-15T18:21:34.099363Z",
+  "updateTime": "2026-11-15T18:51:53.446942Z",
+  "creator": "dialmupe@gmail.com",
+  "lastModifier": "dialmupe@gmail.com",
+  "ingress": "INGRESS_TRAFFIC_ALL",
+  "launchStage": "GA",
+  "template": {
+    "scaling": {
+      "maxInstanceCount": 3
+    },
+    "vpcAccess": {
+      "egress": "PRIVATE_RANGES_ONLY",
+      "networkInterfaces": [
+        {
+          "network": "projects/proyecto-2-cloud-509714/global/networks/mooc4-vpc",
+          "subnetwork": "projects/proyecto-2-cloud-509714/regions/us-central1/subnetworks/mooc4-app-subnet",
+          "tags": [
+            "frontend"
+          ]
+        }
+      ]
+    },
+    "timeout": "300s",
+    "serviceAccount": "mooc4-frontend@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+    "containers": [
+      {
+        "name": "frontend",
+        "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/frontend:060d840f5c48",
+        "env": [
+          {
+            "name": "BACKEND_URL",
+            "value": "https://mooc4-backend-e5xkihk7sa-uc.a.run.app"
+          },
+          {
+            "name": "MAILPIT_URL",
+            "value": "http://10.10.1.30:8025"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "cpu": "1",
+            "memory": "512Mi"
+          },
+          "cpuIdle": true,
+          "startupCpuBoost": true
+        },
+        "ports": [
+          {
+            "name": "http1",
+            "containerPort": 3000
+          }
+        ],
+        "startupProbe": {
+          "initialDelaySeconds": 2,
+          "timeoutSeconds": 5,
+          "periodSeconds": 10,
+          "failureThreshold": 3,
+          "httpGet": {
+            "path": "/",
+            "port": 3000
+          }
+        }
+      }
+    ],
+    "executionEnvironment": "EXECUTION_ENVIRONMENT_GEN2",
+    "maxInstanceRequestConcurrency": 5
+  },
+  "traffic": [
+    {
+      "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST",
+      "percent": 100
+    }
+  ],
+  "scaling": {
+    "scalingMode": "AUTOMATIC",
+    "maxInstanceCount": 3
+  },
+  "urls": [
+    "https://mooc4-frontend-414694464069.us-central1.run.app",
+    "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app"
+  ],
+  "sshEnabled": false,
+  "observedGeneration": "3",
+  "terminalCondition": {
+    "type": "Ready",
+    "state": "CONDITION_SUCCEEDED",
+    "lastTransitionTime": "2026-11-15T18:52:00.965531Z"
+  },
+  "conditions": [
+    {
+      "type": "RoutesReady",
+      "state": "CONDITION_SUCCEEDED",
+      "lastTransitionTime": "2026-11-15T18:52:00.926467Z"
+    },
+    {
+      "type": "ConfigurationsReady",
+      "state": "CONDITION_SUCCEEDED",
+      "lastTransitionTime": "2026-11-15T18:51:55.400884Z"
+    }
+  ],
+  "latestReadyRevision": "projects/proyecto-2-cloud-509714/locations/us-central1/services/mooc4-frontend/revisions/mooc4-frontend-00002-8vh",
+  "latestCreatedRevision": "projects/proyecto-2-cloud-509714/locations/us-central1/services/mooc4-frontend/revisions/mooc4-frontend-00002-8vh",
+  "trafficStatuses": [
+    {
+      "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST",
+      "revision": "mooc4-frontend-00002-8vh",
+      "percent": 100
+    }
+  ],
+  "uri": "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app",
+  "etag": "\"CMn-59cGELCWj9UB/cHJvamVjdHMvcHJveWVjdG8tMi1jbG91ZC01MDk3MTQvbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL21vb2M0LWZyb250ZW5k\""
+}

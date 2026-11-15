@@ -7,8 +7,8 @@
 | Proyecto | `proyecto-2-cloud-509714` |
 | Región | `us-central1` |
 | Rama | `entrega4-cloudrun-pubsub` |
-| Commit de la imagen | `b8f32af` |
-| Etiqueta de imágenes | `b8f32af9643a` |
+| Commit de la imagen | `060d840` |
+| Etiqueta de imágenes | `060d840f5c48` |
 | Fecha UTC del despliegue | `2026-11-15` |
 | URL frontend | https://mooc4-frontend-e5xkihk7sa-uc.a.run.app |
 | URL backend | https://mooc4-backend-e5xkihk7sa-uc.a.run.app |
@@ -17,6 +17,7 @@
 | Suscripción push | `mooc4-media-jobs-push` |
 | Dead-letter | `mooc4-media-jobs-dlq` |
 | Evidencia vigente | [RESUMEN-2026-11-15.md](evidencia/RESUMEN-2026-11-15.md) |
+| Evidencia Mailpit | [mailpit.txt](evidencia/20261115T185942Z/mailpit.txt) |
 | Evidencia histórica | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
 | Mailpit | `https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/` |
 | Credencial Mailpit | usuario `viewer`; contraseña en `mooc4-mailpit-auth` |
@@ -26,7 +27,7 @@
 ## Checklist de evidencias
 
 - [x] Tres servicios Cloud Run operativos y con URL.
-- [x] Imágenes en Artifact Registry con etiqueta inmutable `b8f32af9643a`.
+- [x] Imágenes en Artifact Registry con etiqueta inmutable `060d840f5c48`.
 - [x] Límites: mínimo/máximo, CPU, memoria, concurrencia y timeout.
 - [x] Worker sin `allUsers`; solo `mooc4-pubsub-push` con `run.invoker`.
 - [x] Suscripción push con OIDC y audience del worker.
@@ -38,7 +39,7 @@
 - [x] Escalamiento observado: worker y backend a 3; frontend a 2 con máximo 3.
 - [x] Recorrido Playwright completo contra Cloud Run (**1.8 min**).
 - [x] ClamAV en la VM de soporte `healthy`; límite de memoria corregido a 3 GB.
-- [x] Mailpit accesible en `/mailpit/` mediante HTTPS y Basic Auth.
+- [x] Mailpit accesible en `/mailpit/` mediante HTTPS y Basic Auth (`401` sin credenciales, `200` con credenciales).
 - [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 

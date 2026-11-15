@@ -54,7 +54,7 @@ Valores esperados:
 | Servicio | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | 0 | 3 | 1 | 512Mi | 5 | 300 s |
-| `mooc4-backend` | 0 | 3 | 1 | 512Mi | 10 | 300 s |
+| `mooc4-backend` | 1 | 3 | 1 | 512Mi | 10 | 300 s |
 | `mooc4-worker` | 0 | 3 | 2 | 2Gi | 1 | 590 s |
 
 ## 4. Crear el administrador inicial
@@ -165,11 +165,23 @@ Guardar en `docs/entrega4/evidencia/<fecha>/`:
 
 ## 10. Mailpit
 
-```bash
-gcloud compute ssh mooc4-support --zone us-central1-a --tunnel-through-iap \
-  -- -L 8025:127.0.0.1:8025
-# http://localhost:8025
+Mailpit se publica bajo el frontend HTTPS, sin abrir la VM a Internet:
+
+```text
+https://<frontend_url>/mailpit/
 ```
+
+Usuario: `viewer`. La contraseña está en el secreto
+`mooc4-mailpit-auth` y se entrega por el canal privado:
+
+```bash
+gcloud secrets versions access latest --secret=mooc4-mailpit-auth
+```
+
+La VM de soporte sigue sin IP pública. El frontend llega a Mailpit por la VPC y
+el firewall solo permite el puerto 8025 desde la etiqueta `frontend`. Si se
+necesita depurar desde una estación, el túnel IAP a `127.0.0.1:8025` sigue
+disponible, pero no es la vía de acceso del evaluador.
 
 ## 11. Entorno local
 

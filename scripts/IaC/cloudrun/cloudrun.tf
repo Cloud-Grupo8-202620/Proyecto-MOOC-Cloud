@@ -69,6 +69,18 @@ resource "google_cloud_run_v2_service" "frontend" {
       max_instance_count = var.frontend_max_instances
     }
 
+    # El frontend necesita la VPC solo para el proxy privado a Mailpit. El
+    # tráfico hacia el backend y las APIs de Google sigue saliendo por la red
+    # normal de Cloud Run (PRIVATE_RANGES_ONLY).
+    vpc_access {
+      network_interfaces {
+        network    = google_compute_network.main.id
+        subnetwork = google_compute_subnetwork.app.id
+        tags       = ["frontend"]
+      }
+      egress = "PRIVATE_RANGES_ONLY"
+    }
+
     containers {
       name  = "frontend"
       image = local.images.frontend
@@ -89,6 +101,11 @@ resource "google_cloud_run_v2_service" "frontend" {
       env {
         name  = "BACKEND_URL"
         value = google_cloud_run_v2_service.backend.uri
+      }
+
+      env {
+        name  = "MAILPIT_URL"
+        value = "http://${google_compute_address.support.address}:8025"
       }
 
       startup_probe {

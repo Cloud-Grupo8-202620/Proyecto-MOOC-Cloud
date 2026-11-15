@@ -18,6 +18,8 @@
 | Dead-letter | `mooc4-media-jobs-dlq` |
 | Evidencia vigente | [RESUMEN-2026-11-15.md](evidencia/RESUMEN-2026-11-15.md) |
 | Evidencia histórica | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
+| Mailpit | `https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/` |
+| Credencial Mailpit | usuario `viewer`; contraseña en `mooc4-mailpit-auth` |
 | Video | `<pendiente>` |
 | Escalamiento | 0–3 en frontend, backend y worker; máximo 3 a nivel de servicio |
 
@@ -36,6 +38,7 @@
 - [x] Escalamiento observado: worker y backend a 3; frontend a 2 con máximo 3.
 - [x] Recorrido Playwright completo contra Cloud Run (**1.8 min**).
 - [x] ClamAV en la VM de soporte `healthy`; límite de memoria corregido a 3 GB.
+- [x] Mailpit accesible en `/mailpit/` mediante HTTPS y Basic Auth.
 - [ ] Video de sustentación de máximo 20 minutos, con enlace accesible.
 - [ ] Credenciales de prueba entregadas por el canal privado, no en el repo.
 
@@ -57,6 +60,6 @@ El administrador inicial es `admin`; la contraseña está en el secreto
 
 - Pub/Sub sustituye a asynq/Redis como mensajería.
 - Redis queda solo para sesiones, códigos y locks TUS, en Memorystore.
-- ClamAV y Mailpit quedan en una VM de soporte sin IP pública.
+- ClamAV y Mailpit quedan en una VM de soporte sin IP pública; Mailpit se publica en `/mailpit/` a través del frontend HTTPS con Basic Auth.
 - El frontend hace proxy de la API para conservar el mismo origen.
 - El worker se protege con IAM y OIDC, no con una URL secreta.

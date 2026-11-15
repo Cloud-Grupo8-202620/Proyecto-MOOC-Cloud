@@ -16,4 +16,5 @@ COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html
 # Valor de desarrollo; Cloud Run lo sobrescribe con la URL real del backend.
 ENV BACKEND_URL=http://backend:8080
+ENV MAILPIT_URL=http://10.10.1.30:8025
 EXPOSE 3000

@@ -87,7 +87,7 @@ locals {
     (local.secret_worker_s3_access)  = google_storage_hmac_key.role["worker"].access_id
     (local.secret_worker_s3_secret)  = google_storage_hmac_key.role["worker"].secret
     (local.secret_admin_password)    = random_password.admin.result
-    (local.secret_mailpit_auth)      = "viewer:${random_password.mailpit.result}"
+    (local.secret_mailpit_auth)      = random_password.mailpit.result
   }
 
   # Qué secretos puede leer cada identidad: exactamente los que usa.

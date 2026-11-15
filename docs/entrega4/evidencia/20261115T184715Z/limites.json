@@ -1,0 +1,41 @@
+{
+  "frontend": {
+    "url": "https://mooc4-frontend-e5xkihk7sa-uc.a.run.app",
+    "min_instance_count": "0",
+    "max_instance_count": "3",
+    "service_scaling": {
+      "scalingMode": "AUTOMATIC",
+      "maxInstanceCount": 3
+    },
+    "container_concurrency": 5,
+    "timeout_seconds": 300,
+    "cpu": "1",
+    "memory": "512Mi"
+  },
+  "backend": {
+    "url": "https://mooc4-backend-e5xkihk7sa-uc.a.run.app",
+    "min_instance_count": "0",
+    "max_instance_count": "3",
+    "service_scaling": {
+      "scalingMode": "AUTOMATIC",
+      "maxInstanceCount": 3
+    },
+    "container_concurrency": 10,
+    "timeout_seconds": 300,
+    "cpu": "1",
+    "memory": "512Mi"
+  },
+  "worker": {
+    "url": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app",
+    "min_instance_count": "0",
+    "max_instance_count": "3",
+    "service_scaling": {
+      "scalingMode": "AUTOMATIC",
+      "maxInstanceCount": 3
+    },
+    "container_concurrency": 1,
+    "timeout_seconds": 590,
+    "cpu": "2",
+    "memory": "2Gi"
+  }
+}

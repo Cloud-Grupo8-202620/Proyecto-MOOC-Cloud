@@ -50,6 +50,14 @@ resource "google_cloud_run_v2_service" "frontend" {
   ingress             = "INGRESS_TRAFFIC_ALL"
   labels              = local.labels
 
+  # Escalamiento a nivel de servicio: es el que muestra y aplica Cloud Run
+  # para todas las revisiones con tráfico. Debe coincidir con template.scaling.
+  scaling {
+    min_instance_count = var.frontend_min_instances
+    max_instance_count = var.frontend_max_instances
+    scaling_mode       = "AUTOMATIC"
+  }
+
   template {
     service_account                  = google_service_account.role["frontend"].email
     execution_environment            = "EXECUTION_ENVIRONMENT_GEN2"
@@ -116,6 +124,14 @@ resource "google_cloud_run_v2_service" "backend" {
   deletion_protection = false
   ingress             = "INGRESS_TRAFFIC_ALL"
   labels              = local.labels
+
+  # Escalamiento a nivel de servicio: es el que muestra y aplica Cloud Run
+  # para todas las revisiones con tráfico. Debe coincidir con template.scaling.
+  scaling {
+    min_instance_count = var.backend_min_instances
+    max_instance_count = var.backend_max_instances
+    scaling_mode       = "AUTOMATIC"
+  }
 
   template {
     service_account                  = google_service_account.role["backend"].email
@@ -213,6 +229,14 @@ resource "google_cloud_run_v2_service" "worker" {
   # cuenta push tiene run.invoker; no existe binding para allUsers.
   ingress = "INGRESS_TRAFFIC_ALL"
   labels  = local.labels
+
+  # Escalamiento a nivel de servicio: es el que muestra y aplica Cloud Run
+  # para todas las revisiones con tráfico. Debe coincidir con template.scaling.
+  scaling {
+    min_instance_count = var.worker_min_instances
+    max_instance_count = var.worker_max_instances
+    scaling_mode       = "AUTOMATIC"
+  }
 
   template {
     service_account       = google_service_account.role["worker"].email

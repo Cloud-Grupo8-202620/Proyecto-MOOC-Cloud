@@ -10,7 +10,7 @@ API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, Clam
 ## Arquitectura
 
 ```
-Navegador → Cloud Run frontend (0–3) → proxy /api → Cloud Run backend (1–3)
+Navegador → Cloud Run frontend (0–3) → proxy /api → Cloud Run backend (0–3)
                                                       │ publish
                                                       ▼
                                                 Pub/Sub topic

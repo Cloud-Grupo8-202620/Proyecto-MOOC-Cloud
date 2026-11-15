@@ -1,0 +1,29 @@
+{
+  "ackDeadlineSeconds": 600,
+  "deadLetterPolicy": {
+    "deadLetterTopic": "projects/proyecto-2-cloud-509714/topics/mooc4-media-jobs-dlq",
+    "maxDeliveryAttempts": 5
+  },
+  "expirationPolicy": {},
+  "labels": {
+    "environment": "entrega4",
+    "goog-terraform-provisioned": "true",
+    "managed_by": "terraform",
+    "project": "mooc4"
+  },
+  "messageRetentionDuration": "604800s",
+  "name": "projects/proyecto-2-cloud-509714/subscriptions/mooc4-media-jobs-push",
+  "pushConfig": {
+    "oidcToken": {
+      "audience": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app",
+      "serviceAccountEmail": "mooc4-pubsub-push@proyecto-2-cloud-509714.iam.gserviceaccount.com"
+    },
+    "pushEndpoint": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app/pubsub/push"
+  },
+  "retryPolicy": {
+    "maximumBackoff": "600s",
+    "minimumBackoff": "10s"
+  },
+  "state": "ACTIVE",
+  "topic": "projects/proyecto-2-cloud-509714/topics/mooc4-media-jobs"
+}

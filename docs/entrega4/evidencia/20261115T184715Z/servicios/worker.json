@@ -1,0 +1,229 @@
+{
+  "apiVersion": "serving.knative.dev/v1",
+  "kind": "Service",
+  "metadata": {
+    "annotations": {
+      "run.googleapis.com/ingress": "all",
+      "run.googleapis.com/ingress-status": "all",
+      "run.googleapis.com/maxScale": "3",
+      "run.googleapis.com/operation-id": "7d6c63d3-2227-4afe-8c5f-0eb95b053f00",
+      "run.googleapis.com/scalingMode": "automatic",
+      "run.googleapis.com/urls": "[\"https://mooc4-worker-414694464069.us-central1.run.app\",\"https://mooc4-worker-e5xkihk7sa-uc.a.run.app\"]",
+      "serving.knative.dev/creator": "dialmupe@gmail.com",
+      "serving.knative.dev/lastModifier": "dialmupe@gmail.com"
+    },
+    "creationTimestamp": "2026-11-15T18:21:01.477672Z",
+    "generation": 2,
+    "labels": {
+      "cloud.googleapis.com/location": "us-central1",
+      "environment": "entrega4",
+      "goog-terraform-provisioned": "true",
+      "managed_by": "terraform",
+      "project": "mooc4"
+    },
+    "name": "mooc4-worker",
+    "namespace": "414694464069",
+    "resourceVersion": "AAZgVQ0o7fM",
+    "selfLink": "/apis/serving.knative.dev/v1/namespaces/414694464069/services/mooc4-worker",
+    "uid": "f9ad6ce8-6c88-41e4-bddc-1b50d7912207"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "annotations": {
+          "autoscaling.knative.dev/maxScale": "3",
+          "autoscaling.knative.dev/minScale": "0",
+          "run.googleapis.com/cpu-throttling": "true",
+          "run.googleapis.com/execution-environment": "gen2",
+          "run.googleapis.com/network-interfaces": "[{\"network\":\"projects/proyecto-2-cloud-509714/global/networks/mooc4-vpc\",\"subnetwork\":\"projects/proyecto-2-cloud-509714/regions/us-central1/subnetworks/mooc4-app-subnet\",\"tags\":[\"worker\"]}]",
+          "run.googleapis.com/sessionAffinity": "false",
+          "run.googleapis.com/startup-cpu-boost": "true",
+          "run.googleapis.com/vpc-access-egress": "private-ranges-only"
+        },
+        "labels": {
+          "run.googleapis.com/startupProbeType": "Custom"
+        }
+      },
+      "spec": {
+        "containerConcurrency": 1,
+        "containers": [
+          {
+            "env": [
+              {
+                "name": "WORKER_TRANSCODE_TIMEOUT",
+                "value": "9m"
+              },
+              {
+                "name": "CDN_BASE_URL"
+              },
+              {
+                "name": "S3_PUBLIC_ENDPOINT",
+                "value": "https://storage.googleapis.com"
+              },
+              {
+                "name": "S3_BUCKET_PUBLIC",
+                "value": "mooc4-c2810e-public"
+              },
+              {
+                "name": "S3_BUCKET_ORIGINALS",
+                "value": "mooc4-c2810e-originals"
+              },
+              {
+                "name": "S3_BUCKET_HLS",
+                "value": "mooc4-c2810e-hls"
+              },
+              {
+                "name": "POSTGRES_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "mooc4-postgres-password"
+                  }
+                }
+              },
+              {
+                "name": "S3_REGION",
+                "value": "auto"
+              },
+              {
+                "name": "S3_ACCESS_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "mooc4-worker-s3-access-key"
+                  }
+                }
+              },
+              {
+                "name": "PUBSUB_TOPIC",
+                "value": "mooc4-media-jobs"
+              },
+              {
+                "name": "CLAMAV_HOST",
+                "value": "10.10.1.30:3310"
+              },
+              {
+                "name": "POSTGRES_DB",
+                "value": "mydb"
+              },
+              {
+                "name": "S3_ENDPOINT",
+                "value": "storage.googleapis.com"
+              },
+              {
+                "name": "POSTGRES_USER",
+                "value": "postgres"
+              },
+              {
+                "name": "POSTGRES_HOST",
+                "value": "10.35.0.3"
+              },
+              {
+                "name": "POSTGRES_MAX_OPEN_CONNS",
+                "value": "2"
+              },
+              {
+                "name": "POSTGRES_PORT",
+                "value": "5432"
+              },
+              {
+                "name": "WORKER_SHUTDOWN_TIMEOUT",
+                "value": "8s"
+              },
+              {
+                "name": "S3_USE_SSL",
+                "value": "true"
+              },
+              {
+                "name": "WORKER_MAX_ATTEMPTS",
+                "value": "5"
+              },
+              {
+                "name": "POSTGRES_SSLMODE",
+                "value": "require"
+              },
+              {
+                "name": "S3_SECRET_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "mooc4-worker-s3-secret-key"
+                  }
+                }
+              },
+              {
+                "name": "PUBSUB_PROJECT_ID",
+                "value": "proyecto-2-cloud-509714"
+              }
+            ],
+            "image": "us-central1-docker.pkg.dev/proyecto-2-cloud-509714/mooc4-images/worker:b8f32af9643a",
+            "name": "worker",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "memory": "2Gi"
+              }
+            },
+            "startupProbe": {
+              "failureThreshold": 6,
+              "httpGet": {
+                "path": "/health",
+                "port": 8080
+              },
+              "initialDelaySeconds": 10,
+              "periodSeconds": 10,
+              "timeoutSeconds": 5
+            }
+          }
+        ],
+        "serviceAccountName": "mooc4-worker@proyecto-2-cloud-509714.iam.gserviceaccount.com",
+        "timeoutSeconds": 590
+      }
+    },
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100
+      }
+    ]
+  },
+  "status": {
+    "address": {
+      "url": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app"
+    },
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-11-15T18:44:29.536755Z",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-11-15T18:21:06.820204Z",
+        "status": "True",
+        "type": "ConfigurationsReady"
+      },
+      {
+        "lastTransitionTime": "2026-11-15T18:21:20.494938Z",
+        "status": "True",
+        "type": "RoutesReady"
+      }
+    ],
+    "latestCreatedRevisionName": "mooc4-worker-00001-65x",
+    "latestReadyRevisionName": "mooc4-worker-00001-65x",
+    "observedGeneration": 2,
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "mooc4-worker-00001-65x"
+      }
+    ],
+    "url": "https://mooc4-worker-e5xkihk7sa-uc.a.run.app"
+  }
+}

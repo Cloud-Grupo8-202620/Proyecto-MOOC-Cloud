@@ -12,11 +12,16 @@ mkdir -p "${OUT}/servicios" "${OUT}/iam" "${OUT}/pubsub" "${OUT}/logs"
 
 echo "==> ${OUT}"
 
+mkdir -p "${OUT}/servicios-v2"
+TOKEN="$(gcloud auth print-access-token)"
 for s in mooc4-frontend mooc4-backend mooc4-worker; do
   gcloud run services describe "$s" --project "$PROJECT_ID" --region "$REGION" \
     --format=json > "${OUT}/servicios/${s#mooc4-}.json"
   gcloud run services get-iam-policy "$s" --project "$PROJECT_ID" --region "$REGION" \
     --format=json > "${OUT}/iam/${s#mooc4-}.json"
+  curl -sS -H "Authorization: Bearer ${TOKEN}" \
+    "https://run.googleapis.com/v2/projects/${PROJECT_ID}/locations/${REGION}/services/${s}" \
+    > "${OUT}/servicios-v2/${s#mooc4-}.json"
 done
 
 gcloud pubsub topics describe mooc4-media-jobs --project "$PROJECT_ID" \
@@ -58,12 +63,16 @@ for name in ("frontend", "backend", "worker"):
     c = (spec.get("containers") or [{}])[0]
     res = (c.get("resources") or {}).get("limits") or {}
     scaling = spec.get("scaling") or {}
+    v2 = json.loads((out / "servicios-v2" / f"{name}.json").read_text())
+    service_scaling = v2.get("scaling") or {}
     # gcloud puede devolver la forma v1 (containerConcurrency/timeoutSeconds y
-    # anotaciones de autoscaling) o la forma v2.
+    # anotaciones de autoscaling) o la forma v2. El escalamiento de servicio es
+    # el que muestra Cloud Console y se captura aparte.
     resumen[name] = {
         "url": d.get("status", {}).get("url"),
         "min_instance_count": scaling.get("minInstanceCount", annotations.get("autoscaling.knative.dev/minScale")),
         "max_instance_count": scaling.get("maxInstanceCount", annotations.get("autoscaling.knative.dev/maxScale")),
+        "service_scaling": service_scaling,
         "container_concurrency": spec.get("maxInstanceRequestConcurrency", spec.get("containerConcurrency")),
         "timeout_seconds": spec.get("timeout", spec.get("timeoutSeconds")),
         "cpu": res.get("cpu"),

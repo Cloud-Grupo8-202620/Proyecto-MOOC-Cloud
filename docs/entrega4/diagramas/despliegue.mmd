@@ -1,6 +1,6 @@
 flowchart TB
   Internet -->|HTTPS| FE[Cloud Run frontend\n0–3 instancias]
-  FE -->|HTTPS /api| BE[Cloud Run backend\n1–3 instancias]
+  FE -->|HTTPS /api| BE[Cloud Run backend\n0–3 instancias]
   BE -->|publish| TOPIC[Pub/Sub topic\nmedia-jobs]
   TOPIC -->|push + OIDC| W[Cloud Run worker\n0–3 instancias]
   W -->|ack| TOPIC

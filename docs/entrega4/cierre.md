@@ -19,6 +19,7 @@
 | Evidencia vigente | [RESUMEN-2026-11-15.md](evidencia/RESUMEN-2026-11-15.md) |
 | Evidencia histórica | [RESUMEN-2026-11-14.md](evidencia/RESUMEN-2026-11-14.md) |
 | Video | `<pendiente>` |
+| Escalamiento | 0–3 en frontend, backend y worker; máximo 3 a nivel de servicio |
 
 ## Checklist de evidencias
 

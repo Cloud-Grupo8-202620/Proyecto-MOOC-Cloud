@@ -54,9 +54,9 @@ variable "frontend_max_instances" {
 }
 
 variable "backend_min_instances" {
-  description = "Mínimo de instancias del backend"
+  description = "Mínimo de instancias del backend; 0 permite scale-to-zero"
   type        = number
-  default     = 1
+  default     = 0
 }
 
 variable "backend_max_instances" {

@@ -54,7 +54,7 @@ Valores esperados:
 | Servicio | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | 0 | 3 | 1 | 512Mi | 5 | 300 s |
-| `mooc4-backend` | 1 | 3 | 1 | 512Mi | 10 | 300 s |
+| `mooc4-backend` | 0 | 3 | 1 | 512Mi | 10 | 300 s |
 | `mooc4-worker` | 0 | 3 | 2 | 2Gi | 1 | 590 s |
 
 ## 4. Crear el administrador inicial

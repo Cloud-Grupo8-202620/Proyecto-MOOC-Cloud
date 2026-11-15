@@ -36,6 +36,7 @@ resource "google_compute_instance" "support" {
   metadata = {
     "startup-script"         = file("${path.module}/scripts/support_startup.sh")
     "block-project-ssh-keys" = "TRUE"
+    "mailpit-auth-secret"    = local.secret_mailpit_auth
   }
 
   scheduling {
@@ -43,5 +44,9 @@ resource "google_compute_instance" "support" {
     on_host_maintenance = "MIGRATE"
   }
 
-  depends_on = [google_project_service.enabled, google_compute_router_nat.main]
+  depends_on = [
+    google_project_service.enabled,
+    google_compute_router_nat.main,
+    google_secret_manager_secret_version.app,
+  ]
 }

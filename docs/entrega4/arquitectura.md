@@ -7,7 +7,7 @@ Estado: **redesplegado y verificado el 2026-11-15** en `proyecto-2-cloud-509714`
 ```mermaid
 flowchart LR
   U[Navegador] --> FE[Cloud Run frontend · nginx · 0–3]
-  FE -->|proxy /api, /health| BE[Cloud Run backend · Go · 1–3]
+  FE -->|proxy /api, /health| BE[Cloud Run backend · Go · 0–3]
   BE -->|publish| PS[(Pub/Sub\nmooc4-media-jobs)]
   PS -->|push OIDC| W[Cloud Run worker · Go/ffmpeg · 0–3]
   W -->|ack tras persistir| PS
@@ -28,7 +28,7 @@ El frontend conserva rutas relativas: nginx reenvía `/api`, `/health` y `/opena
 | Servicio | Responsabilidad | Mín. | Máx. | CPU | Memoria | Concurrencia | Timeout |
 |---|---|---:|---:|---:|---:|---:|---:|
 | `mooc4-frontend` | SPA React servida por nginx y proxy de la API | 0 | 3 | 1 | 512 MiB | 5 | 300 s |
-| `mooc4-backend` | API REST, autenticación y publicación de tareas | 1 | 3 | 1 | 512 MiB | 10 | 300 s |
+| `mooc4-backend` | API REST, autenticación y publicación de tareas | 0 | 3 | 1 | 512 MiB | 10 | 300 s |
 | `mooc4-worker` | Push de Pub/Sub, ClamAV y transcodificación HLS | 0 | 3 | 2 | 2 GiB | 1 | 590 s |
 
 - Región: `us-central1`.

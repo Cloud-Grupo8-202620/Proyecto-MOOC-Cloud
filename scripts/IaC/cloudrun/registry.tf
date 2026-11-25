@@ -20,3 +20,16 @@ resource "google_artifact_registry_repository_iam_member" "reader" {
   role       = "roles/artifactregistry.reader"
   member     = google_service_account.role[each.value].member
 }
+
+# Imágenes que Cloud Build genera al compilar la Cloud Function. Repositorio
+# propio y mutable: las etiquetas de las funciones las gestiona Cloud Run
+# functions, no el script de publicación.
+resource "google_artifact_registry_repository" "functions" {
+  repository_id = "${var.name_prefix}-fn-artifacts"
+  location      = var.region
+  format        = "DOCKER"
+  description   = "Imágenes de build de las Cloud Run functions"
+  labels        = local.labels
+
+  depends_on = [google_project_service.enabled]
+}

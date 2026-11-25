@@ -72,14 +72,15 @@ resource "google_compute_firewall" "iap_ssh" {
   }
 }
 
-# Workers -> ClamAV. Las etiquetas se aplican a las interfaces de Direct VPC
-# Egress de Cloud Run, así que el firewall distingue por rol.
+# Cloud Function media.scan -> ClamAV. Las etiquetas se aplican a las
+# interfaces de Direct VPC Egress, así que el firewall distingue por rol. El
+# worker ya no escanea y por eso ya no tiene acceso a clamd.
 resource "google_compute_firewall" "clamav" {
   name        = "${var.name_prefix}-allow-clamav"
   network     = google_compute_network.main.name
   direction   = "INGRESS"
   priority    = 1000
-  source_tags = ["worker"]
+  source_tags = ["scanfn"]
   target_tags = ["support"]
 
   allow {

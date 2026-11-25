@@ -4,6 +4,8 @@ API Go + workers asíncronos, frontend React/Vite, PostgreSQL, Memorystore, Clam
 
 **Estado:** **redesplegado y verificado el 2026-11-15** con la imagen `060d840f5c48`. Frontend, backend y worker están operativos; ClamAV quedó healthy tras corregir su límite de memoria. Evidencia vigente en [RESUMEN-2026-11-15](docs/entrega4/evidencia/RESUMEN-2026-11-15.md).
 
+> **Entrega 5 (Cloud Function + Terraform):** la tarea `media.scan` se migró a una Cloud Run function de segunda generación disparada por Pub/Sub. Ver [análisis serverless](docs/entrega5/analisis-serverless.md), [arquitectura](docs/entrega5/arquitectura.md), [despliegue con Terraform](docs/entrega5/despliegue.md), [evidencias](docs/entrega5/evidencia/README.md) y [video](docs/entrega5/video.md).
+
 - Frontend: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app>
 - Backend: <https://mooc4-backend-e5xkihk7sa-uc.a.run.app>
 - Mailpit: <https://mooc4-frontend-e5xkihk7sa-uc.a.run.app/mailpit/> (usuario `viewer`; contraseña en `mooc4-mailpit-auth`)

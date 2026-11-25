@@ -96,7 +96,7 @@ run "limites_de_ejecucion" {
       google_cloud_run_v2_service.worker.template[0].containers[0].resources[0].limits["cpu"] == "2" &&
       google_cloud_run_v2_service.worker.template[0].containers[0].resources[0].limits["memory"] == "2Gi"
     )
-    error_message = "El worker debe tener 2 vCPU y 2 GiB para ffmpeg y ClamAV"
+    error_message = "El worker debe tener 2 vCPU y 2 GiB para ffmpeg"
   }
 }
 
@@ -108,7 +108,7 @@ run "backend_y_worker_usan_vpc_directa" {
       length(google_cloud_run_v2_service.backend.template[0].vpc_access[0].network_interfaces) == 1 &&
       length(google_cloud_run_v2_service.worker.template[0].vpc_access[0].network_interfaces) == 1
     )
-    error_message = "Backend y worker necesitan Direct VPC Egress para Cloud SQL, Redis y ClamAV"
+    error_message = "Backend y worker necesitan Direct VPC Egress para Cloud SQL y Redis"
   }
 
   assert {

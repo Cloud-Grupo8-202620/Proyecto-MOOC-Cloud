@@ -6,17 +6,21 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 8.0"
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.7"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.7"
     }
   }
 
-  # Estado local por defecto. No se comparte con el root de entrega 3: este
-  # despliegue tiene su propio ciclo de vida y su propio prefijo de recursos.
+  # El estado contiene secretos generados (contraseñas, claves HMAC): nunca se
+  # versiona (*.tfstate está en .gitignore). Por defecto es local; para un
+  # estado remoto y cifrado en un bucket que NO gestiona este despliegue, copia
+  # backend.gcs.tfbackend.example a backend.gcs.tfbackend, descomenta el bloque
+  # siguiente y ejecuta: terraform init -backend-config=backend.gcs.tfbackend
   #
-  # backend "gcs" {
-  #   bucket = "<PROJECT_ID>-tfstate"
-  #   prefix = "entrega4-cloudrun"
-  # }
+  # backend "gcs" {}
 }

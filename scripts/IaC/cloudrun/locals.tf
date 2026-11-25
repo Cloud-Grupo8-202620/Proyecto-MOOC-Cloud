@@ -31,6 +31,10 @@ locals {
   pubsub_subscription = "${var.name_prefix}-media-jobs-push"
   pubsub_dlq_topic    = "${var.name_prefix}-media-jobs-dlq"
   pubsub_dlq_sub      = "${var.name_prefix}-media-jobs-dlq-sub"
+  pubsub_scan_topic   = "${var.name_prefix}-media-scan"
+
+  # Cloud Function media.scan (entrega 5).
+  scan_function = "${var.name_prefix}-scan-media"
 
   # Secret Manager. Ningún valor viaja en la imagen ni en el tfvars.
   secret_postgres_password = "${var.name_prefix}-postgres-password"
@@ -40,6 +44,8 @@ locals {
   secret_backend_s3_secret = "${var.name_prefix}-backend-s3-secret-key"
   secret_worker_s3_access  = "${var.name_prefix}-worker-s3-access-key"
   secret_worker_s3_secret  = "${var.name_prefix}-worker-s3-secret-key"
+  secret_scan_s3_access    = "${var.name_prefix}-scan-s3-access-key"
+  secret_scan_s3_secret    = "${var.name_prefix}-scan-s3-secret-key"
   secret_admin_password    = "${var.name_prefix}-admin-password"
   secret_mailpit_auth      = "${var.name_prefix}-mailpit-auth"
 
@@ -66,5 +72,7 @@ locals {
   pubsub_env = {
     PUBSUB_PROJECT_ID = var.project_id
     PUBSUB_TOPIC      = google_pubsub_topic.jobs.name
+    # El backend publica el escaneo aquí; el transcode sigue en PUBSUB_TOPIC.
+    PUBSUB_SCAN_TOPIC = google_pubsub_topic.scan.name
   }
 }

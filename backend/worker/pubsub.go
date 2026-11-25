@@ -114,17 +114,6 @@ func (h *MediaHandler) ServePush(w http.ResponseWriter, r *http.Request) {
 
 	var resourceID uint
 	switch taskType {
-	case queue.TypeMediaScan:
-		var p queue.ScanPayload
-		p, err = queue.Decode[queue.ScanPayload](msg.Data)
-		if err != nil {
-			log.Printf("worker: scan payload inválido message_id=%s: %v", msg.MessageID, err)
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-		resourceID = p.ResourceID
-		log.Printf("worker: scan recibido message_id=%s attempt=%d resource=%d", msg.MessageID, msg.DeliveryAttempt, p.ResourceID)
-		err = h.HandleScan(ctx, p)
 	case queue.TypeMediaTranscode:
 		var p queue.TranscodePayload
 		p, err = queue.Decode[queue.TranscodePayload](msg.Data)
@@ -171,9 +160,6 @@ func (h *MediaHandler) markFailedByID(id uint, taskType, detail string) {
 	}
 	log.Printf("worker: recurso %d fallo definitivo (%s): %s", id, taskType, detail)
 	updates := map[string]interface{}{"processing_status": courses.ProcessingFailed}
-	if taskType == queue.TypeMediaScan {
-		updates["scan_status"] = courses.ScanFailed
-	}
 	if err := h.DB.Model(&courses.Resource{}).Where("id = ?", id).Updates(updates).Error; err != nil {
 		log.Printf("worker: recurso %d no se pudo persistir el fallo: %v", id, err)
 	}

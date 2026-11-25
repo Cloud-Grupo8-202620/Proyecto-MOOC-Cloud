@@ -12,6 +12,19 @@ resource "google_pubsub_topic" "dlq" {
   depends_on = [google_project_service.enabled]
 }
 
+# Topic de escaneo (entrega 5). Eventarc crea y administra la suscripción push
+# hacia la Cloud Function; el backend solo publica aquí.
+resource "google_pubsub_topic" "scan" {
+  name   = local.pubsub_scan_topic
+  labels = local.labels
+
+  # Un mensaje de escaneo sin entregar se conserva 7 días: es el techo de los
+  # reintentos de Eventarc.
+  message_retention_duration = "604800s"
+
+  depends_on = [google_project_service.enabled]
+}
+
 # Suscripción push autenticada al worker. El ack deadline de 600 s es el máximo
 # de Pub/Sub y está alineado con el timeout de Cloud Run (590 s): la tarea debe
 # terminar y persistir antes de que el mensaje se considere no confirmado.
@@ -62,8 +75,10 @@ resource "google_pubsub_subscription" "dlq" {
   }
 }
 
+# El backend publica scan y transcode; la función publica el transcode que
+# sigue a un escaneo limpio; el worker ya no publica nada.
 resource "google_pubsub_topic_iam_member" "publisher" {
-  for_each = toset(["backend", "worker"])
+  for_each = toset(["backend", "scan_fn"])
 
   topic  = google_pubsub_topic.jobs.name
   role   = "roles/pubsub.publisher"
@@ -81,4 +96,10 @@ resource "google_pubsub_subscription_iam_member" "dlq_subscriber" {
   subscription = google_pubsub_subscription.jobs.name
   role         = "roles/pubsub.subscriber"
   member       = "serviceAccount:service-${data.google_project.this.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_pubsub_topic_iam_member" "scan_publisher" {
+  topic  = google_pubsub_topic.scan.name
+  role   = "roles/pubsub.publisher"
+  member = google_service_account.role["backend"].member
 }

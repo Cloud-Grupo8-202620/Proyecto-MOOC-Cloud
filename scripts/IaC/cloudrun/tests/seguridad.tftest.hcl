@@ -67,8 +67,8 @@ run "firewall_por_rol" {
   command = apply
 
   assert {
-    condition     = toset(google_compute_firewall.clamav.source_tags) == toset(["worker"]) && toset(google_compute_firewall.clamav.target_tags) == toset(["support"])
-    error_message = "Solo los workers alcanzan ClamAV"
+    condition     = toset(google_compute_firewall.clamav.source_tags) == toset(["scanfn"]) && toset(google_compute_firewall.clamav.target_tags) == toset(["support"])
+    error_message = "Solo la Cloud Function media.scan alcanza ClamAV"
   }
 
   assert {

@@ -288,3 +288,7 @@ artifacts/
 
 # Archivo generado por Next en un intento previo; el frontend es Vite.
 frontend/next-env.d.ts
+
+# Configuración de estado remoto de Terraform (nombre del bucket de estado)
+*.tfbackend
+!*.tfbackend.example

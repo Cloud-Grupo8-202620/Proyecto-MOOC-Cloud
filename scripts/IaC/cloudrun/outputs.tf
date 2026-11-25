@@ -82,3 +82,23 @@ output "admin_password_secret" {
   description = "Nombre del secreto con la contraseña inicial; se lee con gcloud secrets versions access"
   value       = google_secret_manager_secret.app[local.secret_admin_password].secret_id
 }
+
+output "pubsub_scan_topic" {
+  description = "Topic de escaneo que activa la Cloud Function"
+  value       = google_pubsub_topic.scan.name
+}
+
+output "scan_function" {
+  description = "Cloud Function media.scan"
+  value = {
+    name     = google_cloudfunctions2_function.scan.name
+    location = google_cloudfunctions2_function.scan.location
+    trigger  = google_cloudfunctions2_function.scan.event_trigger[0].trigger
+    service  = google_cloudfunctions2_function.scan.service_config[0].service
+  }
+}
+
+output "scan_function_source" {
+  description = "Objeto de Cloud Storage con el código desplegado (hash SHA-256 del zip)"
+  value       = "gs://${google_storage_bucket_object.scan_fn.bucket}/${google_storage_bucket_object.scan_fn.name}"
+}

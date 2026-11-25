@@ -19,7 +19,6 @@ locals {
 
   worker_env = merge(local.postgres_env, local.storage_env, local.pubsub_env, {
     POSTGRES_MAX_OPEN_CONNS  = tostring(var.worker_db_max_open_conns)
-    CLAMAV_HOST              = "${google_compute_address.support.address}:3310"
     WORKER_MAX_ATTEMPTS      = tostring(var.pubsub_max_delivery_attempts)
     WORKER_TRANSCODE_TIMEOUT = var.worker_transcode_timeout
     WORKER_SHUTDOWN_TIMEOUT  = "8s"

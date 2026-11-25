@@ -1,0 +1,7 @@
+# Estado remoto opcional. Usa un bucket que NO gestione este despliegue
+# (con versionado y acceso restringido) y copia este archivo a
+# backend.gcs.tfbackend (ignorado por git):
+#
+#   terraform init -backend-config=backend.gcs.tfbackend
+bucket = "CAMBIAR-por-bucket-de-estado"
+prefix = "entrega5-cloudrun"

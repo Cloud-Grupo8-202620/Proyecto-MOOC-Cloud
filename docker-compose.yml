@@ -21,6 +21,7 @@ x-common-env: &common-env
   PUBSUB_EMULATOR_HOST: pubsub:8085
   PUBSUB_PROJECT_ID: mooc-local
   PUBSUB_TOPIC: media-jobs
+  PUBSUB_SCAN_TOPIC: media-scan
 
 services:
   postgres:
@@ -120,7 +121,13 @@ services:
           -H 'Content-Type: application/json' \
           -d '{"topic":"projects/mooc-local/topics/media-jobs","pushConfig":{"pushEndpoint":"http://worker:8080/pubsub/push"},"ackDeadlineSeconds":600}' \
           >/dev/null || true
+        curl -sS -X PUT http://pubsub:8085/v1/projects/mooc-local/topics/media-scan >/dev/null
+        curl -sS -X PUT http://pubsub:8085/v1/projects/mooc-local/subscriptions/media-scan-push \
+          -H 'Content-Type: application/json' \
+          -d '{"topic":"projects/mooc-local/topics/media-scan","pushConfig":{"pushEndpoint":"http://scanfn:8080/pubsub/push"},"ackDeadlineSeconds":600}' \
+          >/dev/null || true
         curl -sf http://pubsub:8085/v1/projects/mooc-local/subscriptions/media-jobs-push >/dev/null
+        curl -sf http://pubsub:8085/v1/projects/mooc-local/subscriptions/media-scan-push >/dev/null
 
   backend:
     build:
@@ -157,15 +164,12 @@ services:
         condition: service_healthy
       s3:
         condition: service_started
-      clamav:
-        condition: service_started
       pubsub-init:
         condition: service_completed_successfully
     env_file:
       - .env
     environment:
       <<: *common-env
-      CLAMAV_HOST: clamav:3310
       WORKER_MAX_ATTEMPTS: 5
       WORKER_TRANSCODE_TIMEOUT: 9m
     expose:
@@ -177,6 +181,31 @@ services:
       retries: 12
     command: [ "./worker" ]
     # Escalamiento horizontal (stateless, idempotente): docker compose up --scale worker=2
+
+  # Equivalente local de la Cloud Function media.scan (entrega 5): el mismo
+  # código de producción detrás de un adaptador push -> CloudEvent.
+  scanfn:
+    build:
+      context: ./backend
+      dockerfile: functions/scanfn/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      s3:
+        condition: service_started
+      clamav:
+        condition: service_started
+      pubsub-init:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    environment:
+      <<: *common-env
+      CLAMAV_HOST: clamav:3310
+      POSTGRES_MAX_OPEN_CONNS: 1
+    expose:
+      - "8080"
 
 volumes:
   postgres_data:

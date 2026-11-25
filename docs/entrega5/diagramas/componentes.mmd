@@ -1,0 +1,20 @@
+flowchart LR
+  U[Navegador] --> FE[Cloud Run frontend · nginx]
+  FE -->|proxy /api| BE[Cloud Run backend · Go]
+  BE -->|publish media.scan| PSS[(Pub/Sub media-scan)]
+  PSS -->|Eventarc · RETRY| FN[[Cloud Function gen2\nscan-media · Go]]
+  FN -->|publish media.transcode| PSJ[(Pub/Sub media-jobs)]
+  PSJ -->|push OIDC| W[Cloud Run worker · Go/ffmpeg]
+  PSJ --> DLQ[(DLQ media-jobs-dlq)]
+  BE --> SQL[(Cloud SQL PostgreSQL)]
+  FN -->|scan_status| SQL
+  W --> SQL
+  BE --> GCS[(Cloud Storage)]
+  FN -->|lee/borra original| GCS
+  W --> GCS
+  FN -->|TCP 3310 · Direct VPC| CLAM[VM soporte · ClamAV]
+  BE --> REDIS[(Memorystore Redis)]
+  BE --> MAIL[VM soporte · Mailpit]
+  FE -->|/mailpit/ · Basic Auth| MAIL
+  classDef nuevo fill:#e6f4ea,stroke:#188038,stroke-width:2px
+  class FN,PSS nuevo

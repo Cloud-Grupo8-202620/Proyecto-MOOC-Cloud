@@ -15,10 +15,13 @@ services:
       S3_PUBLIC_ENDPOINT: http://localhost:19000
       S3_LOCAL_CORS_ORIGINS: http://localhost:5180,http://mooc.localhost:5180
   worker:
+    ports: !reset []
+    environment:
+      S3_PUBLIC_ENDPOINT: http://localhost:19000
+  scanfn:
     depends_on:
       clamav:
         condition: service_healthy
-    ports: !reset []
     environment:
       S3_PUBLIC_ENDPOINT: http://localhost:19000
   frontend:

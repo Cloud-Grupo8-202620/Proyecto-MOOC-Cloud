@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/courses"
-	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/queue"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/storage"
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/utils"
 	"gorm.io/driver/postgres"
@@ -53,17 +52,9 @@ func main() {
 		log.Fatalf("worker: no se pudo crear cliente S3: %v", err)
 	}
 
-	qclient, err := queue.NewClient(context.Background())
-	if err != nil {
-		log.Fatalf("worker: no se pudo crear el publicador de Pub/Sub: %v", err)
-	}
-	defer qclient.Close()
-
 	h := &MediaHandler{
 		DB:               db,
 		Store:            store,
-		Queue:            qclient,
-		ClamHost:         utils.GetEnv("CLAMAV_HOST", "clamav:3310"),
 		MaxAttempts:      utils.GetEnvInt("WORKER_MAX_ATTEMPTS", 5),
 		TranscodeTimeout: utils.GetEnvDuration("WORKER_TRANSCODE_TIMEOUT", 9*time.Minute),
 	}

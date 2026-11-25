@@ -1,4 +1,4 @@
-# Proyecto de la entrega 4. No versionar el tfvars real.
+# Proyecto del despliegue (entregas 4 y 5). No versionar el tfvars real.
 project_id = "proyecto-2-cloud-509714"
 
 # Etiqueta que imprime scripts/publish_images.sh. Es obligatoria para crear los
@@ -11,3 +11,9 @@ image_tag = "CAMBIAR_POR_LA_ETIQUETA"
 # frontend_min_instances = 0
 # worker_min_instances = 0
 # cors_origins = ["*"]
+
+# Entrega 5: Cloud Function media.scan (valores por defecto).
+# scan_fn_runtime         = "go126"
+# scan_fn_memory          = "1Gi"
+# scan_fn_max_instances   = 3
+# scan_fn_max_event_age   = "1h"

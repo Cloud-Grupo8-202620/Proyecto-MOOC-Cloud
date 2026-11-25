@@ -1,0 +1,20 @@
+flowchart TB
+  TF[[terraform init · plan · apply]] -.crea.-> GCP
+  subgraph GCP[Proyecto GCP · us-central1]
+    Internet -->|HTTPS| FE[Cloud Run frontend 0–3]
+    FE --> BE[Cloud Run backend 0–3]
+    BE -->|media.scan| TS[Pub/Sub media-scan]
+    TS -->|Eventarc messagePublished + OIDC scan-event| FN[Cloud Run function scan-media 0–3\nSA scan-fn · Direct VPC tag scanfn]
+    FN -->|media.transcode| TJ[Pub/Sub media-jobs]
+    TJ -->|push + OIDC| W[Cloud Run worker 0–3\nsolo transcode]
+    TJ --> DLQ[DLQ]
+    FN --> SQL[(Cloud SQL)]
+    W --> SQL
+    BE --> SQL
+    FN --> GCS[(Cloud Storage originals)]
+    W --> GCS
+    BE --> GCS
+    FN -->|firewall scanfn→3310| SUP[VM soporte ClamAV + Mailpit]
+    SRC[(Bucket fn-src\nzip de backend/ con hash)] -.Cloud Build.-> FN
+    SM[Secret Manager] -.secret_environment_variables.-> FN
+  end

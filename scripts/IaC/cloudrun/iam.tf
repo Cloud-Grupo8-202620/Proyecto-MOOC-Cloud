@@ -13,6 +13,9 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "eventarc.googleapis.com",
   ])
 
   service_accounts = {
@@ -22,6 +25,9 @@ locals {
     pubsub_push = "Suscripción push de Pub/Sub"
     job_admin   = "Job de provisión de administrador"
     support     = "VM de soporte (ClamAV y Mailpit)"
+    scan_fn     = "Cloud Function media.scan (ejecución)"
+    scan_build  = "Cloud Function media.scan (build de Cloud Build)"
+    scan_event  = "Disparador Eventarc de la Cloud Function media.scan"
   }
 }
 
@@ -49,6 +55,14 @@ resource "google_service_account" "role" {
 # identidad y Cloud Run valida el token antes de entregar la solicitud.
 resource "google_service_account_iam_member" "pubsub_token_creator" {
   service_account_id = google_service_account.role["pubsub_push"].name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:service-${data.google_project.this.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+# Eventarc entrega el mensaje a la función firmando un OIDC con la cuenta del
+# disparador; el agente de Pub/Sub necesita poder emitir ese token.
+resource "google_service_account_iam_member" "scan_event_token_creator" {
+  service_account_id = google_service_account.role["scan_event"].name
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:service-${data.google_project.this.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
 }
@@ -86,6 +100,8 @@ locals {
     (local.secret_backend_s3_secret) = google_storage_hmac_key.role["backend"].secret
     (local.secret_worker_s3_access)  = google_storage_hmac_key.role["worker"].access_id
     (local.secret_worker_s3_secret)  = google_storage_hmac_key.role["worker"].secret
+    (local.secret_scan_s3_access)    = google_storage_hmac_key.role["scan_fn"].access_id
+    (local.secret_scan_s3_secret)    = google_storage_hmac_key.role["scan_fn"].secret
     (local.secret_admin_password)    = random_password.admin.result
     (local.secret_mailpit_auth)      = random_password.mailpit.result
   }
@@ -103,6 +119,11 @@ locals {
       local.secret_postgres_password,
       local.secret_worker_s3_access,
       local.secret_worker_s3_secret,
+    ]
+    scan_fn = [
+      local.secret_postgres_password,
+      local.secret_scan_s3_access,
+      local.secret_scan_s3_secret,
     ]
     job_admin = [
       local.secret_postgres_password,

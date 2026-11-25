@@ -148,9 +148,10 @@ variable "worker_db_max_open_conns" {
     condition = (
       var.backend_max_instances * var.backend_db_max_open_conns +
       var.worker_max_instances * var.worker_db_max_open_conns +
+      var.scan_fn_max_instances * var.scan_fn_db_max_open_conns +
       3 <= var.db_max_connections
     )
-    error_message = "Los pools de backend y worker en su máximo, más 3 conexiones reservadas, superan db_max_connections."
+    error_message = "Los pools de backend, worker y función en su máximo, más 3 conexiones reservadas, superan db_max_connections."
   }
 }
 
@@ -226,4 +227,60 @@ variable "admin_email" {
   description = "Correo del administrador inicial"
   type        = string
   default     = "admin@example.com"
+}
+
+# ---------------------------------------------------------------------------
+# Cloud Function media.scan (entrega 5)
+# ---------------------------------------------------------------------------
+
+variable "scan_fn_runtime" {
+  description = "Runtime de Cloud Run functions; debe cubrir la versión de go.mod de backend/"
+  type        = string
+  default     = "go126"
+}
+
+variable "scan_fn_memory" {
+  description = "Memoria de la función (descarga el original a /tmp, que cuenta como memoria)"
+  type        = string
+  default     = "1Gi"
+}
+
+variable "scan_fn_timeout_seconds" {
+  description = "Tiempo máximo por invocación de la función (hasta 3600 en eventos)"
+  type        = number
+  default     = 540
+
+  validation {
+    condition     = var.scan_fn_timeout_seconds >= 60 && var.scan_fn_timeout_seconds <= 3600
+    error_message = "El timeout de la función debe estar entre 60 y 3600 segundos."
+  }
+}
+
+variable "scan_fn_min_instances" {
+  description = "Mínimo de instancias de la función (0 permite scale-to-zero)"
+  type        = number
+  default     = 0
+}
+
+variable "scan_fn_max_instances" {
+  description = "Máximo de instancias de la función; limita las conexiones a Cloud SQL"
+  type        = number
+  default     = 3
+
+  validation {
+    condition     = var.scan_fn_max_instances >= var.scan_fn_min_instances && var.scan_fn_max_instances <= 3
+    error_message = "La función debe escalar como máximo a 3 instancias y el mínimo no puede superarlo."
+  }
+}
+
+variable "scan_fn_db_max_open_conns" {
+  description = "Pool de PostgreSQL por instancia de la función (concurrencia 1)"
+  type        = number
+  default     = 1
+}
+
+variable "scan_fn_max_event_age" {
+  description = "Edad máxima de un mensaje de escaneo antes de marcar el recurso como fallido y confirmarlo"
+  type        = string
+  default     = "1h"
 }

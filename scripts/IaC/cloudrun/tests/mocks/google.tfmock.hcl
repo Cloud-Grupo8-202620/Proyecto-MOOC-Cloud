@@ -85,3 +85,9 @@ mock_resource "google_storage_bucket" {
     name = "mooc4-mock-bucket"
   }
 }
+
+mock_resource "google_cloudfunctions2_function" {
+  defaults = {
+    name = "mooc4-scan-media"
+  }
+}

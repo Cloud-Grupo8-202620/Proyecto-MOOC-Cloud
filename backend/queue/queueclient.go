@@ -10,11 +10,14 @@ import (
 	"github.com/DiegoMunevar2007/Proyecto-1-Cloud.git/utils"
 )
 
-// Client publica trabajos en un topic de Pub/Sub. El worker los recibe por una
-// suscripción push autenticada; no hay consumidor en este proceso.
+// Client publica trabajos en Pub/Sub. El transcode viaja por el topic de media
+// y lo recibe el worker por una suscripción push autenticada; el escaneo viaja
+// por su propio topic y lo ejecuta la Cloud Function. No hay consumidor en este
+// proceso.
 type Client struct {
-	client    *pubsub.Client
-	publisher *pubsub.Publisher
+	client        *pubsub.Client
+	publisher     *pubsub.Publisher
+	scanPublisher *pubsub.Publisher
 }
 
 // NewClient construye el publicador desde variables de entorno. En local,
@@ -25,11 +28,16 @@ func NewClient(ctx context.Context) (*Client, error) {
 		return nil, errors.New("PUBSUB_PROJECT_ID no está definido")
 	}
 	topicID := utils.GetEnv("PUBSUB_TOPIC", "media-jobs")
+	scanTopicID := utils.GetEnv("PUBSUB_SCAN_TOPIC", "media-scan")
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}
-	return &Client{client: client, publisher: client.Publisher(topicID)}, nil
+	return &Client{
+		client:        client,
+		publisher:     client.Publisher(topicID),
+		scanPublisher: client.Publisher(scanTopicID),
+	}, nil
 }
 
 // Close libera el publicador y sus conexiones.
@@ -40,6 +48,9 @@ func (c *Client) Close() error {
 	if c.publisher != nil {
 		c.publisher.Stop()
 	}
+	if c.scanPublisher != nil {
+		c.scanPublisher.Stop()
+	}
 	if c.client != nil {
 		return c.client.Close()
 	}
@@ -48,8 +59,8 @@ func (c *Client) Close() error {
 
 // enqueue publica un trabajo. El message_id que devuelve Pub/Sub es el
 // identificador que se registra y se muestra como task_id.
-func (c *Client) enqueue(ctx context.Context, taskType string, payload interface{}, idempotencyKey string) (string, error) {
-	if c == nil || c.publisher == nil {
+func (c *Client) enqueue(ctx context.Context, publisher *pubsub.Publisher, taskType string, payload interface{}, idempotencyKey string) (string, error) {
+	if c == nil || publisher == nil {
 		return "", errors.New("publicador de Pub/Sub no configurado")
 	}
 	data, err := json.Marshal(payload)
@@ -60,7 +71,7 @@ func (c *Client) enqueue(ctx context.Context, taskType string, payload interface
 	if idempotencyKey != "" {
 		attributes["idempotency_key"] = idempotencyKey
 	}
-	result := c.publisher.Publish(ctx, &pubsub.Message{Data: data, Attributes: attributes})
+	result := publisher.Publish(ctx, &pubsub.Message{Data: data, Attributes: attributes})
 	return result.Get(ctx)
 }
 
@@ -69,10 +80,11 @@ func (c *Client) EnqueueTranscode(ctx context.Context, p TranscodePayload, idemp
 	if idempotencyKey == "" {
 		idempotencyKey = p.IdempotencyKey
 	}
-	return c.enqueue(ctx, TypeMediaTranscode, p, idempotencyKey)
+	return c.enqueue(ctx, c.publisher, TypeMediaTranscode, p, idempotencyKey)
 }
 
-// EnqueueScan publica un trabajo de escaneo antimalware (fail-closed).
+// EnqueueScan publica un trabajo de escaneo antimalware (fail-closed) en el
+// topic de escaneo, que activa la Cloud Function.
 func (c *Client) EnqueueScan(ctx context.Context, p ScanPayload, idempotencyKey string) (string, error) {
-	return c.enqueue(ctx, TypeMediaScan, p, idempotencyKey)
+	return c.enqueue(ctx, c.scanPublisher, TypeMediaScan, p, idempotencyKey)
 }
